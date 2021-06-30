@@ -38,10 +38,10 @@
         android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        app:layout_constraintTop_toBottomOf="@+id/usernamelogin" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/usernamelogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
@@ -58,17 +58,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.128" />
+        app:layout_constraintVertical_bias="0.122" />
 
-    <Button
-        android:id="@+id/signup"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:background="#FF131B45"
+        android:backgroundTint="#7EF13514"
         android:text="Login"
+        app:cornerRadius="30dp"
         android:textColor="@color/colorWhite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
@@ -87,7 +88,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup" />
+        app:layout_constraintTop_toBottomOf="@+id/login" />
+
+    <TextView
+        android:id="@+id/googletext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lato_black"
+        android:text="Unable to login through OTP try Google login"
+        app:layout_constraintBottom_toTopOf="@+id/signingoogle"
+        app:layout_constraintEnd_toEndOf="@+id/signingoogle"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toStartOf="@+id/signingoogle"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signingoogle"
@@ -96,7 +110,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginTop="32dp"
         android:layout_marginRight="40dp"
-        android:background="#ffffff"
+        android:backgroundTint="#CD5151"
         android:padding="10dp"
         android:text="Continue with Google"
         android:textAllCaps="false"
@@ -108,20 +122,21 @@
         app:layout_constraintWidth_percent="0.6" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button4"
+        android:id="@+id/phonesignin"
         android:layout_width="0dp"
         android:layout_height="61dp"
-        app:cornerRadius="30dp"
-        android:layout_marginLeft="40dp"
+        android:textAllCaps="false"
         android:layout_marginTop="20dp"
         android:layout_marginRight="40dp"
-        android:background="#ffffff"
+        android:backgroundTint="#CD5151"
         android:text="  Continue with PhoneNo"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:cornerRadius="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/signingoogle"
         app:layout_constraintHorizontal_bias="0.075"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signingoogle" />
+        app:layout_constraintStart_toStartOf="@+id/signingoogle"
+        app:layout_constraintTop_toBottomOf="@+id/signingoogle"
+        app:layout_constraintWidth_percent=".7" />
 
 
     <ImageView
@@ -154,8 +169,9 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="112dp"
+        android:layout_marginStart="104dp"
         android:layout_marginTop="32dp"
+        android:layout_marginBottom="48dp"
         android:text="Don't have an account?"
         android:textColor="#000000"
         android:textSize="15sp"

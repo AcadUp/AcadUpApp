@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "735931673293",
+    "project_id": "acadup-68402",
+    "storage_bucket": "acadup-68402.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735931673293:android:e601af8dd2e68401459784",
+        "android_client_info": {
+          "package_name": "com.example.acadup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735931673293-iee8ut5gbnjujtt6i5hp3iirkj2f7gu1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdiDbIOIuHzvXHES9OQY4TtiRJhxA5HPI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "735931673293-iee8ut5gbnjujtt6i5hp3iirkj2f7gu1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
