@@ -11,13 +11,14 @@ public class Splash extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_welcome);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(Splash.this,LoginActivity.class));
-finish();
+                startActivity(new Intent(Splash.this,com.example.acadup.LoginActivity.class));
+                finish();
             }
-        },5000);
+        },3000);
     }
 }

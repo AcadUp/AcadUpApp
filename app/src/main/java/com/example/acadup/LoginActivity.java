@@ -9,14 +9,17 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -35,11 +38,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class LoginActivity extends AppCompatActivity {
-    TextView signup, google_tv;
-    EditText username, password;
-    Button login, googlesignin, phonesignin;
+    EditText emailLogIn,passwordLogIn;
+    TextView forgotPassword,signUpPage;
+    AppCompatButton signIn,googleSignInBtn,phoneSignInBtn;
+    FrameLayout googleSignIn,phoneSignIn;
+
+    TextView google_tv;
     FirebaseAuth auth;
     public static final int RC_SIGN_IN = 12;
     GoogleSignInClient googleSignInClient;
@@ -48,47 +53,65 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_loginactivity);
 
         initUI();
+        processRequest();
 
-        processrequest();
-        googlesignin.setOnClickListener(new View.OnClickListener() {
+        googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                processlogingooglesignin();
+                processLogInGoogleSignIn();
             }
         });
-        login.setOnClickListener(new View.OnClickListener() {
+        googleSignInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user = username.getText().toString();
-                String pass = password.getText().toString();
-                if (TextUtils.isEmpty(user) || TextUtils.isEmpty(pass))
+                processLogInGoogleSignIn();
+            }
+        });
+
+        signIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = emailLogIn.getText().toString().trim();
+                String pass = passwordLogIn.getText().toString().trim();
+                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(pass))
                     Toast.makeText(LoginActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
-                else if (password.length() < 6)
+                else if (pass.length() < 6)
                     Toast.makeText(LoginActivity.this, "Very short password", Toast.LENGTH_SHORT).show();
                 else {
-                    loginuser(user, pass);
+                    logInUser(email, pass);
                 }
             }
         });
 
-phonesignin.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        startActivity(new Intent(LoginActivity.this,OtpActivity.class));
+        phoneSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,OtpActivity.class));
+            }
+        });
+        phoneSignInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,OtpActivity.class));
+            }
+        });
+
+        signUpPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, com.example.acadup.signup.class));
+                finish();
+            }
+        });
 
     }
-});
 
 
-    }
-
-
-
-
-    private void processlogingooglesignin() {
+    private void processLogInGoogleSignIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -101,7 +124,6 @@ phonesignin.setOnClickListener(new View.OnClickListener() {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d("google id", "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
@@ -136,13 +158,12 @@ phonesignin.setOnClickListener(new View.OnClickListener() {
     }
 
 
-    private void processrequest() {
+    private void processRequest() {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
-
 
     }
 
@@ -150,13 +171,14 @@ phonesignin.setOnClickListener(new View.OnClickListener() {
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null)
+        if (currentUser != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-        finish();
+            finish();
+        }
         //   updateUI(currentUser);
     }
 
-    private void loginuser(String user, String pass) {
+    private void logInUser(String user, String pass) {
         auth.signInWithEmailAndPassword(user, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<AuthResult> task) {
@@ -182,21 +204,25 @@ phonesignin.setOnClickListener(new View.OnClickListener() {
 
 
     private void initUI() {
-        signup = findViewById(R.id.signuPp);
-        username = findViewById(R.id.usernamelogin);
-        password = findViewById(R.id.passwordlogin);
-        login = findViewById(R.id.login);
+        emailLogIn=findViewById(R.id.emailLogin);//username
+        passwordLogIn=findViewById(R.id.passwordLogin);//password
+        forgotPassword=findViewById(R.id.forgot_pass);
+        signUpPage=findViewById(R.id.signUpPage);//signup
+        signIn=findViewById(R.id.logIn);//login
+        googleSignIn=findViewById(R.id.googleSignIn);//googlesignin
+        googleSignInBtn=findViewById(R.id.googleSignInBtn);
+        phoneSignIn=findViewById(R.id.phoneSignIn);//phonesignin
+        phoneSignInBtn=findViewById(R.id.phoneSignInBtn);
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        googlesignin = findViewById(R.id.signingoogle);
-        phonesignin = findViewById(R.id.phonesignin);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            google_tv.setText(Html.fromHtml("Unable to login through phone?<br>" + "<u>Connect with Google</u>", Html.FROM_HTML_MODE_LEGACY));
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            google_tv.setText(Html.fromHtml("Unable to login through phone?<br>" + "<u>Connect with Google</u>", Html.FROM_HTML_MODE_LEGACY));
+//
+//        } else {
+//            google_tv.setText(Html.fromHtml("Unable to login through phone?<br>" + "<u>Connect with Google</u>"));
+//        }
 
-        } else {
-            google_tv.setText(Html.fromHtml("Unable to login through phone?<br>" + "<u>Connect with Google</u>"));
-        }
     }
 
     private boolean isNetworkAvailable() {

@@ -12,11 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AcadUp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".manageOtp"></activity>
+        <activity android:name=".manageOtp"/>
         <activity android:name=".OtpActivity" />
         <activity android:name=".User_details" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".HomeActivity"/>
+
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".LoginActivity"/>
+
+        <activity android:name=".signup"/>
+
+        <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
