@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/bell1"
+        android:title="Notification"
+        android:icon="@drawable/bell1"
+        app:showAsAction="always"
+        android:orderInCategory="100"
+        />
+    <item android:id="@+id/profile"
+        android:title="Profile"
+        android:icon="@drawable/profile"
+        app:showAsAction="always"
+        android:orderInCategory="101"/>
+    <item android:id="@+id/search"
+        android:title="Search"
+        android:icon="@drawable/search"
+        app:showAsAction="always"
+        android:orderInCategory="99"/>
+</menu>

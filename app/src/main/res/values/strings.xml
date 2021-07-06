@@ -1,6 +1,33 @@
 <resources>
     <string name="app_name">AcadUp</string>
-  <!--  <string name="default_web_client_id" /> -->
+    <!--  <string name="default_web_client_id" /> -->
     <string name="see_more_subjects">See more subjects</string>
     <string name="or">________   or   ________</string>
+    <string name="title_activity_main_home">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_test">Test</string>
+    <string name="live_class">Learn with expert faculties in live classroom and also get your doubts cleared instantly.</string>
+    <string name="live_class_title">Live Interactive Class</string>
+    <string name="test">Improve your scores by practicing with handpicked questions and get detailed reports of your performance.</string>
+    <string name="test_series_title"><![CDATA[Test Series & Notes]]></string>
+    <string name="structured_courses_title">Structured Courses</string>
+    <string name="struc_course_desc">Get access to all our structured courses according to exam syllabus to help you best prepare for it.</string>
+    <string-array name="classes">
+        <item>Class-I</item>
+        <item>Class-II</item>
+        <item>Class-III</item>
+        <item>Class-IV</item>
+        <item>Class-V</item>
+        <item>Class-VI</item>
+        <item>Class-VII</item>
+        <item>Class-VIII</item>
+        <item>Class-IX</item>
+        <item>Class-X</item>
+        <item>Class-XI</item>
+        <item>Class-XII</item>
+    </string-array>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>
