@@ -14,6 +14,20 @@
     <string name="test_series_title"><![CDATA[Test Series & Notes]]></string>
     <string name="structured_courses_title">Structured Courses</string>
     <string name="struc_course_desc">Get access to all our structured courses according to exam syllabus to help you best prepare for it.</string>
+    <string-array name="classesSpinner">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
     <string-array name="classes">
         <item>Class-I</item>
         <item>Class-II</item>

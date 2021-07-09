@@ -18,8 +18,8 @@ Button getotp;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
-        phoneno=findViewById(R.id.t1);
-        countryCodePicker=findViewById(R.id.ccp);
+    phoneno=findViewById(R.id.t1);
+    countryCodePicker=findViewById(R.id.ccp);
         countryCodePicker.registerCarrierNumberEditText(phoneno);
         getotp=findViewById(R.id.b1);
         getotp.setOnClickListener(new View.OnClickListener() {
