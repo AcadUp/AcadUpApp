@@ -209,6 +209,7 @@
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/maths"
                         android:src="@drawable/maths"/>
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
@@ -223,6 +224,7 @@
                     app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal2" >
                     <ImageView
                         android:scaleType="centerCrop"
+                        android:id="@+id/computer"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/computer"/>
@@ -242,7 +244,8 @@
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/science"/>
+                        android:src="@drawable/science"
+                        android:id="@+id/science"/>
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView6"
@@ -259,7 +262,8 @@
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/sdf"/>
+                        android:src="@drawable/sdf"
+                        android:id="@+id/robotics"/>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
@@ -277,7 +281,8 @@
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/evs"/>
+                        android:src="@drawable/evs"
+                        android:id="@+id/evs"/>
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewAnother4"
@@ -291,6 +296,7 @@
                     app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal6" >
                     <ImageView
                         android:scaleType="centerCrop"
+                        android:id="@+id/chemistry"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/chemistry"/>
@@ -308,6 +314,7 @@
                     >
                     <ImageView
                         android:scaleType="centerCrop"
+                        android:id="@+id/english"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/english"/>
@@ -325,6 +332,7 @@
                     >
                     <ImageView
                         android:scaleType="centerCrop"
+                        android:id="@+id/coding"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/coding"/>

@@ -12,12 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".UpdateProfile"></activity>
+        <activity android:name=".CodingRoboticsPurchase"></activity>
+        <activity android:name=".UpdateProfile" />
         <activity android:name=".SubjectOptions" />
         <activity android:name=".manageOtp" />
         <activity android:name=".OtpActivity" />
         <activity android:name=".User_details" />
-        <activity android:name=".HomeActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".signup" />

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +17,17 @@ import java.util.ArrayList;
 
 public class PracticeTestAdapter extends RecyclerView.Adapter<PracticeTestAdapter.PracticeTestHolder> {
     private Context context;
+    ItemClicked activity;
     private ArrayList<PracticeTestModel> practiceTestModelArrayList;
 
-    public PracticeTestAdapter(Context context,ArrayList<PracticeTestModel> practiceTestModelArrayList){
+    public interface ItemClicked{
+        void onItemClicked(int index);
+    }
+
+    public PracticeTestAdapter(Context context,ArrayList<PracticeTestModel> practiceTestModelArrayList,ItemClicked pos){
         this.context=context;
         this.practiceTestModelArrayList=practiceTestModelArrayList;
+        this.activity=pos;
     }
 
     @NonNull
@@ -33,6 +40,12 @@ public class PracticeTestAdapter extends RecyclerView.Adapter<PracticeTestAdapte
     @Override
     public void onBindViewHolder(@NonNull PracticeTestHolder holder, int position) {
         holder.practiceTestImage.setImageResource(practiceTestModelArrayList.get(position).getImageSource());
+        holder.practiceTestImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context.getApplicationContext(), "hello",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

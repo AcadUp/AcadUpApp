@@ -1,10 +1,12 @@
 package com.example.acadup.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,10 +22,13 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.acadup.Adapters.HotCourseAdapter;
 import com.example.acadup.Adapters.PracticeTestAdapter;
 import com.example.acadup.Adapters.SliderAdapter;
+import com.example.acadup.HomeActivity;
+import com.example.acadup.MainActivity;
 import com.example.acadup.Models.HotCourseModel;
 import com.example.acadup.Models.PracticeTestModel;
 import com.example.acadup.Models.SliderModel;
 import com.example.acadup.R;
+import com.example.acadup.SubjectOptions;
 
 import java.util.ArrayList;
 
@@ -36,11 +41,13 @@ public class HomeFragment extends Fragment {
     HotCourseAdapter hotCourseAdapter;
     PracticeTestAdapter practiceTestAdapter;
     HotCourseAdapter.ItemClicked hotCourseItem;
+    PracticeTestAdapter.ItemClicked practiceTestItem;
     LinearLayout dotsLayout;
     SliderAdapter sliderAdapter;
     ViewPager2 pager2;
     ArrayList<SliderModel> sliderModelArrayList;
     TextView[] dots;
+    ImageView maths,science,robotics,coding,computer,evs;
     ConstraintLayout consEight,consFour;
     int showMoreCount=0;
 
@@ -57,6 +64,12 @@ public class HomeFragment extends Fragment {
         practiceTestModelArrayList=new ArrayList<>();
         pager2=root.findViewById(R.id.view_pager2);
         dotsLayout=root.findViewById(R.id.dots_container);
+        maths=root.findViewById(R.id.maths);
+        science=root.findViewById(R.id.science);
+        evs=root.findViewById(R.id.evs);
+        robotics=root.findViewById(R.id.robotics);
+        coding=root.findViewById(R.id.coding);
+        computer=root.findViewById(R.id.computer);
         sliderModelArrayList=new ArrayList<>();
 
         consEight=root.findViewById(R.id.consEight);
@@ -118,7 +131,15 @@ public class HomeFragment extends Fragment {
         hotCourseRecyclerView.setAdapter(hotCourseAdapter);
 
         //practice test adapter,layout Manager set and itemClick of practice test
-        practiceTestAdapter=new PracticeTestAdapter(getContext(),practiceTestModelArrayList);
+
+        practiceTestItem=new PracticeTestAdapter.ItemClicked() {
+            @Override
+            public void onItemClicked(int index) {
+                startActivity(new Intent(getActivity().getApplicationContext(), SubjectOptions.class));
+                Toast.makeText(getActivity().getApplicationContext(), "Profile", Toast.LENGTH_SHORT).show();
+            }
+        };
+        practiceTestAdapter=new PracticeTestAdapter(getContext(),practiceTestModelArrayList,practiceTestItem);
         layoutManagerPracticeTest=new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
         practiceTestRecyclerView.setLayoutManager(layoutManagerPracticeTest);
         practiceTestRecyclerView.setAdapter(practiceTestAdapter);
@@ -136,6 +157,12 @@ public class HomeFragment extends Fragment {
             public void onPageSelected(int position) {
                 selectedIndicator(position);
                 super.onPageSelected(position);
+            }
+        });
+        science.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity().getApplicationContext(),SubjectOptions.class));
             }
         });
 
@@ -162,4 +189,5 @@ public class HomeFragment extends Fragment {
             dotsLayout.addView(dots[i]);
         }
     }
+    /**/
 }

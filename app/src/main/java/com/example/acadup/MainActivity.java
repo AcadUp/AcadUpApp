@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
     FirebaseAuth firebaseAuth;
     CircleImageView profileImageView;
-    ImageButton backBtn;
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     FragmentAdapter fragmentAdapter;
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         logoutBtn=findViewById(R.id.logoutBtn);
         editProfile=findViewById(R.id.edirprofile);
         nameTv=findViewById(R.id.name);
-        backBtn=findViewById(R.id.backBtn);
         classTv=findViewById(R.id.classTv);
         swipeRefreshLayout=findViewById(R.id.refreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -181,12 +179,7 @@ public class MainActivity extends AppCompatActivity {
               }
         });
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainActivity.this.onBackPressed();
-            }
-        });
+
     }
 
 }
