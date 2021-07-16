@@ -58,7 +58,7 @@ public class HotCourseAdapter extends RecyclerView.Adapter<HotCourseAdapter.HotC
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.onItemClicked(getAdapterPosition());
+                    activity.onItemClicked(getAbsoluteAdapterPosition());
                 }
             });
         }

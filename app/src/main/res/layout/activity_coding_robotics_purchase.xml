@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".CodingRoboticsPurchase">
 
-    <com.ruslankishai.unmaterialtab.tabs.RoundTabLayout
-        android:id="@+id/round_tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:accent="@color/colorAccent" />
+<!--    <com.ruslankishai.unmaterialtab.tabs.RoundTabLayout-->
+<!--        android:id="@+id/round_tabs"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/colorPrimary"-->
+<!--        app:accent="@color/colorAccent" />-->
 
 
 </FrameLayout>

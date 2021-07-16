@@ -1,39 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/nav_bg1"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/nav_head">
+    >
     <androidx.cardview.widget.CardView
+        android:layout_gravity="center_horizontal"
         android:id="@+id/card"
         android:layout_width="40pt"
         android:layout_height="40pt"
-        app:cardCornerRadius="10pt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_marginTop="5pt"
+        app:cardCornerRadius="20pt">
+
         <ImageView
+
             android:id="@+id/img"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/thinker_icon2"
-            />
+            android:src="@drawable/thinker_icon2" />
     </androidx.cardview.widget.CardView>
-
     <TextView
+        android:id="@+id/textName"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="AcadUp"
-        android:textColor="@android:color/white"
-        android:textSize="30dp"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        android:layout_marginTop="5pt"
         android:textStyle="bold"
-        android:alpha="2"
         android:layout_marginBottom="20dp"
-        android:paddingBottom="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:paddingBottom="20dp" />
+    <ScrollView
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:id="@+id/homeClick"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/home_i"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Home"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
+            <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/scheduleClick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/schedule_tri"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Schedule a Trial"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
+            <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/upcomingLiveClicked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/upcoming_live"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upcoming Live Class"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
+            <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/notesClicked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/notes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My Notes"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
+            <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/progressClicked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/progress_report"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Progress Report"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
+            <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/leaderboardClicked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/leader_board"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Leaderboard"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
+            <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/refer_friend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/refer_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Refer a Friend"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
+
+            <ExpandableListView
+                android:paddingVertical="5pt"
+                android:id="@+id/aboutExpand"
+                android:layout_height="240dp"
+                android:layout_width="match_parent"
+                android:groupIndicator="@drawable/custom_expand"/>
+
+            <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/logOutLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="11pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/logout"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"/>
+                <TextView
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Log out"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
+            <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/rateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/rate_app"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rate this App"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

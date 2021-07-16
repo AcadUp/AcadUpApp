@@ -46,7 +46,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:layout_margin="5pt">
+                    android:layout_margin="5pt"
+                    android:id="@+id/demo">
 
                     <ImageView
                         android:id="@+id/imageView6"
@@ -130,20 +131,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent=".59"/>
-                <!--
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent=".08"/>
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent=".92"/>
-                    -->
+
                 <!--horizontal guidelines-->
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guidelineHorizontal1"
@@ -209,7 +197,7 @@
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/maths"
+                        android:id="@+id/subEightImg1"
                         android:src="@drawable/maths"/>
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
@@ -224,7 +212,7 @@
                     app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal2" >
                     <ImageView
                         android:scaleType="centerCrop"
-                        android:id="@+id/computer"
+                        android:id="@+id/subEightImg2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/computer"/>
@@ -245,7 +233,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/science"
-                        android:id="@+id/science"/>
+                        android:id="@+id/subEightImg3"/>
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView6"
@@ -263,7 +251,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/sdf"
-                        android:id="@+id/robotics"/>
+                        android:id="@+id/subEightImg4"/>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
@@ -282,7 +270,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/evs"
-                        android:id="@+id/evs"/>
+                        android:id="@+id/subEightImg5"/>
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewAnother4"
@@ -296,7 +284,7 @@
                     app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal6" >
                     <ImageView
                         android:scaleType="centerCrop"
-                        android:id="@+id/chemistry"
+                        android:id="@+id/subEightImg6"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/chemistry"/>
@@ -314,7 +302,7 @@
                     >
                     <ImageView
                         android:scaleType="centerCrop"
-                        android:id="@+id/english"
+                        android:id="@+id/subEightImg7"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/english"/>
@@ -332,7 +320,7 @@
                     >
                     <ImageView
                         android:scaleType="centerCrop"
-                        android:id="@+id/coding"
+                        android:id="@+id/subEightImg8"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/coding"/>
@@ -411,10 +399,11 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalFour2">
 
                     <ImageView
+                        android:id="@+id/subFourImg1"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/maths"/>
+                       />
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewFour4"
@@ -427,10 +416,11 @@
                     app:layout_constraintTop_toBottomOf="@id/guidelineHorizontalFour1"
                     app:layout_constraintBottom_toTopOf="@id/guidelineHorizontalFour2" >
                     <ImageView
+                        android:id="@+id/subFourImg2"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/computer"/>
+                        />
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewFour5"
@@ -444,6 +434,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalFour4"
                     >
                     <ImageView
+                        android:id="@+id/subFourImg3"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -461,6 +452,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalFour4"
                     >
                     <ImageView
+                        android:id="@+id/subFourImg4"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -552,6 +544,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalSix2">
 
                     <ImageView
+                        android:id="@+id/subSixImg1"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -568,6 +561,7 @@
                     app:layout_constraintTop_toBottomOf="@id/guidelineHorizontalSix1"
                     app:layout_constraintBottom_toTopOf="@id/guidelineHorizontalSix2" >
                     <ImageView
+                        android:id="@+id/subSixImg2"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -585,6 +579,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalSix4"
                     >
                     <ImageView
+                        android:id="@+id/subSixImg3"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -602,6 +597,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalSix4"
                     >
                     <ImageView
+                        android:id="@+id/subSixImg4"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -619,6 +615,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalSix6"
                     >
                     <ImageView
+                        android:id="@+id/subSixImg5"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -636,6 +633,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalSix6"
                     >
                     <ImageView
+                        android:id="@+id/subSixImg6"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -643,6 +641,7 @@
                 </androidx.cardview.widget.CardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/moreSubButton"
                 android:layout_width="match_parent"

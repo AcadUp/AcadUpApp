@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AcadUp</string>
+    <string name="app_name">AcadUpNew</string>
     <!--  <string name="default_web_client_id" /> -->
     <string name="see_more_subjects">See more subjects</string>
     <string name="or">________   or   ________</string>
@@ -44,4 +44,6 @@
     </string-array>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="sample2">We have received a request for free demo session. You will be allocated a class on your mentioned date or
+    our representative will call you to find a better time.</string>
 </resources>
