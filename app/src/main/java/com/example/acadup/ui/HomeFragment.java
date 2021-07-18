@@ -25,6 +25,7 @@ import com.example.acadup.Adapters.HotCourseAdapter;
 import com.example.acadup.Adapters.PracticeTestAdapter;
 import com.example.acadup.Adapters.SliderAdapter;
 import com.example.acadup.HomeActivity;
+import com.example.acadup.LoadData.ApplicationClass;
 import com.example.acadup.MainActivity;
 import com.example.acadup.Models.HotCourseModel;
 import com.example.acadup.Models.PracticeTestModel;
@@ -34,12 +35,15 @@ import com.example.acadup.R;
 import com.example.acadup.SubjectOptions;
 import com.example.acadup.SubjectView;
 import com.example.acadup.payment_inquiry;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-import static com.example.acadup.LoadData.ApplicationClass.lowerClass;
-import static com.example.acadup.LoadData.ApplicationClass.midClass;
-import static com.example.acadup.LoadData.ApplicationClass.upperClass;
 
 public class HomeFragment extends Fragment implements SubjectView {
     ConstraintLayout demoActivity;
@@ -64,15 +68,23 @@ public class HomeFragment extends Fragment implements SubjectView {
     int showMoreCount=0;
     int consSelect5=0,consSelect6=0,consSelect8=0;
     CardView cardView6;
-    ArrayList<SubjectsModel> lowClass1,middleClass1,upClass1;
+//    ArrayList<SubjectsModel> lowClass1,middleClass1,upClass1;
+    FirebaseFirestore db;
+    DocumentReference lowClassRef,midClassRef,upperClassRef;
+    public static ArrayList<SubjectsModel> lowerClass_1,midClass_1,upperClass_1;
 
     private View root;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
 
         root= inflater.inflate(R.layout.fragment_home, container, false);
-        lowClass1=lowerClass;
-        middleClass1=midClass;
-        upClass1=upperClass;
+        lowerClass_1=new ArrayList<>();
+        midClass_1=new ArrayList<>();
+        upperClass_1=new ArrayList<>();
+        db=FirebaseFirestore.getInstance();
+        lowClassRef=db.document("Class/lowerClass");
+        midClassRef=db.document("Class/midClass");
+        upperClassRef=db.document("Class/upperClass");
+        loadData();
 
         moreSubjectBtn=root.findViewById(R.id.moreSubButton);
 
@@ -134,40 +146,43 @@ public class HomeFragment extends Fragment implements SubjectView {
                         consFour.setVisibility(View.GONE);
                         consEight.setVisibility(View.GONE);
                         cardView6.setVisibility(View.GONE);
-
-                        Glide.with(getContext()).load(upClass1.get(0).getImage()).into(subSixImg1);
-                        Glide.with(getContext()).load(upClass1.get(1).getImage()).into(subSixImg2);
-                        Glide.with(getContext()).load(upClass1.get(2).getImage()).into(subSixImg3);
-                        Glide.with(getContext()).load(upClass1.get(3).getImage()).into(subSixImg4);
-                        Glide.with(getContext()).load(upClass1.get(4).getImage()).into(subSixImg5);
-
+                        if(getContext()!=null && upperClass_1.size()>0) {
+                            Glide.with(getContext()).load(upperClass_1.get(0).getImage()).into(subSixImg1);
+                            Glide.with(getContext()).load(upperClass_1.get(1).getImage()).into(subSixImg2);
+                            Glide.with(getContext()).load(upperClass_1.get(2).getImage()).into(subSixImg3);
+                            Glide.with(getContext()).load(upperClass_1.get(3).getImage()).into(subSixImg4);
+                            Glide.with(getContext()).load(upperClass_1.get(4).getImage()).into(subSixImg5);
+                        }
                     }
                     else if(consSelect6==1){
                         consSix.setVisibility(View.VISIBLE);
                         consFour.setVisibility(View.GONE);
                         consEight.setVisibility(View.GONE);
                         cardView6.setVisibility(View.VISIBLE);
-                        Glide.with(getContext()).load(middleClass1.get(0).getImage()).into(subSixImg1);
-                        Glide.with(getContext()).load(middleClass1.get(1).getImage()).into(subSixImg2);
-                        Glide.with(getContext()).load(middleClass1.get(2).getImage()).into(subSixImg3);
-                        Glide.with(getContext()).load(middleClass1.get(3).getImage()).into(subSixImg4);
-                        Glide.with(getContext()).load(middleClass1.get(4).getImage()).into(subSixImg5);
-                        Glide.with(getContext()).load(middleClass1.get(5).getImage()).into(subSixImg6);
+                        if(getContext()!=null && midClass_1.size()>0) {
+                            Glide.with(getContext()).load(midClass_1.get(0).getImage()).into(subSixImg1);
+                            Glide.with(getContext()).load(midClass_1.get(1).getImage()).into(subSixImg2);
+                            Glide.with(getContext()).load(midClass_1.get(2).getImage()).into(subSixImg3);
+                            Glide.with(getContext()).load(midClass_1.get(3).getImage()).into(subSixImg4);
+                            Glide.with(getContext()).load(midClass_1.get(4).getImage()).into(subSixImg5);
+                            Glide.with(getContext()).load(midClass_1.get(5).getImage()).into(subSixImg6);
+                        }
                     }
                     else if(consSelect8==1){
                         consEight.setVisibility(View.VISIBLE);
                         consFour.setVisibility(View.GONE);
                         consSix.setVisibility(View.GONE);
                         cardView6.setVisibility(View.VISIBLE);
-
-                        Glide.with(getContext()).load(lowClass1.get(0).getImage()).into(subEightImg1);
-                        Glide.with(getContext()).load(lowClass1.get(1).getImage()).into(subEightImg2);
-                        Glide.with(getContext()).load(lowClass1.get(2).getImage()).into(subEightImg3);
-                        Glide.with(getContext()).load(lowClass1.get(3).getImage()).into(subEightImg4);
-                        Glide.with(getContext()).load(lowClass1.get(4).getImage()).into(subEightImg5);
-                        Glide.with(getContext()).load(lowClass1.get(5).getImage()).into(subEightImg6);
-                        Glide.with(getContext()).load(lowClass1.get(6).getImage()).into(subEightImg7);
-                        Glide.with(getContext()).load(lowClass1.get(7).getImage()).into(subEightImg8);
+                        if(getContext()!=null && lowerClass_1.size()>0) {
+                            Glide.with(getContext()).load(lowerClass_1.get(0).getImage()).into(subEightImg1);
+                            Glide.with(getContext()).load(lowerClass_1.get(1).getImage()).into(subEightImg2);
+                            Glide.with(getContext()).load(lowerClass_1.get(2).getImage()).into(subEightImg3);
+                            Glide.with(getContext()).load(lowerClass_1.get(3).getImage()).into(subEightImg4);
+                            Glide.with(getContext()).load(lowerClass_1.get(4).getImage()).into(subEightImg5);
+                            Glide.with(getContext()).load(lowerClass_1.get(5).getImage()).into(subEightImg6);
+                            Glide.with(getContext()).load(lowerClass_1.get(6).getImage()).into(subEightImg7);
+                            Glide.with(getContext()).load(lowerClass_1.get(7).getImage()).into(subEightImg8);
+                        }
                     }
 
                 }
@@ -176,28 +191,34 @@ public class HomeFragment extends Fragment implements SubjectView {
                     moreSubjectBtn.setText("See more subjects");
 
                     if(consSelect8==1){
-                        Glide.with(getContext()).load(lowClass1.get(0).getImage()).into(subFourImg1);
-                        Glide.with(getContext()).load(lowClass1.get(1).getImage()).into(subFourImg2);
-                        Glide.with(getContext()).load(lowClass1.get(2).getImage()).into(subFourImg3);
-                        Glide.with(getContext()).load(lowClass1.get(3).getImage()).into(subFourImg4);
+                        if(getContext()!=null && lowerClass_1.size()>0) {
+                            Glide.with(getContext()).load(lowerClass_1.get(0).getImage()).into(subFourImg1);
+                            Glide.with(getContext()).load(lowerClass_1.get(1).getImage()).into(subFourImg2);
+                            Glide.with(getContext()).load(lowerClass_1.get(2).getImage()).into(subFourImg3);
+                            Glide.with(getContext()).load(lowerClass_1.get(3).getImage()).into(subFourImg4);
+                        }
                         consFour.setVisibility(View.VISIBLE);
                         consEight.setVisibility(View.GONE);
                         consSix.setVisibility(View.GONE);
                     }
                     if(consSelect6==1){
-                        Glide.with(getContext()).load(middleClass1.get(0).getImage()).into(subFourImg1);
-                        Glide.with(getContext()).load(middleClass1.get(1).getImage()).into(subFourImg2);
-                        Glide.with(getContext()).load(middleClass1.get(2).getImage()).into(subFourImg3);
-                        Glide.with(getContext()).load(middleClass1.get(3).getImage()).into(subFourImg4);
+                        if(getContext()!=null && midClass_1.size()>0) {
+                            Glide.with(getContext()).load(midClass_1.get(0).getImage()).into(subFourImg1);
+                            Glide.with(getContext()).load(midClass_1.get(1).getImage()).into(subFourImg2);
+                            Glide.with(getContext()).load(midClass_1.get(2).getImage()).into(subFourImg3);
+                            Glide.with(getContext()).load(midClass_1.get(3).getImage()).into(subFourImg4);
+                        }
                         consFour.setVisibility(View.VISIBLE);
                         consEight.setVisibility(View.GONE);
                         consSix.setVisibility(View.GONE);
                     }
                     if(consSelect5==1){
-                        Glide.with(getContext()).load(upClass1.get(0).getImage()).into(subFourImg1);
-                        Glide.with(getContext()).load(upClass1.get(1).getImage()).into(subFourImg2);
-                        Glide.with(getContext()).load(upClass1.get(2).getImage()).into(subFourImg3);
-                        Glide.with(getContext()).load(upClass1.get(3).getImage()).into(subFourImg4);
+                        if(getContext()!=null && upperClass_1.size()>0) {
+                            Glide.with(getContext()).load(upperClass_1.get(0).getImage()).into(subFourImg1);
+                            Glide.with(getContext()).load(upperClass_1.get(1).getImage()).into(subFourImg2);
+                            Glide.with(getContext()).load(upperClass_1.get(2).getImage()).into(subFourImg3);
+                            Glide.with(getContext()).load(upperClass_1.get(3).getImage()).into(subFourImg4);
+                        }
                         consFour.setVisibility(View.VISIBLE);
                         consEight.setVisibility(View.GONE);
                         consSix.setVisibility(View.GONE);
@@ -269,14 +290,76 @@ public class HomeFragment extends Fragment implements SubjectView {
                 super.onPageSelected(position);
             }
         });
-//        science.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(getActivity().getApplicationContext(),SubjectOptions.class));
-//            }
-//        });
+
 
         return root;
+    }
+
+    public void loadData(){
+        lowClassRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            Map<String,Object> map= (Map<String, Object>) documentSnapshot.get("Subjects");
+                            Object[] key= map.keySet().toArray();
+
+                            for(int i=0;i<map.size();i++){
+                                SubjectsModel subjectsModel1=documentSnapshot.get("Subjects."+key[i].toString(),SubjectsModel.class);
+                                lowerClass_1.add(subjectsModel1);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(ApplicationClass.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        midClassRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            Map<String,Object> map= (Map<String, Object>) documentSnapshot.get("Subjects");
+                            Object[] key= map.keySet().toArray();
+
+                            for(int i=0;i<map.size();i++){
+                                SubjectsModel subjectsModel1=documentSnapshot.get("Subjects."+key[i].toString(),SubjectsModel.class);
+                                midClass_1.add(subjectsModel1);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(ApplicationClass.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        upperClassRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            Map<String,Object> map= (Map<String, Object>) documentSnapshot.get("Subjects");
+                            Object[] key= map.keySet().toArray();
+                            String[] names=new String[map.size()];
+                            for(int i=0;i<map.size();i++){
+                                SubjectsModel subjectsModel1=documentSnapshot.get("Subjects."+key[i].toString(),SubjectsModel.class);
+                                upperClass_1.add(subjectsModel1);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(ApplicationClass.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 
@@ -311,10 +394,13 @@ public class HomeFragment extends Fragment implements SubjectView {
             showMoreCount=0;
             moreSubjectBtn.setText("See more subjects");
 
-            Glide.with(getContext()).load(lowClass1.get(0).getImage()).into(subFourImg1);
-            Glide.with(getContext()).load(lowClass1.get(1).getImage()).into(subFourImg2);
-            Glide.with(getContext()).load(lowClass1.get(2).getImage()).into(subFourImg3);
-            Glide.with(getContext()).load(lowClass1.get(3).getImage()).into(subFourImg4);
+
+            if(getContext()!=null && lowerClass_1.size()>0) {
+                Glide.with(getContext()).load(lowerClass_1.get(0).getImage()).into(subFourImg1);
+                Glide.with(getContext()).load(lowerClass_1.get(1).getImage()).into(subFourImg2);
+                Glide.with(getContext()).load(lowerClass_1.get(2).getImage()).into(subFourImg3);
+                Glide.with(getContext()).load(lowerClass_1.get(3).getImage()).into(subFourImg4);
+            }
         }
         else if(index>=5 && index<=9){
             consSelect6=1;consSelect8=0;consSelect5=0;
@@ -324,10 +410,12 @@ public class HomeFragment extends Fragment implements SubjectView {
             showMoreCount=0;
             moreSubjectBtn.setText("See more subjects");
 
-            Glide.with(getContext()).load(middleClass1.get(0).getImage()).into(subFourImg1);
-            Glide.with(getContext()).load(middleClass1.get(1).getImage()).into(subFourImg2);
-            Glide.with(getContext()).load(middleClass1.get(2).getImage()).into(subFourImg3);
-            Glide.with(getContext()).load(middleClass1.get(3).getImage()).into(subFourImg4);
+            if(getContext()!=null && midClass_1.size()>0) {
+                Glide.with(getContext()).load(midClass_1.get(0).getImage()).into(subFourImg1);
+                Glide.with(getContext()).load(midClass_1.get(1).getImage()).into(subFourImg2);
+                Glide.with(getContext()).load(midClass_1.get(2).getImage()).into(subFourImg3);
+                Glide.with(getContext()).load(midClass_1.get(3).getImage()).into(subFourImg4);
+            }
         }
         else if(index>=10 && index<=11){
             consSelect5=1;consSelect8=0;consSelect6=0;
@@ -337,10 +425,12 @@ public class HomeFragment extends Fragment implements SubjectView {
             showMoreCount=0;
             moreSubjectBtn.setText("See more subjects");
 
-            Glide.with(getContext()).load(upClass1.get(0).getImage()).into(subFourImg1);
-            Glide.with(getContext()).load(upClass1.get(1).getImage()).into(subFourImg2);
-            Glide.with(getContext()).load(upClass1.get(2).getImage()).into(subFourImg3);
-            Glide.with(getContext()).load(upClass1.get(3).getImage()).into(subFourImg4);
+            if(getContext()!=null && upperClass_1.size()>0) {
+                Glide.with(getContext()).load(upperClass_1.get(0).getImage()).into(subFourImg1);
+                Glide.with(getContext()).load(upperClass_1.get(1).getImage()).into(subFourImg2);
+                Glide.with(getContext()).load(upperClass_1.get(2).getImage()).into(subFourImg3);
+                Glide.with(getContext()).load(upperClass_1.get(3).getImage()).into(subFourImg4);
+            }
         }
     }
     /**/

@@ -5,6 +5,8 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,9 +26,12 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.example.acadup.Models.SubjectsModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -34,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.acadup.LoadData.ApplicationClass.lowerClass;
@@ -51,17 +57,24 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
     int hour;
     Calendar calendar=Calendar.getInstance();
     int count1=0,count2=0,count3=0,count4=0,count5=0,count6=0,count7=0,count8=0;
-    String dates,times;
+    String dates,times,s;
     TextView slotTime;
     ArrayList<SubjectsModel> lowClass,middleClass,upClass;
-
-
+    FirebaseFirestore fireStore;
+    FirebaseAuth firebaseAuth;
+    DocumentReference documentReference,demoClassRef;
+    String name,email,phone;
+    int classSel;
+    Map<String,Object> user ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_demo_choice);
-
+        user= new HashMap<>();
+        firebaseAuth=FirebaseAuth.getInstance();
+        fireStore=FirebaseFirestore.getInstance();
+        demoClassRef = fireStore.collection("DemoClass").document(firebaseAuth.getCurrentUser().getUid());
         lowClass=lowerClass;
         middleClass=midClass;
         upClass=upperClass;
@@ -74,6 +87,10 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
         etEmail=findViewById(R.id.emailId);
         etPhone=findViewById(R.id.phoneNum);
         slotTime=findViewById(R.id.slotTime);
+
+        etName.setEnabled(false);
+        etPhone.setEnabled(false);
+        etEmail.setEnabled(false);
         
         sub1=findViewById(R.id.sub1);
         sub2=findViewById(R.id.sub2);
@@ -83,14 +100,57 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
         sub6=findViewById(R.id.sub6);
         sub7=findViewById(R.id.sub7);
         sub8=findViewById(R.id.sub8);
-        sub1.setBackground(getResources().getDrawable(R.drawable.sub_select));
-        sub1.setTextColor(Color.WHITE);
 
         datePickerBtn=findViewById(R.id.datePicker1);
         timePickerBtn=findViewById(R.id.timePicker1);
 
         scheduleBtn=findViewById(R.id.scheduleTrialBtn);
         spinnerClass=findViewById(R.id.spinnerClass);
+
+
+
+        documentReference=fireStore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+        documentReference.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()) {
+                            name=documentSnapshot.getString("firstName")+" "+documentSnapshot.getString("lastName");
+                            classSel=Integer.parseInt(documentSnapshot.getString("class"))-1;
+                            phone=documentSnapshot.getString("phone");
+                            email=documentSnapshot.getString("email");
+                            etName.setText(name);
+                            spinnerClass.setSelection(classSel);
+                            etPhone.setText(phone);
+                            etEmail.setText(email);
+
+                            user.put("name",name);
+                            user.put("email",email);
+                            user.put("phone",phone);
+                            user.put("class",String.valueOf(classSel+1));
+                            demoClassRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+
+                        }
+                        }
+                })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(demo_choice.this, "Something wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         ArrayAdapter adapter=ArrayAdapter.createFromResource(this, R.array.classes,
                 R.layout.color_spinner_layout);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_layout); //Spinner Dropdown Text
@@ -101,188 +161,63 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             @Override
             public void onClick(View view) {
                 count1=1;count2=0;count3=0;count4=0;count5=0;count6=0;count7=0;count8=0;
-
-                sub1.setBackground(getResources().getDrawable(R.drawable.sub_select));
-                sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub1.setTextColor(Color.WHITE);
-                sub2.setTextColor(Color.BLACK);
-                sub3.setTextColor(Color.BLACK);
-                sub4.setTextColor(Color.BLACK);
-                sub5.setTextColor(Color.BLACK);
-                sub6.setTextColor(Color.BLACK);
-                sub7.setTextColor(Color.BLACK);
-                sub8.setTextColor(Color.BLACK);
+                subChangeEffect(count1);
             }
         });
         sub2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 count2=1;count1=0;count3=0;count4=0;count5=0;count6=0;count7=0;count8=0;
+                subChangeEffect(count2);
 
-                sub2.setBackground(getResources().getDrawable(R.drawable.sub_select));
-                sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub2.setTextColor(Color.WHITE);
-                sub1.setTextColor(Color.BLACK);
-                sub3.setTextColor(Color.BLACK);
-                sub4.setTextColor(Color.BLACK);
-                sub5.setTextColor(Color.BLACK);
-                sub6.setTextColor(Color.BLACK);
-                sub7.setTextColor(Color.BLACK);
-                sub8.setTextColor(Color.BLACK);
             }
         });
         sub3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 count3=1;count2=0;count1=0;count4=0;count5=0;count6=0;count7=0;count8=0;
+                subChangeEffect(count3);
 
-                sub3.setBackground(getResources().getDrawable(R.drawable.sub_select));
-                sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub3.setTextColor(Color.WHITE);
-                sub2.setTextColor(Color.BLACK);
-                sub1.setTextColor(Color.BLACK);
-                sub4.setTextColor(Color.BLACK);
-                sub5.setTextColor(Color.BLACK);
-                sub6.setTextColor(Color.BLACK);
-                sub7.setTextColor(Color.BLACK);
-                sub8.setTextColor(Color.BLACK);
             }
         });
         sub4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 count4=1;count2=0;count3=0;count1=0;count5=0;count6=0;count7=0;count8=0;
+                subChangeEffect(count4);
 
-                sub4.setBackground(getResources().getDrawable(R.drawable.sub_select));
-                sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub4.setTextColor(Color.WHITE);
-                sub2.setTextColor(Color.BLACK);
-                sub3.setTextColor(Color.BLACK);
-                sub1.setTextColor(Color.BLACK);
-                sub5.setTextColor(Color.BLACK);
-                sub6.setTextColor(Color.BLACK);
-                sub7.setTextColor(Color.BLACK);
-                sub8.setTextColor(Color.BLACK);
             }
         });
         sub5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 count5=1;count2=0;count3=0;count4=0;count1=0;count6=0;count7=0;count8=0;
+                subChangeEffect(count5);
 
-                sub5.setBackground(getResources().getDrawable(R.drawable.sub_select));
-                sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-
-                sub5.setTextColor(Color.WHITE);
-                sub2.setTextColor(Color.BLACK);
-                sub3.setTextColor(Color.BLACK);
-                sub4.setTextColor(Color.BLACK);
-                sub1.setTextColor(Color.BLACK);
-                sub6.setTextColor(Color.BLACK);
-                sub7.setTextColor(Color.BLACK);
-                sub8.setTextColor(Color.BLACK);
             }
         });
         sub6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 count6=1;count2=0;count3=0;count4=0;count5=0;count1=0;count7=0;count8=0;
+                subChangeEffect(count6);
 
-                sub6.setBackground(getResources().getDrawable(R.drawable.sub_select));
-                sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-
-                sub6.setTextColor(Color.WHITE);
-                sub2.setTextColor(Color.BLACK);
-                sub3.setTextColor(Color.BLACK);
-                sub4.setTextColor(Color.BLACK);
-                sub5.setTextColor(Color.BLACK);
-                sub1.setTextColor(Color.BLACK);
-                sub7.setTextColor(Color.BLACK);
-                sub8.setTextColor(Color.BLACK);
             }
         });
         sub7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 count7=1;count2=0;count3=0;count4=0;count5=0;count6=0;count1=0;count8=0;
+                subChangeEffect(count7);
 
-                sub7.setBackground(getResources().getDrawable(R.drawable.sub_select));
-                sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-
-                sub7.setTextColor(Color.WHITE);
-                sub2.setTextColor(Color.BLACK);
-                sub3.setTextColor(Color.BLACK);
-                sub4.setTextColor(Color.BLACK);
-                sub5.setTextColor(Color.BLACK);
-                sub6.setTextColor(Color.BLACK);
-                sub1.setTextColor(Color.BLACK);
-                sub8.setTextColor(Color.BLACK);
             }
         });
         sub8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 count8=1;count2=0;count3=0;count4=0;count5=0;count6=0;count7=0;count1=0;
+                subChangeEffect(count8);
 
-                sub8.setBackground(getResources().getDrawable(R.drawable.sub_select));
-                sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-                sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-
-                sub8.setTextColor(Color.WHITE);
-                sub2.setTextColor(Color.BLACK);
-                sub3.setTextColor(Color.BLACK);
-                sub4.setTextColor(Color.BLACK);
-                sub5.setTextColor(Color.BLACK);
-                sub6.setTextColor(Color.BLACK);
-                sub7.setTextColor(Color.BLACK);
-                sub1.setTextColor(Color.BLACK);
             }
         });
 
@@ -304,6 +239,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
         scheduleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(demo_choice.this, s, Toast.LENGTH_SHORT).show();
 
                 if(etName.getText().toString().trim().isEmpty()||etEmail.getText().toString().trim().isEmpty()||
                 etPhone.getText().toString().trim().isEmpty()|| times == null || dates == null){
@@ -347,35 +283,200 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
 
     }
 
-    private void setTime() {
-        TimePickerDialog timePickerDialog=new TimePickerDialog(demo_choice.this,kTimePickerListener,
-                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false);
-        timePickerDialog.show();
-    }
-
-    private void setDate() {
-        DatePickerDialog datePickerDialog=new DatePickerDialog(demo_choice.this,kDatePickerListener,year,month,date);
-        datePickerDialog.show();
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        sub1.setBackground(getResources().getDrawable(R.drawable.sub_select));
-        sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-        sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-        sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-        sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-        sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-        sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-        sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
-        sub1.setTextColor(Color.WHITE);
-        sub2.setTextColor(Color.BLACK);
-        sub3.setTextColor(Color.BLACK);
-        sub4.setTextColor(Color.BLACK);
-        sub5.setTextColor(Color.BLACK);
-        sub6.setTextColor(Color.BLACK);
-        sub7.setTextColor(Color.BLACK);
-        sub8.setTextColor(Color.BLACK);
+        subChangeEffect(count1);
+        spinnerSelectionEffect(i);
+    }
+
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+    private void subChangeEffect(int count) {
+        if(count==count1){
+            sub1.setBackground(getResources().getDrawable(R.drawable.sub_select));
+            sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub1.setTextColor(Color.WHITE);
+            sub2.setTextColor(Color.BLACK);
+            sub3.setTextColor(Color.BLACK);
+            sub4.setTextColor(Color.BLACK);
+            sub5.setTextColor(Color.BLACK);
+            sub6.setTextColor(Color.BLACK);
+            sub7.setTextColor(Color.BLACK);
+            sub8.setTextColor(Color.BLACK);
+            user.put("subject",sub1.getText().toString());
+        }
+        else if(count==count2){
+            sub2.setBackground(getResources().getDrawable(R.drawable.sub_select));
+            sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub2.setTextColor(Color.WHITE);
+            sub1.setTextColor(Color.BLACK);
+            sub3.setTextColor(Color.BLACK);
+            sub4.setTextColor(Color.BLACK);
+            sub5.setTextColor(Color.BLACK);
+            sub6.setTextColor(Color.BLACK);
+            sub7.setTextColor(Color.BLACK);
+            sub8.setTextColor(Color.BLACK);
+            user.put("subject",sub2.getText().toString());
+        }
+        else if(count==count3){
+            sub3.setBackground(getResources().getDrawable(R.drawable.sub_select));
+            sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub3.setTextColor(Color.WHITE);
+            sub2.setTextColor(Color.BLACK);
+            sub1.setTextColor(Color.BLACK);
+            sub4.setTextColor(Color.BLACK);
+            sub5.setTextColor(Color.BLACK);
+            sub6.setTextColor(Color.BLACK);
+            sub7.setTextColor(Color.BLACK);
+            sub8.setTextColor(Color.BLACK);
+            user.put("subject",sub3.getText().toString());
+        }
+        else if(count==count4){
+            sub4.setBackground(getResources().getDrawable(R.drawable.sub_select));
+            sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub4.setTextColor(Color.WHITE);
+            sub2.setTextColor(Color.BLACK);
+            sub3.setTextColor(Color.BLACK);
+            sub1.setTextColor(Color.BLACK);
+            sub5.setTextColor(Color.BLACK);
+            sub6.setTextColor(Color.BLACK);
+            sub7.setTextColor(Color.BLACK);
+            sub8.setTextColor(Color.BLACK);
+            user.put("subject",sub4.getText().toString());
+        }
+        else if(count==count5){
+            sub5.setBackground(getResources().getDrawable(R.drawable.sub_select));
+            sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+
+            sub5.setTextColor(Color.WHITE);
+            sub2.setTextColor(Color.BLACK);
+            sub3.setTextColor(Color.BLACK);
+            sub4.setTextColor(Color.BLACK);
+            sub1.setTextColor(Color.BLACK);
+            sub6.setTextColor(Color.BLACK);
+            sub7.setTextColor(Color.BLACK);
+            sub8.setTextColor(Color.BLACK);
+            user.put("subject",sub5.getText().toString());
+        }
+        else if(count==count6){
+            sub6.setBackground(getResources().getDrawable(R.drawable.sub_select));
+            sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+
+            sub6.setTextColor(Color.WHITE);
+            sub2.setTextColor(Color.BLACK);
+            sub3.setTextColor(Color.BLACK);
+            sub4.setTextColor(Color.BLACK);
+            sub5.setTextColor(Color.BLACK);
+            sub1.setTextColor(Color.BLACK);
+            sub7.setTextColor(Color.BLACK);
+            sub8.setTextColor(Color.BLACK);
+            user.put("subject",sub6.getText().toString());
+        }
+        else if(count==count7){
+            sub7.setBackground(getResources().getDrawable(R.drawable.sub_select));
+            sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub8.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+
+            sub7.setTextColor(Color.WHITE);
+            sub2.setTextColor(Color.BLACK);
+            sub3.setTextColor(Color.BLACK);
+            sub4.setTextColor(Color.BLACK);
+            sub5.setTextColor(Color.BLACK);
+            sub6.setTextColor(Color.BLACK);
+            sub1.setTextColor(Color.BLACK);
+            sub8.setTextColor(Color.BLACK);
+            user.put("subject",sub7.getText().toString());
+        }
+        else if(count==count8){
+            sub8.setBackground(getResources().getDrawable(R.drawable.sub_select));
+            sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub3.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub4.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub5.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub6.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub7.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+            sub1.setBackground(getResources().getDrawable(R.drawable.subjects_background));
+
+            sub8.setTextColor(Color.WHITE);
+            sub2.setTextColor(Color.BLACK);
+            sub3.setTextColor(Color.BLACK);
+            sub4.setTextColor(Color.BLACK);
+            sub5.setTextColor(Color.BLACK);
+            sub6.setTextColor(Color.BLACK);
+            sub7.setTextColor(Color.BLACK);
+            sub1.setTextColor(Color.BLACK);
+            user.put("subject",sub8.getText().toString());
+        }
+        demoClassRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+    private void spinnerSelectionEffect(int i) {
+        user.put("class",String.valueOf(i+1));
+        demoClassRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
         if(i>=0 && i<=4){
             low=1;mid=0;up=0;
             sub1.setVisibility(View.VISIBLE);
@@ -435,17 +536,24 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
         }
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
+    private void setTime() {
+        TimePickerDialog timePickerDialog=new TimePickerDialog(demo_choice.this,kTimePickerListener,
+                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false);
+        timePickerDialog.show();
     }
+
+    private void setDate() {
+        DatePickerDialog datePickerDialog=new DatePickerDialog(demo_choice.this,kDatePickerListener,year,month,date);
+        datePickerDialog.show();
+    }
+
     protected DatePickerDialog.OnDateSetListener kDatePickerListener=new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             year=year;
             month=month+1;
             date=dayOfMonth;
-            String s=String.valueOf(date)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
+            s=String.valueOf(date)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
             SimpleDateFormat format1=new SimpleDateFormat("dd/MM/yyyy");
             Date d1=null;
             try {

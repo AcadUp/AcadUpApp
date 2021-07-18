@@ -399,6 +399,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalFour2">
 
                     <ImageView
+                        android:src="@drawable/maths"
                         android:id="@+id/subFourImg1"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
@@ -416,6 +417,7 @@
                     app:layout_constraintTop_toBottomOf="@id/guidelineHorizontalFour1"
                     app:layout_constraintBottom_toTopOf="@id/guidelineHorizontalFour2" >
                     <ImageView
+                        android:src="@drawable/coding"
                         android:id="@+id/subFourImg2"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"

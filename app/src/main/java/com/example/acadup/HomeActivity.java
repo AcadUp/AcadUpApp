@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.acadup.Adapters.CustomExpandableAdapter;
 import com.example.acadup.Models.ExpandableModel;
 import com.example.acadup.ui.DashboardFragment;
@@ -262,19 +263,32 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     Fragment selectedFragment=null;
                     switch (item.getItemId()){
                         case R.id.navigation_home:
-                            selectedFragment=new HomeFragment();
+//                            selectedFragment=new HomeFragment();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
+                            spinner.setSelection(0);
+                            spinner.setEnabled(true);
+
                             break;
                         case R.id.navigation_test:
-                            selectedFragment=new TestFragment();
+//                            selectedFragment=new TestFragment();
+                            spinner.setSelection(0);
+                            spinner.setEnabled(false);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new TestFragment()).commit();
                             break;
                         case R.id.navigation_dashboard:
-                            selectedFragment=new DashboardFragment();
+//                            selectedFragment=new DashboardFragment();
+                            spinner.setSelection(0);
+                            spinner.setEnabled(false);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DashboardFragment()).commit();
                             break;
                         case R.id.navigation_notifications:
-                            selectedFragment=new NotificationsFragment();
+//                            selectedFragment=new NotificationsFragment();
+                            spinner.setSelection(0);
+                            spinner.setEnabled(false);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new NotificationsFragment()).commit();
                             break;
                     }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+//                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 }
             };
@@ -284,6 +298,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
         subView.spinnerClicked(i);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,homeFragment).commit();
+
     }
 
     @Override
