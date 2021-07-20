@@ -1,0 +1,428 @@
+Index: app/src/main/java/com/example/acadup/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.acadup;\r\n\r\nimport android.content.Intent;\r\nimport android.graphics.Color;\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.support.annotation.Nullable;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.ImageButton;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.fragment.app.FragmentManager;\r\nimport androidx.swiperefreshlayout.widget.SwipeRefreshLayout;\r\nimport androidx.viewpager2.widget.ViewPager2;\r\n\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.android.material.tabs.TabLayout;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.firestore.DocumentReference;\r\nimport com.google.firebase.firestore.DocumentSnapshot;\r\nimport com.google.firebase.firestore.EventListener;\r\nimport com.google.firebase.firestore.FirebaseFirestore;\r\nimport com.google.firebase.firestore.FirebaseFirestoreException;\r\nimport com.google.firebase.storage.FirebaseStorage;\r\nimport com.google.firebase.storage.StorageReference;\r\nimport com.squareup.picasso.Picasso;\r\n\r\nimport de.hdodenhof.circleimageview.CircleImageView;\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n    TextView logoutBtn,editProfile,nameTv,classTv;\r\n    SwipeRefreshLayout swipeRefreshLayout;\r\n    FirebaseAuth firebaseAuth;\r\n    CircleImageView profileImageView;\r\n    TabLayout tabLayout;\r\n    ViewPager2 viewPager2;\r\n    FragmentAdapter fragmentAdapter;\r\n    FirebaseAuth fAuth;\r\n    FirebaseFirestore fStore;\r\n    StorageReference storageReference;\r\n    String userId;\r\n    FirebaseUser user;\r\n    final String[] email = new String[1];\r\n    final String[] phone = new String[1];\r\n\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.profile_activity);\r\n        logoutBtn=findViewById(R.id.logoutBtn);\r\n        editProfile=findViewById(R.id.edirprofile);\r\n        nameTv=findViewById(R.id.name);\r\n        classTv=findViewById(R.id.classTv);\r\n        swipeRefreshLayout=findViewById(R.id.refreshLayout);\r\n        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {\r\n            @Override\r\n            public void onRefresh() {\r\n                swipeRefreshLayout.setRefreshing(false);\r\n                StorageReference profileRef = storageReference.child(\"users/\"+fAuth.getCurrentUser().getUid()+\"/profile.jpg\");\r\n                profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {\r\n                    @Override\r\n                    public void onSuccess(Uri uri) {\r\n                        Picasso.get().load(uri).into(profileImageView);\r\n                        profileImageView.setRotation(90);\r\n                    }\r\n                });\r\n\r\n                userId = fAuth.getCurrentUser().getUid();\r\n                user = fAuth.getCurrentUser();\r\n                DocumentReference documentReference = fStore.collection(\"users\").document(userId);\r\n                documentReference.addSnapshotListener(MainActivity.this, new EventListener<DocumentSnapshot>() {\r\n                    @Override\r\n                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {\r\n                        if(documentSnapshot.exists()){\r\n                            nameTv.setText(documentSnapshot.getString(\"firstName\")+\" \"+documentSnapshot.getString(\"lastName\"));\r\n                            classTv.setText(documentSnapshot.getString(\"class\"));\r\n                            phone[0] =documentSnapshot.getString(\"phone\");\r\n                            email[0] =documentSnapshot.getString(\"email\");\r\n                        }else {\r\n                            Log.d(\"tag\", \"onEvent: Document do not exists\");\r\n                        }\r\n                    }\r\n                });\r\n            }\r\n        });\r\n        profileImageView = findViewById(R.id.profileImage);\r\n       // changeProfileImage = findViewById(R.id.changeProfile);\r\n\r\n        fAuth = FirebaseAuth.getInstance();\r\n        fStore = FirebaseFirestore.getInstance();\r\n        storageReference = FirebaseStorage.getInstance().getReference();\r\n\r\n        StorageReference profileRef = storageReference.child(\"users/\"+fAuth.getCurrentUser().getUid()+\"/profile.jpg\");\r\n        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {\r\n            @Override\r\n            public void onSuccess(Uri uri) {\r\n                Picasso.get().load(uri).into(profileImageView);\r\n                profileImageView.setRotation(90);\r\n            }\r\n        });\r\n\r\n        userId = fAuth.getCurrentUser().getUid();\r\n        user = fAuth.getCurrentUser();\r\n        DocumentReference documentReference = fStore.collection(\"users\").document(userId);\r\n        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {\r\n            @Override\r\n            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {\r\n                if(documentSnapshot.exists()){\r\n\r\n                    nameTv.setText(documentSnapshot.getString(\"firstName\")+\" \"+documentSnapshot.getString(\"lastName\"));\r\n                    classTv.setText(documentSnapshot.getString(\"class\"));\r\n                    phone[0] =documentSnapshot.getString(\"phone\");\r\n                    email[0] =documentSnapshot.getString(\"email\");\r\n                }else {\r\n                    Log.d(\"tag\", \"onEvent: Document do not exists\");\r\n                }\r\n            }\r\n        });\r\n\r\n        logoutBtn.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                firebaseAuth.getInstance().signOut();\r\n                startActivity(new Intent(MainActivity.this,LoginActivity.class));\r\n                finish();\r\n            }\r\n        });\r\n\r\n        editProfile.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                Intent intent=new Intent(MainActivity.this,UpdateProfile.class);\r\n                String name=nameTv.getText().toString();\r\n                String[] firstLastName=name.split(\" \",2);\r\n                intent.putExtra(\"firstName\",firstLastName[0]);\r\n                intent.putExtra(\"lastName\",firstLastName[1]);\r\n                intent.putExtra(\"email\",email[0]);\r\n                intent.putExtra(\"phone\",phone[0]);\r\n                intent.putExtra(\"class\",classTv.getText().toString());\r\n                startActivity(intent);\r\n            }\r\n        });\r\n\r\n        tabLayout=findViewById(R.id.tab_layout);\r\n        viewPager2=findViewById(R.id.viewpager);\r\n        FragmentManager fm=getSupportFragmentManager();\r\n        fragmentAdapter =new FragmentAdapter(fm,getLifecycle());\r\n        viewPager2.setAdapter(fragmentAdapter);\r\n\r\n        tabLayout.addTab(tabLayout.newTab().setText(\"Status\"));\r\n        tabLayout.addTab(tabLayout.newTab().setText(\"Tests\"));\r\n        tabLayout.addTab(tabLayout.newTab().setText(\"Question\"));\r\n        tabLayout.addTab(tabLayout.newTab().setText(\"Docs/Videos\"));\r\n        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {\r\n            @Override\r\n            public void onTabSelected(TabLayout.Tab tab) {\r\n                viewPager2.setCurrentItem(tab.getPosition());\r\n            }\r\n\r\n            @Override\r\n            public void onTabUnselected(TabLayout.Tab tab) {\r\n\r\n            }\r\n\r\n            @Override\r\n            public void onTabReselected(TabLayout.Tab tab) {\r\n\r\n            }\r\n        });\r\n        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {\r\n            @Override\r\n            public void onPageSelected(int position) {\r\n                 tabLayout.selectTab(tabLayout.getTabAt(position));\r\n                 tabLayout.setSelectedTabIndicatorColor(Color.parseColor(\"#C11515\"));\r\n              }\r\n        });\r\n\r\n\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/acadup/MainActivity.java	(revision 7140e22a4e7aa013b325ccac225a6454f7b5084b)
++++ app/src/main/java/com/example/acadup/MainActivity.java	(date 1626624972667)
+@@ -33,7 +33,6 @@
+ public class MainActivity extends AppCompatActivity {
+     TextView logoutBtn,editProfile,nameTv,classTv;
+     SwipeRefreshLayout swipeRefreshLayout;
+-    FirebaseAuth firebaseAuth;
+     CircleImageView profileImageView;
+     TabLayout tabLayout;
+     ViewPager2 viewPager2;
+@@ -124,7 +123,7 @@
+         logoutBtn.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+-                firebaseAuth.getInstance().signOut();
++                FirebaseAuth.getInstance().signOut();
+                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                 finish();
+             }
+@@ -151,7 +150,7 @@
+         fragmentAdapter =new FragmentAdapter(fm,getLifecycle());
+         viewPager2.setAdapter(fragmentAdapter);
+ 
+-        tabLayout.addTab(tabLayout.newTab().setText("Status"));
++        tabLayout.addTab(tabLayout.newTab().setText("Stats"));
+         tabLayout.addTab(tabLayout.newTab().setText("Tests"));
+         tabLayout.addTab(tabLayout.newTab().setText("Question"));
+         tabLayout.addTab(tabLayout.newTab().setText("Docs/Videos"));
+Index: app/src/main/java/com/example/acadup/ui/HomeFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.acadup.ui;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.text.Html;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.ImageView;\r\nimport android.widget.LinearLayout;\r\nimport android.widget.TextView;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.widget.AppCompatButton;\r\nimport androidx.cardview.widget.CardView;\r\nimport androidx.constraintlayout.widget.ConstraintLayout;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\nimport androidx.viewpager2.widget.ViewPager2;\r\n\r\nimport com.bumptech.glide.Glide;\r\nimport com.example.acadup.Adapters.HotCourseAdapter;\r\nimport com.example.acadup.Adapters.PracticeTestAdapter;\r\nimport com.example.acadup.Adapters.SliderAdapter;\r\nimport com.example.acadup.HomeActivity;\r\nimport com.example.acadup.MainActivity;\r\nimport com.example.acadup.Models.HotCourseModel;\r\nimport com.example.acadup.Models.PracticeTestModel;\r\nimport com.example.acadup.Models.SliderModel;\r\nimport com.example.acadup.Models.SubjectsModel;\r\nimport com.example.acadup.R;\r\nimport com.example.acadup.SubjectOptions;\r\nimport com.example.acadup.SubjectView;\r\nimport com.example.acadup.payment_inquiry;\r\n\r\nimport java.util.ArrayList;\r\n\r\nimport static com.example.acadup.LoadData.ApplicationClass.lowerClass;\r\nimport static com.example.acadup.LoadData.ApplicationClass.midClass;\r\nimport static com.example.acadup.LoadData.ApplicationClass.upperClass;\r\n\r\npublic class HomeFragment extends Fragment implements SubjectView {\r\n    ConstraintLayout demoActivity;\r\n    AppCompatButton moreSubjectBtn;\r\n    RecyclerView hotCourseRecyclerView,practiceTestRecyclerView,whyAcadupRecyclerView,subjectRecyclerView;\r\n    ArrayList<HotCourseModel> hotCourseModelArrayList;\r\n    ArrayList<PracticeTestModel> practiceTestModelArrayList;\r\n    RecyclerView.LayoutManager layoutManagerHotCourse,layoutManagerPracticeTest,layoutManagerWhyAcadup,layoutManagerSubject;\r\n    HotCourseAdapter hotCourseAdapter;\r\n    PracticeTestAdapter practiceTestAdapter;\r\n    HotCourseAdapter.ItemClicked hotCourseItem;\r\n    PracticeTestAdapter.ItemClicked practiceTestItem;\r\n    LinearLayout dotsLayout;\r\n    SliderAdapter sliderAdapter;\r\n    ViewPager2 pager2;\r\n    ArrayList<SliderModel> sliderModelArrayList;\r\n    TextView[] dots;\r\n    ImageView subEightImg1,subEightImg2,subEightImg3,subEightImg4,subEightImg5,subEightImg6,subEightImg7,subEightImg8;\r\n    ImageView subFourImg1,subFourImg2,subFourImg3,subFourImg4;\r\n    ImageView subSixImg1,subSixImg2,subSixImg3,subSixImg4,subSixImg5,subSixImg6;\r\n    ConstraintLayout consEight,consFour,consSix;\r\n    int showMoreCount=0;\r\n    int consSelect5=0,consSelect6=0,consSelect8=0;\r\n    CardView cardView6;\r\n    ArrayList<SubjectsModel> lowClass1,middleClass1,upClass1;\r\n\r\n    private View root;\r\n    public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {\r\n\r\n        root= inflater.inflate(R.layout.fragment_home, container, false);\r\n        lowClass1=lowerClass;\r\n        middleClass1=midClass;\r\n        upClass1=upperClass;\r\n\r\n        moreSubjectBtn=root.findViewById(R.id.moreSubButton);\r\n\r\n        demoActivity=root.findViewById(R.id.demo);\r\n        hotCourseRecyclerView=root.findViewById(R.id.hotCourseRecyclerView);\r\n        practiceTestRecyclerView=root.findViewById(R.id.practiceTestRecyclerView);\r\n        hotCourseModelArrayList=new ArrayList<>();\r\n        practiceTestModelArrayList=new ArrayList<>();\r\n        pager2=root.findViewById(R.id.view_pager2);\r\n        dotsLayout=root.findViewById(R.id.dots_container);\r\n//        Eight Img\r\n        subEightImg1=root.findViewById(R.id.subEightImg1);\r\n        subEightImg2=root.findViewById(R.id.subEightImg2);\r\n        subEightImg3=root.findViewById(R.id.subEightImg3);\r\n        subEightImg4=root.findViewById(R.id.subEightImg4);\r\n        subEightImg5=root.findViewById(R.id.subEightImg5);\r\n        subEightImg6=root.findViewById(R.id.subEightImg6);\r\n        subEightImg7=root.findViewById(R.id.subEightImg7);\r\n        subEightImg8=root.findViewById(R.id.subEightImg8);\r\n//        Four Img\r\n        subFourImg1=root.findViewById(R.id.subFourImg1);\r\n        subFourImg2=root.findViewById(R.id.subFourImg2);\r\n        subFourImg3=root.findViewById(R.id.subFourImg3);\r\n        subFourImg4=root.findViewById(R.id.subFourImg4);\r\n//      Six Img\r\n        subSixImg1=root.findViewById(R.id.subSixImg1);\r\n        subSixImg2=root.findViewById(R.id.subSixImg2);\r\n        subSixImg3=root.findViewById(R.id.subSixImg3);\r\n        subSixImg4=root.findViewById(R.id.subSixImg4);\r\n        subSixImg5=root.findViewById(R.id.subSixImg5);\r\n        subSixImg6=root.findViewById(R.id.subSixImg6);\r\n\r\n        cardView6=root.findViewById(R.id.cardViewSix8);\r\n        sliderModelArrayList=new ArrayList<>();\r\n\r\n        consEight=root.findViewById(R.id.consEight);\r\n        consFour=root.findViewById(R.id.consFour);\r\n        consSix=root.findViewById(R.id.consSix);\r\n\r\n\r\n\r\n        consEight.setVisibility(View.GONE);\r\n\r\n        demoActivity.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                startActivity(new Intent(getContext(), payment_inquiry.class));\r\n            }\r\n        });\r\n\r\n        moreSubjectBtn.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                if(showMoreCount==0) {\r\n                    showMoreCount=1;\r\n                    moreSubjectBtn.setText(\"See less subjects\");\r\n                    if(consSelect5==1){\r\n                        consSix.setVisibility(View.VISIBLE);\r\n                        consFour.setVisibility(View.GONE);\r\n                        consEight.setVisibility(View.GONE);\r\n                        cardView6.setVisibility(View.GONE);\r\n\r\n                        Glide.with(getContext()).load(upClass1.get(0).getImage()).into(subSixImg1);\r\n                        Glide.with(getContext()).load(upClass1.get(1).getImage()).into(subSixImg2);\r\n                        Glide.with(getContext()).load(upClass1.get(2).getImage()).into(subSixImg3);\r\n                        Glide.with(getContext()).load(upClass1.get(3).getImage()).into(subSixImg4);\r\n                        Glide.with(getContext()).load(upClass1.get(4).getImage()).into(subSixImg5);\r\n\r\n                    }\r\n                    else if(consSelect6==1){\r\n                        consSix.setVisibility(View.VISIBLE);\r\n                        consFour.setVisibility(View.GONE);\r\n                        consEight.setVisibility(View.GONE);\r\n                        cardView6.setVisibility(View.VISIBLE);\r\n                        Glide.with(getContext()).load(middleClass1.get(0).getImage()).into(subSixImg1);\r\n                        Glide.with(getContext()).load(middleClass1.get(1).getImage()).into(subSixImg2);\r\n                        Glide.with(getContext()).load(middleClass1.get(2).getImage()).into(subSixImg3);\r\n                        Glide.with(getContext()).load(middleClass1.get(3).getImage()).into(subSixImg4);\r\n                        Glide.with(getContext()).load(middleClass1.get(4).getImage()).into(subSixImg5);\r\n                        Glide.with(getContext()).load(middleClass1.get(5).getImage()).into(subSixImg6);\r\n                    }\r\n                    else if(consSelect8==1){\r\n                        consEight.setVisibility(View.VISIBLE);\r\n                        consFour.setVisibility(View.GONE);\r\n                        consSix.setVisibility(View.GONE);\r\n                        cardView6.setVisibility(View.VISIBLE);\r\n\r\n                        Glide.with(getContext()).load(lowClass1.get(0).getImage()).into(subEightImg1);\r\n                        Glide.with(getContext()).load(lowClass1.get(1).getImage()).into(subEightImg2);\r\n                        Glide.with(getContext()).load(lowClass1.get(2).getImage()).into(subEightImg3);\r\n                        Glide.with(getContext()).load(lowClass1.get(3).getImage()).into(subEightImg4);\r\n                        Glide.with(getContext()).load(lowClass1.get(4).getImage()).into(subEightImg5);\r\n                        Glide.with(getContext()).load(lowClass1.get(5).getImage()).into(subEightImg6);\r\n                        Glide.with(getContext()).load(lowClass1.get(6).getImage()).into(subEightImg7);\r\n                        Glide.with(getContext()).load(lowClass1.get(7).getImage()).into(subEightImg8);\r\n                    }\r\n\r\n                }\r\n                else{\r\n                    showMoreCount=0;\r\n                    moreSubjectBtn.setText(\"See more subjects\");\r\n\r\n                    if(consSelect8==1){\r\n                        Glide.with(getContext()).load(lowClass1.get(0).getImage()).into(subFourImg1);\r\n                        Glide.with(getContext()).load(lowClass1.get(1).getImage()).into(subFourImg2);\r\n                        Glide.with(getContext()).load(lowClass1.get(2).getImage()).into(subFourImg3);\r\n                        Glide.with(getContext()).load(lowClass1.get(3).getImage()).into(subFourImg4);\r\n                        consFour.setVisibility(View.VISIBLE);\r\n                        consEight.setVisibility(View.GONE);\r\n                        consSix.setVisibility(View.GONE);\r\n                    }\r\n                    if(consSelect6==1){\r\n                        Glide.with(getContext()).load(middleClass1.get(0).getImage()).into(subFourImg1);\r\n                        Glide.with(getContext()).load(middleClass1.get(1).getImage()).into(subFourImg2);\r\n                        Glide.with(getContext()).load(middleClass1.get(2).getImage()).into(subFourImg3);\r\n                        Glide.with(getContext()).load(middleClass1.get(3).getImage()).into(subFourImg4);\r\n                        consFour.setVisibility(View.VISIBLE);\r\n                        consEight.setVisibility(View.GONE);\r\n                        consSix.setVisibility(View.GONE);\r\n                    }\r\n                    if(consSelect5==1){\r\n                        Glide.with(getContext()).load(upClass1.get(0).getImage()).into(subFourImg1);\r\n                        Glide.with(getContext()).load(upClass1.get(1).getImage()).into(subFourImg2);\r\n                        Glide.with(getContext()).load(upClass1.get(2).getImage()).into(subFourImg3);\r\n                        Glide.with(getContext()).load(upClass1.get(3).getImage()).into(subFourImg4);\r\n                        consFour.setVisibility(View.VISIBLE);\r\n                        consEight.setVisibility(View.GONE);\r\n                        consSix.setVisibility(View.GONE);\r\n                    }\r\n                }\r\n            }\r\n        });\r\n\r\n        //hot course some dummy element added\r\n        hotCourseModelArrayList.add(new HotCourseModel(\"Hot Course 1\"));\r\n        hotCourseModelArrayList.add(new HotCourseModel(\"Hot Course 2\"));\r\n        hotCourseModelArrayList.add(new HotCourseModel(\"Hot Course 3\"));\r\n        hotCourseModelArrayList.add(new HotCourseModel(\"Hot Course 4\"));\r\n        hotCourseModelArrayList.add(new HotCourseModel(\"Hot Course 5\"));\r\n        hotCourseModelArrayList.add(new HotCourseModel(\"Hot Course 6\"));\r\n        //in practice test some dummy data added\r\n        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));\r\n        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));\r\n        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));\r\n        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));\r\n        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));\r\n        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));\r\n\r\n        //slide recyclerView dummy data added\r\n        sliderModelArrayList.add(new SliderModel(R.drawable.sample1));\r\n        sliderModelArrayList.add(new SliderModel(R.drawable.sample2));\r\n        sliderModelArrayList.add(new SliderModel(R.drawable.sample3));\r\n        sliderModelArrayList.add(new SliderModel(R.drawable.sample4));\r\n\r\n\r\n        //hot course adapter, layout Manager set and itemClick of hot course\r\n        hotCourseItem=new HotCourseAdapter.ItemClicked() {\r\n            @Override\r\n            public void onItemClicked(int index) {\r\n                Toast.makeText(getContext(), \"Hot Course \"+(index+1), Toast.LENGTH_SHORT).show();\r\n            }\r\n        };\r\n        hotCourseAdapter=new HotCourseAdapter(getContext(),hotCourseModelArrayList,hotCourseItem);\r\n        layoutManagerHotCourse=new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);\r\n        hotCourseRecyclerView.setLayoutManager(layoutManagerHotCourse);\r\n        hotCourseRecyclerView.setAdapter(hotCourseAdapter);\r\n\r\n        //practice test adapter,layout Manager set and itemClick of practice test\r\n\r\n        practiceTestItem=new PracticeTestAdapter.ItemClicked() {\r\n            @Override\r\n            public void onItemClicked(int index) {\r\n                startActivity(new Intent(getActivity().getApplicationContext(), SubjectOptions.class));\r\n                Toast.makeText(getActivity().getApplicationContext(), \"Profile\", Toast.LENGTH_SHORT).show();\r\n            }\r\n        };\r\n        practiceTestAdapter=new PracticeTestAdapter(getContext(),practiceTestModelArrayList,practiceTestItem);\r\n        layoutManagerPracticeTest=new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);\r\n        practiceTestRecyclerView.setLayoutManager(layoutManagerPracticeTest);\r\n        practiceTestRecyclerView.setAdapter(practiceTestAdapter);\r\n\r\n\r\n        //slide recyclerview adapter set and also dots are set\r\n        sliderAdapter=new SliderAdapter(sliderModelArrayList);\r\n        pager2.setAdapter(sliderAdapter);\r\n\r\n        dots=new TextView[sliderModelArrayList.size()];\r\n        dotsIndicator();\r\n\r\n        pager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {\r\n            @Override\r\n            public void onPageSelected(int position) {\r\n                selectedIndicator(position);\r\n                super.onPageSelected(position);\r\n            }\r\n        });\r\n//        science.setOnClickListener(new View.OnClickListener() {\r\n//            @Override\r\n//            public void onClick(View view) {\r\n//                startActivity(new Intent(getActivity().getApplicationContext(),SubjectOptions.class));\r\n//            }\r\n//        });\r\n\r\n        return root;\r\n    }\r\n\r\n\r\n    private void selectedIndicator(int position) {\r\n            for(int i=0;i<dots.length;i++){\r\n                if(i==position){\r\n                    dots[i].setTextColor(getResources().getColor(R.color.colorPrimaryDark));\r\n                }\r\n                else{\r\n                    dots[i].setTextColor(getResources().getColor(R.color.colorGray));\r\n                }\r\n            }\r\n    }\r\n\r\n    private void dotsIndicator() {\r\n        for(int i=0;i<dots.length;i++){\r\n            dots[i]=new TextView(getContext());\r\n            dots[i].setText(Html.fromHtml(\"&#9679;\"));\r\n            dots[i].setTextSize(20);\r\n            dotsLayout.addView(dots[i]);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void spinnerClicked(int index) {\r\n//        Toast.makeText(getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();\r\n        if(index>=0&& index<=4){\r\n            consSelect8=1;consSelect5=0;consSelect6=0;\r\n            consEight.setVisibility(View.GONE);\r\n            consFour.setVisibility(View.VISIBLE);\r\n            consSix.setVisibility(View.GONE);\r\n            showMoreCount=0;\r\n            moreSubjectBtn.setText(\"See more subjects\");\r\n\r\n            Glide.with(getContext()).load(lowClass1.get(0).getImage()).into(subFourImg1);\r\n            Glide.with(getContext()).load(lowClass1.get(1).getImage()).into(subFourImg2);\r\n            Glide.with(getContext()).load(lowClass1.get(2).getImage()).into(subFourImg3);\r\n            Glide.with(getContext()).load(lowClass1.get(3).getImage()).into(subFourImg4);\r\n        }\r\n        else if(index>=5 && index<=9){\r\n            consSelect6=1;consSelect8=0;consSelect5=0;\r\n            consEight.setVisibility(View.GONE);\r\n            consFour.setVisibility(View.VISIBLE);\r\n            consSix.setVisibility(View.GONE);\r\n            showMoreCount=0;\r\n            moreSubjectBtn.setText(\"See more subjects\");\r\n\r\n            Glide.with(getContext()).load(middleClass1.get(0).getImage()).into(subFourImg1);\r\n            Glide.with(getContext()).load(middleClass1.get(1).getImage()).into(subFourImg2);\r\n            Glide.with(getContext()).load(middleClass1.get(2).getImage()).into(subFourImg3);\r\n            Glide.with(getContext()).load(middleClass1.get(3).getImage()).into(subFourImg4);\r\n        }\r\n        else if(index>=10 && index<=11){\r\n            consSelect5=1;consSelect8=0;consSelect6=0;\r\n            consEight.setVisibility(View.GONE);\r\n            consFour.setVisibility(View.VISIBLE);\r\n            consSix.setVisibility(View.GONE);\r\n            showMoreCount=0;\r\n            moreSubjectBtn.setText(\"See more subjects\");\r\n\r\n            Glide.with(getContext()).load(upClass1.get(0).getImage()).into(subFourImg1);\r\n            Glide.with(getContext()).load(upClass1.get(1).getImage()).into(subFourImg2);\r\n            Glide.with(getContext()).load(upClass1.get(2).getImage()).into(subFourImg3);\r\n            Glide.with(getContext()).load(upClass1.get(3).getImage()).into(subFourImg4);\r\n        }\r\n    }\r\n    /**/\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/acadup/ui/HomeFragment.java	(revision 7140e22a4e7aa013b325ccac225a6454f7b5084b)
++++ app/src/main/java/com/example/acadup/ui/HomeFragment.java	(date 1626622671469)
+@@ -126,6 +126,7 @@
+         moreSubjectBtn.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
++                Toast.makeText(getContext(),"moreSubject",Toast.LENGTH_LONG).show();
+                 if(showMoreCount==0) {
+                     showMoreCount=1;
+                     moreSubjectBtn.setText("See less subjects");
+@@ -302,7 +303,7 @@
+ 
+     @Override
+     public void spinnerClicked(int index) {
+-//        Toast.makeText(getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
++//      Toast.makeText(getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
+         if(index>=0&& index<=4){
+             consSelect8=1;consSelect5=0;consSelect6=0;
+             consEight.setVisibility(View.GONE);
+Index: app/src/main/res/layout/fragment_dashboard.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".ui.DashboardFragment\">\r\n\r\n    <TextView\r\n        android:id=\"@+id/text_dashboard\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:layout_marginStart=\"8dp\"\r\n        android:textAlignment=\"center\"\r\n        android:textSize=\"20sp\"\r\n        app:layout_constraintBottom_toBottomOf=\"parent\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintStart_toStartOf=\"parent\"\r\n        app:layout_constraintTop_toTopOf=\"parent\" />\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_dashboard.xml	(revision 7140e22a4e7aa013b325ccac225a6454f7b5084b)
++++ app/src/main/res/layout/fragment_dashboard.xml	(date 1626622671401)
+@@ -1,20 +1,290 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+-    android:layout_width="match_parent"
+-    android:layout_height="match_parent"
+-    tools:context=".ui.DashboardFragment">
++    android:background="@drawable/bg"
++    android:id="@+id/refreshLayout"
++    tools:context=".ui.DashboardFragment"
++    android:layout_height="match_parent">
++    <LinearLayout
++        android:layout_width="match_parent"
++        android:orientation="vertical"
++        android:layout_height="match_parent">
++        <RelativeLayout
++            android:layout_width="match_parent"
++            android:layout_marginTop="15dp"
++            android:layout_height="wrap_content">
++
++
++            <de.hdodenhof.circleimageview.CircleImageView
++                android:id="@+id/profileImage"
++                app:civ_border_width="1dp"
++                android:elevation="10dp"
++                app:civ_border_color="@color/teal_700"
++                android:layout_width="70dp"
++                android:layout_height="70dp"
++                android:layout_centerHorizontal="true"
++                android:src="@drawable/userr" />
++            <TextView
++                android:id="@+id/logoutBtn"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:gravity="end"
++                android:textStyle="bold"
++                android:layout_margin="10dp"
++                android:textColor="#FFFFFF"
++                android:drawableEnd="@drawable/logout"
++                android:text="Logout"/>
++        </RelativeLayout>
++
++        <LinearLayout
++            android:layout_width="match_parent"
++            android:gravity="center_horizontal"
++            android:layout_height="wrap_content"
++            android:orientation="vertical">
++
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:layout_marginTop="20dp"
++                android:gravity="center"
++                android:orientation="vertical"
++                android:weightSum="2">
++
++                <TextView
++                    android:layout_centerInParent="true"
++                    android:id="@+id/name"
++                    android:background="@drawable/edit_textbg"
++                    android:layout_width="wrap_content"
++                    android:padding="10dp"
++                    android:layout_height="50dp"
++                    android:fontFamily="@font/lato_black"
++                    android:text="Ashish Kumar"
++                    android:textAlignment="center"
++                    android:textColor="@color/teal_700"
++                    android:textSize="24dp" />
++
++                <LinearLayout
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:gravity="center"
++                    android:orientation="horizontal">
++
++                    <TextView
++                        android:layout_marginLeft="10dp"
++                        android:layout_toRightOf="@+id/name"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_centerVertical="true"
++                        android:fontFamily="@font/lato_bold"
++                        android:text="Class-"
++                        android:id="@+id/tv"
++                        android:gravity="center_vertical"
++                        android:textColor="#F44336"
++                        android:textSize="20dp" />
++                    <TextView
++                        android:layout_toRightOf="@+id/name"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:layout_centerVertical="true"
++                        android:fontFamily="@font/lato_bold"
++                        android:text="8"
++                        android:id="@+id/classTv"
++                        android:gravity="center_vertical"
++                        android:textColor="#F44336"
++                        android:textSize="20dp" />
++                </LinearLayout>
++            </LinearLayout>
++
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:layout_marginTop="20dp"
++                android:orientation="horizontal"
++                android:paddingLeft="20dp"
++                android:paddingRight="20dp"
++                android:weightSum="3">
++
++                <TextView
++                    android:id="@+id/edirprofile"
++                    android:layout_width="match_parent"
++                    android:layout_height="match_parent"
++                    android:layout_weight="1"
++                    android:gravity="center"
++                    android:fontFamily="@font/stolzl_medium"
++                    android:text="Edit Profile"
++                    android:textAlignment="center"
++                    android:textColor="@color/colorBlack"
++                    android:textSize="13dp" />
++
++                <View
++                    android:layout_width="2dp"
++                    android:layout_height="20dp"
++                    android:layout_marginTop="2dp"
++                    android:background="#686868" />
+ 
+-    <TextView
+-        android:id="@+id/text_dashboard"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:layout_marginStart="8dp"
+-        android:textAlignment="center"
+-        android:textSize="20sp"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent" />
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
++                <TextView
++                    android:id="@+id/courses"
++                    android:layout_width="match_parent"
++                    android:layout_height="match_parent"
++                    android:layout_weight="1"
++                    android:gravity="center"
++                    android:fontFamily="@font/stolzl_medium"
++                    android:text="Courses"
++                    android:textAlignment="center"
++                    android:textColor="@color/colorBlack"
++                    android:textSize="13dp" />
++
++                <View
++                    android:layout_width="2dp"
++                    android:layout_height="20dp"
++                    android:layout_marginTop="2dp"
++                    android:background="#686868" />
++
++                <TextView
++                    android:id="@+id/upgrade"
++                    android:layout_width="match_parent"
++                    android:layout_height="match_parent"
++                    android:layout_weight="1"
++                    android:gravity="center"
++                    android:fontFamily="@font/stolzl_medium"
++                    android:text="Upgrade"
++                    android:textAlignment="center"
++                    android:textColor="#D6B712"
++                    android:textSize="13dp" />
++            </LinearLayout>
++
++            <LinearLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:padding="10dp"
++                android:layout_marginTop="30dp"
++                android:orientation="horizontal"
++                android:weightSum="4">
++
++                <TextView
++                    android:id="@+id/level"
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:fontFamily="@font/lato_black"
++                    android:text="X"
++                    android:gravity="center"
++                    android:textAlignment="center"
++                    android:textColor="@color/colorBlack"
++                    android:textSize="18dp" />
++
++
++                <TextView
++                    android:id="@+id/followers"
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:fontFamily="@font/lato_black"
++                    android:text="Y"
++                    android:gravity="center"
++                    android:textAlignment="center"
++                    android:textColor="@color/colorBlack"
++                    android:textSize="18dp" />
++
++                <TextView
++                    android:id="@+id/following"
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:fontFamily="@font/lato_black"
++                    android:text="Z"
++                    android:gravity="center"
++                    android:textAlignment="center"
++                    android:textColor="@color/colorBlack"
++                    android:textSize="18dp" />
++
++                <TextView
++                    android:id="@+id/coins"
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:fontFamily="@font/lato_black"
++                    android:text="38"
++                    android:gravity="center"
++                    android:textAlignment="center"
++                    android:textColor="@color/colorBlack"
++                    android:textSize="18dp" />
++            </LinearLayout>
++
++            <LinearLayout
++
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:padding="10dp"
++                android:layout_marginTop="10dp"
++                android:orientation="horizontal"
++                android:weightSum="4">
++
++                <TextView
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:gravity="center"
++                    android:fontFamily="@font/lato_bold"
++                    android:text="Level"
++                    android:textAlignment="center"
++                    android:textSize="15dp" />
++
++
++                <TextView
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:fontFamily="@font/lato_bold"
++                    android:text="Followers"
++                    android:gravity="center"
++                    android:textAlignment="center"
++                    android:textSize="15dp" />
++
++                <TextView
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:fontFamily="@font/lato_bold"
++                    android:text="Following"
++                    android:gravity="center"
++                    android:textAlignment="center"
++                    android:textSize="15dp" />
++
++                <TextView
++                    android:layout_width="match_parent"
++                    android:layout_height="wrap_content"
++                    android:layout_weight="1"
++                    android:gravity="center"
++                    android:fontFamily="@font/lato_bold"
++                    android:text="Coins"
++                    android:textAlignment="center"
++                    android:textSize="15dp" />
++            </LinearLayout>
++
++
++        </LinearLayout>
++        <View
++            android:layout_width="0dp"
++            android:layout_height="10dp"/>
++
++        <RelativeLayout
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            android:orientation="vertical">
++            <com.google.android.material.tabs.TabLayout
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:id="@+id/tab_layout"/>
++            <androidx.viewpager2.widget.ViewPager2
++                android:layout_width="match_parent"
++                android:id="@+id/viewpager"
++                android:layout_below="@+id/tab_layout"
++                android:layout_height="match_parent"/>
++        </RelativeLayout>
++
++    </LinearLayout>
++
++</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_1_8\" project-jdk-name=\"1.8\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision 7140e22a4e7aa013b325ccac225a6454f7b5084b)
++++ .idea/misc.xml	(date 1626515692420)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"RunConfigurationProducerService\">\r\n    <option name=\"ignoredProducers\">\r\n      <set>\r\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer\" />\r\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer\" />\r\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer\" />\r\n      </set>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/runConfigurations.xml	(revision 7140e22a4e7aa013b325ccac225a6454f7b5084b)
++++ .idea/runConfigurations.xml	(date 1626515163533)
+@@ -3,6 +3,7 @@
+   <component name="RunConfigurationProducerService">
+     <option name="ignoredProducers">
+       <set>
++        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
+         <option value="org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer" />
+         <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer" />
+         <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer" />
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/compiler.xml	(date 1626515692553)
++++ .idea/compiler.xml	(date 1626515692553)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <bytecodeTargetLevel target="11" />
++  </component>
++</project>
+\ No newline at end of file

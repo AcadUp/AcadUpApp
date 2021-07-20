@@ -56,6 +56,7 @@ import java.util.concurrent.Executor;
 
 public class HomeFragment extends Fragment implements SubjectView,View.OnClickListener {
     ConstraintLayout demoActivity;
+    int classSelected;
     AppCompatButton moreSubjectBtn;
     RecyclerView hotCourseRecyclerView,practiceTestRecyclerView,whyAcadupRecyclerView,subjectRecyclerView;
     ArrayList<HotCourseModel> hotCourseModelArrayList;
@@ -425,6 +426,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
 
     @Override
     public void spinnerClicked(int index) {
+        classSelected=index+1;
       //Toast.makeText(getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
         if(index>=0&& index<=4){
             consSelect8=1;consSelect5=0;consSelect6=0;
@@ -491,6 +493,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                 if(documentSnapshot.exists()){
                     welcomeMsg.setText("Hello "+documentSnapshot.getString("firstName")+",");
                     classDefault[0] =Integer.parseInt(documentSnapshot.getString("class"));
+                    classSelected=classDefault[0];
                     if( classDefault[0]>=1 && classDefault[0]<=4)
                     {
                         consSelect8=1;consSelect5=0;consSelect6=0;
@@ -560,7 +563,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                 startActivity(new Intent(getContext(),SubjectOptions.class));
                 break;
             case R.id.subFourImg2:
-                if(classDefault[0]>=7 && classDefault[0]<=10)
+                if(classSelected>=7 && classSelected<=10)
                 {
                     startActivity(new Intent(getContext(),payment_inquiry.class));
                 }
