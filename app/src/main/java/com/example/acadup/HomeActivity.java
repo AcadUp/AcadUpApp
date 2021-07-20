@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +31,14 @@ import com.example.acadup.ui.HomeFragment;
 import com.example.acadup.ui.NotificationsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.StorageReference;
 import com.google.type.Color;
 
 import java.util.ArrayList;
@@ -45,6 +55,12 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     CustomExpandableAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    StorageReference storageReference;
+    String userId;
+    FirebaseUser user;
+    final int[] spinnerPos = new int[1];
     HashMap<String, List<ExpandableModel>> listDataChild;
     LinearLayout homeLayout,scheduleTrialLayout,upcomingLiveLayout,notesLayout,progressLayout
             ,leaderBoardLayout,referFriendLayout,logOutLayout,rateLayout;
@@ -57,6 +73,13 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+
+        if(fAuth.getCurrentUser() == null  ){
+            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+            finish();
+        }
 
         drawerLayout=findViewById(R.id.drawarLayout);
         nav=findViewById(R.id.navMenu);
@@ -68,10 +91,27 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         toggle.syncState();
 
         spinner=findViewById(R.id.spinner);
-        ArrayAdapter adapter=ArrayAdapter.createFromResource(this,R.array.classes,
+        ArrayAdapter adapter=ArrayAdapter.createFromResource(this,R.array.classesSpinner,
                 R.layout.color_spinner_layout);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_layout); //Spinner Dropdown Text
         spinner.setAdapter(adapter);
+        userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
+
+        DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(HomeActivity.this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot.exists()){
+                    String classVal=documentSnapshot.getString("class");
+                    spinnerPos[0] =adapter.getPosition(classVal);
+                    spinner.setSelection(spinnerPos[0]);
+
+                }else {
+                    Log.d("tag", "onEvent: Document do not exists");
+                }
+            }
+        });
         spinner.setOnItemSelectedListener(this);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -79,7 +119,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         homeFragment=new HomeFragment();
         subView=homeFragment;
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,homeFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,homeFragment,"HOME_FRAGMENT").commit();
 
         homeLayout=v.findViewById(R.id.homeClick);
         scheduleTrialLayout=v.findViewById(R.id.scheduleClick);
@@ -264,26 +304,26 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     switch (item.getItemId()){
                         case R.id.navigation_home:
 //                            selectedFragment=new HomeFragment();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
-                            spinner.setSelection(0);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment(),"HOME_FRAGMENT").commit();
+                            spinner.setSelection(spinnerPos[0]);
                             spinner.setEnabled(true);
 
                             break;
                         case R.id.navigation_test:
 //                            selectedFragment=new TestFragment();
-                            spinner.setSelection(0);
+                            spinner.setSelection(spinnerPos[0]);
                             spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new TestFragment()).commit();
                             break;
                         case R.id.navigation_dashboard:
 //                            selectedFragment=new DashboardFragment();
-                            spinner.setSelection(0);
+                            spinner.setSelection(spinnerPos[0]);
                             spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DashboardFragment()).commit();
                             break;
                         case R.id.navigation_notifications:
 //                            selectedFragment=new NotificationsFragment();
-                            spinner.setSelection(0);
+                            spinner.setSelection(spinnerPos[0]);
                             spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new NotificationsFragment()).commit();
                             break;
@@ -298,8 +338,10 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
         subView.spinnerClicked(i);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,homeFragment).commit();
-
+        HomeFragment homeFrag=(HomeFragment)getSupportFragmentManager().findFragmentByTag("HOME_FRAGMENT");
+        if(homeFrag!=null && homeFrag.isVisible()) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+        }
     }
 
     @Override

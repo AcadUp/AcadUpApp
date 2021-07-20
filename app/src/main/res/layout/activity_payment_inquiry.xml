@@ -365,6 +365,7 @@
                     </androidx.cardview.widget.CardView>
                     <TextView
                         android:text="Game Design"
+                        android:id="@+id/topic1"
                         android:textColor="@android:color/white"
                         android:textStyle="bold"
                         android:layout_width="wrap_content"
@@ -402,6 +403,7 @@
                             android:layout_height="match_parent"/>
                     </androidx.cardview.widget.CardView>
                     <TextView
+                        android:id="@+id/topic2"
                         android:text="Machine Learning models"
                         android:textColor="@android:color/white"
                         android:textStyle="bold"
@@ -442,6 +444,7 @@
                             />
                     </androidx.cardview.widget.CardView>
                     <TextView
+                        android:id="@+id/topic3"
                         android:text="Apps published on playstore"
                         android:layout_centerHorizontal="true"
                         android:textColor="@android:color/white"
@@ -485,6 +488,7 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="30dp"/>
                 <TextView
+                    android:id="@+id/project2"
                     android:text="MIT App Inventor"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
@@ -558,6 +562,7 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="30dp"/>
                 <TextView
+                    android:id="@+id/project1"
                     android:text="Android Application"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
@@ -577,6 +582,7 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="30dp"/>
                 <TextView
+                    android:id="@+id/project3"
                     android:text="Musical Band"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"

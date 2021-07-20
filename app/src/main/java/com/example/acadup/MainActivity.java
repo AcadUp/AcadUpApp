@@ -33,7 +33,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity {
     TextView logoutBtn,editProfile,nameTv,classTv;
     SwipeRefreshLayout swipeRefreshLayout;
-    FirebaseAuth firebaseAuth;
     CircleImageView profileImageView;
     TabLayout tabLayout;
     ViewPager2 viewPager2;
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                firebaseAuth.getInstance().signOut();
+                FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
                 finish();
             }
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentAdapter =new FragmentAdapter(fm,getLifecycle());
         viewPager2.setAdapter(fragmentAdapter);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Status"));
+        tabLayout.addTab(tabLayout.newTab().setText("Stats"));
         tabLayout.addTab(tabLayout.newTab().setText("Tests"));
         tabLayout.addTab(tabLayout.newTab().setText("Question"));
         tabLayout.addTab(tabLayout.newTab().setText("Docs/Videos"));

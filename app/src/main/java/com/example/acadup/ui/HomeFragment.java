@@ -1,8 +1,11 @@
 package com.example.acadup.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,15 +40,21 @@ import com.example.acadup.SubjectView;
 import com.example.acadup.payment_inquiry;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 
-public class HomeFragment extends Fragment implements SubjectView {
+public class HomeFragment extends Fragment implements SubjectView,View.OnClickListener {
     ConstraintLayout demoActivity;
     AppCompatButton moreSubjectBtn;
     RecyclerView hotCourseRecyclerView,practiceTestRecyclerView,whyAcadupRecyclerView,subjectRecyclerView;
@@ -61,6 +70,7 @@ public class HomeFragment extends Fragment implements SubjectView {
     ViewPager2 pager2;
     ArrayList<SliderModel> sliderModelArrayList;
     TextView[] dots;
+    TextView welcomeMsg;
     ImageView subEightImg1,subEightImg2,subEightImg3,subEightImg4,subEightImg5,subEightImg6,subEightImg7,subEightImg8;
     ImageView subFourImg1,subFourImg2,subFourImg3,subFourImg4;
     ImageView subSixImg1,subSixImg2,subSixImg3,subSixImg4,subSixImg5,subSixImg6;
@@ -68,6 +78,12 @@ public class HomeFragment extends Fragment implements SubjectView {
     int showMoreCount=0;
     int consSelect5=0,consSelect6=0,consSelect8=0;
     CardView cardView6;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    StorageReference storageReference;
+    String userId;
+    FirebaseUser user;
+    final int[] classDefault = new int[1];
 //    ArrayList<SubjectsModel> lowClass1,middleClass1,upClass1;
     FirebaseFirestore db;
     DocumentReference lowClassRef,midClassRef,upperClassRef;
@@ -89,6 +105,7 @@ public class HomeFragment extends Fragment implements SubjectView {
         moreSubjectBtn=root.findViewById(R.id.moreSubButton);
 
         demoActivity=root.findViewById(R.id.demo);
+        welcomeMsg=root.findViewById(R.id.welcomeMsg);
         hotCourseRecyclerView=root.findViewById(R.id.hotCourseRecyclerView);
         practiceTestRecyclerView=root.findViewById(R.id.practiceTestRecyclerView);
         hotCourseModelArrayList=new ArrayList<>();
@@ -117,14 +134,34 @@ public class HomeFragment extends Fragment implements SubjectView {
         subSixImg5=root.findViewById(R.id.subSixImg5);
         subSixImg6=root.findViewById(R.id.subSixImg6);
 
+        subEightImg1.setOnClickListener(this);
+        subEightImg2.setOnClickListener(this);
+        subEightImg3.setOnClickListener(this);
+        subEightImg4.setOnClickListener(this);
+        subEightImg5.setOnClickListener(this);
+        subEightImg6.setOnClickListener(this);
+        subEightImg7.setOnClickListener(this);
+        subEightImg8.setOnClickListener(this);
+        subSixImg1.setOnClickListener(this);
+        subSixImg2.setOnClickListener(this);
+        subSixImg3.setOnClickListener(this);
+        subSixImg4.setOnClickListener(this);
+        subSixImg5.setOnClickListener(this);
+        subSixImg6.setOnClickListener(this);
+        subFourImg1.setOnClickListener(this);
+        subFourImg2.setOnClickListener(this);
+        subFourImg3.setOnClickListener(this);
+        subFourImg4.setOnClickListener(this);
+
+
+
+
         cardView6=root.findViewById(R.id.cardViewSix8);
         sliderModelArrayList=new ArrayList<>();
 
         consEight=root.findViewById(R.id.consEight);
         consFour=root.findViewById(R.id.consFour);
         consSix=root.findViewById(R.id.consSix);
-
-
 
         consEight.setVisibility(View.GONE);
 
@@ -138,6 +175,8 @@ public class HomeFragment extends Fragment implements SubjectView {
         moreSubjectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+              // Toast.makeText(getContext(),consSelect5 +" /"+consSelect6+"/"+consSelect8,Toast.LENGTH_LONG).show();
                 if(showMoreCount==0) {
                     showMoreCount=1;
                     moreSubjectBtn.setText("See less subjects");
@@ -146,6 +185,7 @@ public class HomeFragment extends Fragment implements SubjectView {
                         consFour.setVisibility(View.GONE);
                         consEight.setVisibility(View.GONE);
                         cardView6.setVisibility(View.GONE);
+                        //consSix.setOnClickListener();
                         if(getContext()!=null && upperClass_1.size()>0) {
                             Glide.with(getContext()).load(upperClass_1.get(0).getImage()).into(subSixImg1);
                             Glide.with(getContext()).load(upperClass_1.get(1).getImage()).into(subSixImg2);
@@ -385,7 +425,7 @@ public class HomeFragment extends Fragment implements SubjectView {
 
     @Override
     public void spinnerClicked(int index) {
-//        Toast.makeText(getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
+      //Toast.makeText(getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
         if(index>=0&& index<=4){
             consSelect8=1;consSelect5=0;consSelect6=0;
             consEight.setVisibility(View.GONE);
@@ -433,5 +473,112 @@ public class HomeFragment extends Fragment implements SubjectView {
             }
         }
     }
+
+
+    @Override
+    public void onCreate(@androidx.annotation.Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+
+        userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
+
+        DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot.exists()){
+                    welcomeMsg.setText("Hello "+documentSnapshot.getString("firstName")+",");
+                    classDefault[0] =Integer.parseInt(documentSnapshot.getString("class"));
+                    if( classDefault[0]>=1 && classDefault[0]<=4)
+                    {
+                        consSelect8=1;consSelect5=0;consSelect6=0;
+                    }
+                    else if(classDefault[0]>=5 && classDefault[0]<=10){
+                        consSelect8=0;consSelect5=0;consSelect6=1;
+                    }
+                    else if(classDefault[0]>=11 && classDefault[0]<=12)
+                    {
+                        consSelect8=0;consSelect5=1;consSelect6=0;
+                    }
+                }else {
+                    Log.d("tag", "onEvent: Document do not exists");
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId())
+        {
+            case R.id.subEightImg1 :
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subEightImg2:
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subEightImg3 :
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subEightImg4 :
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subEightImg5 :
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subEightImg6 :
+                startActivity(new Intent(getContext(),payment_inquiry.class));
+                break;
+            case R.id.subEightImg7 :
+                startActivity(new Intent(getContext(),payment_inquiry.class));
+                break;
+            case R.id.subEightImg8 :
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subSixImg1 :
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subSixImg2:
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subSixImg3:
+                startActivity(new Intent(getContext(),payment_inquiry.class));
+                break;
+            case R.id.subSixImg4:
+                startActivity(new Intent(getContext(),payment_inquiry.class));
+                break;
+            case R.id.subSixImg5:
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subSixImg6:
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subFourImg1:
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subFourImg2:
+                if(classDefault[0]>=7 && classDefault[0]<=10)
+                {
+                    startActivity(new Intent(getContext(),payment_inquiry.class));
+                }
+                else {
+                    startActivity(new Intent(getContext(),SubjectOptions.class));
+                }
+
+                break;
+            case R.id.subFourImg3:
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+            case R.id.subFourImg4:
+                startActivity(new Intent(getContext(),SubjectOptions.class));
+                break;
+
+
+        }
+    }
+
     /**/
 }
