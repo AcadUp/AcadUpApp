@@ -3,16 +3,29 @@ package com.example.acadup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class payment_inquiry extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.razorpay.Checkout;
+import com.razorpay.PaymentResultListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class payment_inquiry extends AppCompatActivity implements PaymentResultListener {
     TextView codingSelect,codingDeselect,roboticsSelect,roboticsDeselect;
     TextView heading_fundamental,amount,classNumber,moneyClass;
     TextView beginnerSelected,beginnerDeselected,intermediateSelected,intermediateDeselected,advancedSelected,advancedDeselected;
     ConstraintLayout demoChoice;
+    Button payBtn;
+    String amnt="11999";
     int robotics=0;
     int coding=1;
     @Override
@@ -20,11 +33,15 @@ public class payment_inquiry extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_payment_inquiry);
+        Intent data = getIntent();
+        String email=data.getStringExtra("email");
+        String contact=data.getStringExtra("phone");
         demoChoice=findViewById(R.id.demo_choice);
         heading_fundamental=findViewById(R.id.heading_fundamental);
         amount=findViewById(R.id.amount);
         classNumber=findViewById(R.id.classNumber);
         moneyClass=findViewById(R.id.moneyClass);
+        payBtn=findViewById(R.id.payBtn);
 
         demoChoice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +85,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Robotics Beginner");
                     amount.setText("Rs. 12,999");
+                    amnt="12999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 700/- per session");
                 }
@@ -75,6 +93,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Coding Beginner");
                     amount.setText("Rs. 11,999");
+                    amnt="11999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 600/- per session");
                 }
@@ -99,6 +118,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Robotics Beginner");
                     amount.setText("Rs. 12,999");
+                    amnt="12999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 700/- per session");
                 }
@@ -106,6 +126,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Coding Beginner");
                     amount.setText("Rs. 11,999");
+                    amnt="11999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 600/- per session");
                 }
@@ -125,6 +146,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Robotics Beginner");
                     amount.setText("Rs. 12,999");
+                    amnt="12999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 700/- per session");
                 }
@@ -132,6 +154,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Coding Beginner");
                     amount.setText("Rs. 11,999");
+                    amnt="11999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 600/- per session");
                 }
@@ -151,6 +174,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Robotics Intermediate");
                     amount.setText("Rs. 15,999");
+                    amnt="15999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 800/- per session");
                 }
@@ -158,6 +182,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Coding Intermediate");
                     amount.setText("Rs. 14,999");
+                    amnt="14999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 800/- per session");
                 }
@@ -176,6 +201,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Robotics Adavanced");
                     amount.setText("Rs. 20,999");
+                    amnt="20999";
                     classNumber.setText("50");
                     moneyClass.setText("Rs. 1000/- per session");
                 }
@@ -183,6 +209,7 @@ public class payment_inquiry extends AppCompatActivity {
                 {
                     heading_fundamental.setText("Coding Adavanced");
                     amount.setText("Rs. 18,999");
+                    amnt="18999";
                     classNumber.setText("50");
                     moneyClass.setText("Rs. 900/- per session");
                 }
@@ -194,5 +221,41 @@ public class payment_inquiry extends AppCompatActivity {
                 advancedSelected.setVisibility(View.VISIBLE);
             }
         });
+
+        payBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String samount=amnt;
+                int amt=Math.round(Float.parseFloat(samount)*100);
+
+                Checkout checkout=new Checkout();
+                checkout.setKeyID("rzp_test_aeTrn6p7xVhaSm");
+                checkout.setImage(R.drawable.logo_shield);
+                JSONObject object=new JSONObject();
+                try {
+                    object.put("name",heading_fundamental.getText().toString());
+                    object.put("description","Payment for buying "+heading_fundamental.getText().toString()+" Course.");
+                    object.put("amount",amt);
+                    object.put("Currency","INR");
+                    object.put("contact of student",contact);
+                    object.put("email of student",email);
+
+                    checkout.open(payment_inquiry.this,object);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    @Override
+    public void onPaymentSuccess(String s) {
+        Toast.makeText(this,"Payment successful "+s,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPaymentError(int i, String s) {
+        Toast.makeText(this,"Payment failed due to error: "+s,Toast.LENGTH_SHORT).show();
     }
 }

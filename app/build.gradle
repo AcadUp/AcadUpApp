@@ -44,6 +44,8 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.google.firebase:firebase-storage:20.0.0'
+    implementation 'com.razorpay:checkout:1.6.4'
+
 //    implementation 'com.ruslankishai:unmaterialtabs:0.1a'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

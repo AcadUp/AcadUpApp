@@ -85,6 +85,8 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
     String userId;
     FirebaseUser user;
     final int[] classDefault = new int[1];
+    String emailId;
+    String phone;
 //    ArrayList<SubjectsModel> lowClass1,middleClass1,upClass1;
     FirebaseFirestore db;
     DocumentReference lowClassRef,midClassRef,upperClassRef;
@@ -494,6 +496,8 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                     welcomeMsg.setText("Hello "+documentSnapshot.getString("firstName")+",");
                     classDefault[0] =Integer.parseInt(documentSnapshot.getString("class"));
                     classSelected=classDefault[0];
+                    emailId=documentSnapshot.getString("email");
+                    phone=documentSnapshot.getString("phone");
                     if( classDefault[0]>=1 && classDefault[0]<=4)
                     {
                         consSelect8=1;consSelect5=0;consSelect6=0;
@@ -518,65 +522,69 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         switch(view.getId())
         {
             case R.id.subEightImg1 :
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
-            case R.id.subEightImg2:
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
-            case R.id.subEightImg3 :
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
-            case R.id.subEightImg4 :
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
+            case R.id.subSixImg6:
+            case R.id.subFourImg1:
+            case R.id.subSixImg2:
+            case R.id.subEightImg8 :
+            case R.id.subSixImg1 :
             case R.id.subEightImg5 :
+            case R.id.subEightImg3 :
+            case R.id.subEightImg4 :
+            case R.id.subEightImg2:
+            case R.id.subFourImg2:
                 startActivity(new Intent(getContext(),SubjectOptions.class));
                 break;
             case R.id.subEightImg6 :
-                startActivity(new Intent(getContext(),payment_inquiry.class));
-                break;
             case R.id.subEightImg7 :
-                startActivity(new Intent(getContext(),payment_inquiry.class));
-                break;
-            case R.id.subEightImg8 :
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
-            case R.id.subSixImg1 :
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
-            case R.id.subSixImg2:
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
             case R.id.subSixImg3:
-                startActivity(new Intent(getContext(),payment_inquiry.class));
-                break;
             case R.id.subSixImg4:
-                startActivity(new Intent(getContext(),payment_inquiry.class));
+                Intent intent=new Intent(getContext(),payment_inquiry.class);
+                intent.putExtra("email",emailId);
+                intent.putExtra("phone",phone);
+                startActivity(intent);
                 break;
-            case R.id.subSixImg5:
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
-            case R.id.subSixImg6:
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
-            case R.id.subFourImg1:
-                startActivity(new Intent(getContext(),SubjectOptions.class));
-                break;
-            case R.id.subFourImg2:
+            case R.id.subFourImg3:
                 if(classSelected>=7 && classSelected<=10)
                 {
-                    startActivity(new Intent(getContext(),payment_inquiry.class));
+                    intent=new Intent(getContext(),payment_inquiry.class);
+                    intent.putExtra("email",emailId);
+                    intent.putExtra("phone",phone);
+                    startActivity(intent);
                 }
                 else {
                     startActivity(new Intent(getContext(),SubjectOptions.class));
                 }
-
-                break;
-            case R.id.subFourImg3:
-                startActivity(new Intent(getContext(),SubjectOptions.class));
                 break;
             case R.id.subFourImg4:
-                startActivity(new Intent(getContext(),SubjectOptions.class));
+                if(classSelected>=7 && classSelected<=10)
+                {
+                    intent=new Intent(getContext(),payment_inquiry.class);
+                    intent.putExtra("email",emailId);
+                    intent.putExtra("phone",phone);
+                    startActivity(intent);
+                }
+                else if(classSelected>=11 && classSelected<=12)
+                {
+                    intent=new Intent(getContext(),payment_inquiry.class);
+                    intent.putExtra("email",emailId);
+                    intent.putExtra("phone",phone);
+                    startActivity(intent);
+                }
+                else {
+                    startActivity(new Intent(getContext(),SubjectOptions.class));
+                }
+                break;
+            case R.id.subSixImg5:
+                if(classSelected>=11 && classSelected<=12)
+                {
+                    intent=new Intent(getContext(),payment_inquiry.class);
+                    intent.putExtra("email",emailId);
+                    intent.putExtra("phone",phone);
+                    startActivity(intent);
+                }
+                else {
+                    startActivity(new Intent(getContext(),SubjectOptions.class));
+                }
                 break;
 
 

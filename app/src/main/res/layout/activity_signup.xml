@@ -110,6 +110,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
+        android:dropDownWidth="30dp"
         android:spinnerMode="dropdown"
         android:layout_marginLeft="5dp"
         android:background="@drawable/edit_textbg"

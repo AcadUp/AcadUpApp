@@ -672,6 +672,7 @@
                 android:textSize="18dp"
                 android:textStyle="bold"/>
             <Button
+                android:id="@+id/payBtn"
                 android:paddingHorizontal="10pt"
                 android:layout_marginTop="3pt"
                 android:textSize="18sp"
