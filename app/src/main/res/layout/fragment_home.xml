@@ -39,7 +39,7 @@
                 android:layout_marginVertical="4pt"
                 android:layout_marginHorizontal="7pt"
                 android:fontFamily="@font/lato_black"
-                android:text="Hello Rishav,"
+                android:text="Hello ,"
                 android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 />

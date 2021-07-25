@@ -100,6 +100,20 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         userId = auth.getCurrentUser().getUid();
 
+//        DocumentReference documentReference = fireStore.collection("users").document(userId);
+//        documentReference.addSnapshotListener(HomeActivity.this, new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                if(documentSnapshot.exists()){
+//                    String classVal=documentSnapshot.getString("class");
+//                    spinnerPos[0] =adapter.getPosition(classVal);
+//                    spinner.setSelection(spinnerPos[0]);
+//
+//                }else {
+//                    Log.d("tag", "onEvent: Document do not exists");
+//                }
+//            }
+//        });
         loadClassFromFB();
         spinner.setOnItemSelectedListener(this);
 
@@ -341,17 +355,15 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-
-
     void loadClassFromFB(){
         DocumentReference db=fireStore.collection("users").document(auth.getCurrentUser().getUid());
         db.addSnapshotListener(HomeActivity.this, new EventListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@androidx.annotation.Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if(documentSnapshot.exists()){
-                    classTxt=Integer.parseInt(documentSnapshot.getString("class"))-1;
-                    spinner.setSelection(classTxt);
-                }
+                            classTxt=Integer.parseInt(documentSnapshot.getString("class"))-1;
+                            spinner.setSelection(classTxt);
+                        }
                 else{
                     Toast.makeText(HomeActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }

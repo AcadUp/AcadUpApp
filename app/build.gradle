@@ -45,6 +45,9 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.google.firebase:firebase-storage:20.0.0'
     implementation 'com.razorpay:checkout:1.6.4'
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
 
 //    implementation 'com.ruslankishai:unmaterialtabs:0.1a'
     testImplementation 'junit:junit:4.+'

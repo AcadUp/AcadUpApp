@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
     StorageReference storageReference;
     String userId;
     FirebaseUser user;
-    final int[] classDefault = new int[1];
+//    final int[] classDefault = new int[1];
     String emailId;
     String phone;
 
@@ -182,6 +182,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
             @Override
             public void onClick(View view) {
 
+              // Toast.makeText(getContext(),consSelect5 +" /"+consSelect6+"/"+consSelect8,Toast.LENGTH_LONG).show();
                 if(showMoreCount==0) {
                     showMoreCount=1;
                     moreSubjectBtn.setText("See less subjects");
