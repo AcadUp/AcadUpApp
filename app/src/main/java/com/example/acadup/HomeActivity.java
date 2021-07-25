@@ -1,6 +1,7 @@
 package com.example.acadup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,7 +11,6 @@ import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +29,8 @@ import com.example.acadup.Models.ExpandableModel;
 import com.example.acadup.ui.DashboardFragment;
 import com.example.acadup.ui.HomeFragment;
 import com.example.acadup.ui.NotificationsFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,15 +57,15 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     CustomExpandableAdapter listAdapter;
     ExpandableListView expListView;
     List<String> listDataHeader;
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-    StorageReference storageReference;
+    FirebaseAuth auth;
+    FirebaseFirestore fireStore;
+
     String userId;
-    FirebaseUser user;
+    int classTxt;
     final int[] spinnerPos = new int[1];
     HashMap<String, List<ExpandableModel>> listDataChild;
     LinearLayout homeLayout,scheduleTrialLayout,upcomingLiveLayout,notesLayout,progressLayout
-            ,leaderBoardLayout,referFriendLayout,logOutLayout,rateLayout;
+            ,leaderBoardLayout,referFriendLayout,logOutLayout,rateLayout,demoSlotsLayout;
     View v;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +75,10 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
+        fireStore=FirebaseFirestore.getInstance();
+        auth=FirebaseAuth.getInstance();
 
-        if(fAuth.getCurrentUser() == null  ){
+        if(auth.getCurrentUser() == null  ){
             startActivity(new Intent(getApplicationContext(),LoginActivity.class));
             finish();
         }
@@ -91,28 +93,17 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         toggle.syncState();
 
         spinner=findViewById(R.id.spinner);
-        ArrayAdapter adapter=ArrayAdapter.createFromResource(this,R.array.classesSpinner,
+        ArrayAdapter adapter=ArrayAdapter.createFromResource(this,R.array.classes,
                 R.layout.color_spinner_layout);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_layout); //Spinner Dropdown Text
         spinner.setAdapter(adapter);
-        userId = fAuth.getCurrentUser().getUid();
-        user = fAuth.getCurrentUser();
 
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(HomeActivity.this, new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(documentSnapshot.exists()){
-                    String classVal=documentSnapshot.getString("class");
-                    spinnerPos[0] =adapter.getPosition(classVal);
-                    spinner.setSelection(spinnerPos[0]);
+        userId = auth.getCurrentUser().getUid();
 
-                }else {
-                    Log.d("tag", "onEvent: Document do not exists");
-                }
-            }
-        });
+        loadClassFromFB();
         spinner.setOnItemSelectedListener(this);
+
+
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(navListener);
@@ -130,6 +121,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         referFriendLayout=v.findViewById(R.id.refer_friend);
         logOutLayout=v.findViewById(R.id.logOutLayout);
         rateLayout=v.findViewById(R.id.rateLayout);
+        demoSlotsLayout=v.findViewById(R.id.demo_slots);
 
         //Expandable about
         expListView=v.findViewById(R.id.aboutExpand);
@@ -229,6 +221,15 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
+        demoSlotsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(HomeActivity.this,demo_slot.class);
+                intent.putExtra("FromHomeActivity",7);
+                startActivity(intent);
+                drawerLayout.closeDrawer(GravityCompat.START);
+            }
+        });
         logOutLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,8 +265,6 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Header, Child data
         listDataChild.put(listDataHeader.get(0), about_us);
-
-
     }
 
     @Override
@@ -303,32 +302,26 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     Fragment selectedFragment=null;
                     switch (item.getItemId()){
                         case R.id.navigation_home:
-//                            selectedFragment=new HomeFragment();
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment(),"HOME_FRAGMENT").commit();
                             spinner.setSelection(spinnerPos[0]);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment(),"HOME_FRAGMENT").commit();
                             spinner.setEnabled(true);
-
                             break;
                         case R.id.navigation_test:
-//                            selectedFragment=new TestFragment();
                             spinner.setSelection(spinnerPos[0]);
                             spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new TestFragment()).commit();
                             break;
                         case R.id.navigation_dashboard:
-//                            selectedFragment=new DashboardFragment();
                             spinner.setSelection(spinnerPos[0]);
                             spinner.setEnabled(false);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DashboardFragment()).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DashboardFragment()).commitNow();
                             break;
                         case R.id.navigation_notifications:
-//                            selectedFragment=new NotificationsFragment();
                             spinner.setSelection(spinnerPos[0]);
                             spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new NotificationsFragment()).commit();
                             break;
                     }
-//                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
                     return true;
                 }
             };
@@ -348,13 +341,33 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
+
+    void loadClassFromFB(){
+        DocumentReference db=fireStore.collection("users").document(auth.getCurrentUser().getUid());
+        db.addSnapshotListener(HomeActivity.this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@androidx.annotation.Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+                if(documentSnapshot.exists()){
+                    classTxt=Integer.parseInt(documentSnapshot.getString("class"))-1;
+                    spinner.setSelection(classTxt);
+                }
+                else{
+                    Toast.makeText(HomeActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
     @Override
     public void onBackPressed() {
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
         }
         else{
-            finish();
+            Intent intent=new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
 
         }
 

@@ -1,5 +1,6 @@
 package com.example.acadup.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import com.example.acadup.LoginActivity;
 import com.example.acadup.MainActivity;
 import com.example.acadup.R;
 import com.example.acadup.UpdateProfile;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,6 +36,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import java.util.concurrent.Executor;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -112,6 +116,7 @@ public class DashboardFragment extends Fragment {
         userId = fAuth.getCurrentUser().getUid();
         user = fAuth.getCurrentUser();
         DocumentReference documentReference = fStore.collection("users").document(userId);
+
         documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -132,6 +137,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getContext(), LoginActivity.class));
+                getActivity().finish();
             }
         });
 

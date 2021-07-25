@@ -179,7 +179,25 @@
                     android:textSize="15dp"
                     android:textColor="#020939"/>
             </LinearLayout>
-
+            <LinearLayout
+                android:background="?android:attr/selectableItemBackground"
+                android:id="@+id/demo_slots"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingVertical="7pt">
+                <ImageView
+                    android:src="@drawable/upcoming_live"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:paddingLeft="4pt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Demo slots"
+                    android:textSize="15dp"
+                    android:textColor="#020939"/>
+            </LinearLayout>
             <ExpandableListView
                 android:paddingVertical="5pt"
                 android:id="@+id/aboutExpand"
