@@ -13,8 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ConnectUsActivity"
-            android:label="Connect With Us"/>
+        <activity android:name=".NcertSolution"></activity>
+        <activity
+            android:name=".ConnectUsActivity"
+            android:label="Connect With Us" />
         <activity android:name=".CodingRoboticsPurchase" />
         <activity android:name=".UpdateProfile" />
         <activity android:name=".SubjectOptions" />

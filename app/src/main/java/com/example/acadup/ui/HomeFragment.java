@@ -51,6 +51,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 
 
@@ -494,7 +495,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot.exists()){
                     welcomeMsg.setText("Hello "+documentSnapshot.getString("firstName")+",");
-                    classDefault[0] =Integer.parseInt(documentSnapshot.getString("class"));
+                    classDefault[0] =Integer.parseInt(Objects.requireNonNull(documentSnapshot.getString("class")));
                     classSelected=classDefault[0];
                     emailId=documentSnapshot.getString("email");
                     phone=documentSnapshot.getString("phone");

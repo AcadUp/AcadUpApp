@@ -1,7 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@drawable/learn_coding"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/edit_textbg"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginTop="10dp"
     android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/imgStruc"
+                android:layout_marginHorizontal="3pt"
+                android:layout_gravity="center_vertical"
+                android:layout_width="25pt"
+                android:layout_height="25pt"
+                android:src="@drawable/maths"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="3pt">
+                <TextView
+                    android:id="@+id/titleStruc"
+                    android:text="Real Numbers"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+              <LinearLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/lecturesText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="9 Lectures"
+                    android:textColor="?android:textColorHint"/>
+
+                  <TextView
+                      android:id="@+id/line"
+                      android:layout_marginLeft="5dp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:textColor="?android:textColorHint"
+                      android:text="|"/>
+                  <TextView
+                      android:id="@+id/durationText"
+                      android:textColor="?android:textColorHint"
+                      android:layout_marginLeft="5dp"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="00:58:31 Duration"/>
+              </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
 </LinearLayout>

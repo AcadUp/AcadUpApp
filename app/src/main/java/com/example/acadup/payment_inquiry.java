@@ -7,17 +7,25 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class payment_inquiry extends AppCompatActivity implements PaymentResultListener {
     TextView codingSelect,codingDeselect,roboticsSelect,roboticsDeselect;
@@ -28,6 +36,10 @@ public class payment_inquiry extends AppCompatActivity implements PaymentResultL
     String amnt="11999";
     int robotics=0;
     int coding=1;
+    FirebaseFirestore fireStore;
+    FirebaseAuth firebaseAuth;
+    DocumentReference documentReference;
+    Map<String,Object> user ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -252,6 +264,28 @@ public class payment_inquiry extends AppCompatActivity implements PaymentResultL
     @Override
     public void onPaymentSuccess(String s) {
         Toast.makeText(this,"Payment successful "+s,Toast.LENGTH_SHORT).show();
+        user= new HashMap<>();
+        firebaseAuth=FirebaseAuth.getInstance();
+        fireStore=FirebaseFirestore.getInstance();
+        documentReference = fireStore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("purchasedCourses").document(s);
+        user.put("course_name",heading_fundamental.getText().toString());
+        user.put("amount",amount.getText().toString());
+
+        user.put("Date of Payment", Calendar.getInstance().getTime());
+        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(payment_inquiry.this,"added data: "+s,Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(payment_inquiry.this,"not added"+s,Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
     @Override
