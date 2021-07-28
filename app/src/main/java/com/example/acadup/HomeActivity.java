@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     String userId;
     int classTxt;
-    final int[] spinnerPos = new int[1];
+//    final int[] spinnerPos = new int[1];
     HashMap<String, List<ExpandableModel>> listDataChild;
     LinearLayout homeLayout,scheduleTrialLayout,upcomingLiveLayout,notesLayout,progressLayout
             ,leaderBoardLayout,referFriendLayout,logOutLayout,rateLayout,demoSlotsLayout;
@@ -316,22 +316,26 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     Fragment selectedFragment=null;
                     switch (item.getItemId()){
                         case R.id.navigation_home:
-                            spinner.setSelection(spinnerPos[0]);
+//                            spinner.setSelection(spinnerPos[0]);
+                            spinner.setSelection(classTxt);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment(),"HOME_FRAGMENT").commit();
                             spinner.setEnabled(true);
                             break;
                         case R.id.navigation_test:
-                            spinner.setSelection(spinnerPos[0]);
+//                            spinner.setSelection(spinnerPos[0]);
+                            spinner.setSelection(classTxt);
                             spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new TestFragment()).commit();
                             break;
                         case R.id.navigation_dashboard:
-                            spinner.setSelection(spinnerPos[0]);
+//                            spinner.setSelection(spinnerPos[0]);
+                            spinner.setSelection(classTxt);
                             spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DashboardFragment()).commitNow();
                             break;
                         case R.id.navigation_notifications:
-                            spinner.setSelection(spinnerPos[0]);
+//                            spinner.setSelection(spinnerPos[0]);
+                            spinner.setSelection(classTxt);
                             spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new NotificationsFragment()).commit();
                             break;

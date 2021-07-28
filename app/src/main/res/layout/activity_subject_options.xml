@@ -192,13 +192,15 @@
         android:weightSum="1"
         android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/ncert_sol_layout"
             android:layout_width="0dp"
             android:background="@drawable/why_acadup"
             android:layout_height="140dp"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="25dp"
-            android:layout_marginBottom="15dp"            android:backgroundTint="#C4E4E1"
+            android:layout_marginBottom="15dp"
+            android:backgroundTint="#C4E4E1"
             android:layout_weight="0.5">
         <androidx.cardview.widget.CardView
             android:id="@+id/solutionsCard"

@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".NcertSolution"></activity>
+        <activity android:name=".TopicVideoLists"></activity>
+        <activity android:name=".NcertSolution" />
         <activity
             android:name=".ConnectUsActivity"
             android:label="Connect With Us" />

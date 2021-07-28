@@ -487,19 +487,6 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
-        if( classSelected>=0 && classSelected<=5)
-        {
-            consSelect8=1;consSelect5=0;consSelect6=0;
-        }
-        else if(classSelected>=6 && classSelected<=9){
-            consSelect8=0;consSelect5=0;consSelect6=1;
-        }
-        else if(classSelected>=10 && classSelected<=11)
-        {
-            consSelect8=0;consSelect5=1;consSelect6=0;
-        }
-
-
         userId = fAuth.getCurrentUser().getUid();
         user = fAuth.getCurrentUser();
         DocumentReference ref=fStore.collection("users").document(userId);
@@ -509,26 +496,38 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         String nameTxt=documentSnapshot.getString("firstName");
                         welcomeMsg.setText("Hello "+nameTxt+",");
+                        classSelected=Integer.parseInt(documentSnapshot.getString("class"))-1;
+                        if( classSelected>=0 && classSelected<=5)
+                        {
+                            consSelect8=1;consSelect5=0;consSelect6=0;
+                        }
+                        else if(classSelected>=6 && classSelected<=9){
+                            consSelect8=0;consSelect5=0;consSelect6=1;
+                        }
+                        else if(classSelected>=10 && classSelected<=11)
+                        {
+                            consSelect8=0;consSelect5=1;consSelect6=0;
+                        }
                         emailId=documentSnapshot.getString("email");
                         phone=documentSnapshot.getString("phone");
-
-<<<<<<< HEAD
-        DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if(documentSnapshot.exists()){
-                    welcomeMsg.setText("Hello "+documentSnapshot.getString("firstName")+",");
-                    classDefault[0] =Integer.parseInt(Objects.requireNonNull(documentSnapshot.getString("class")));
-                    classSelected=classDefault[0];
-                    emailId=documentSnapshot.getString("email");
-                    phone=documentSnapshot.getString("phone");
-                    if( classDefault[0]>=1 && classDefault[0]<=4)
-                    {
-                        consSelect8=1;consSelect5=0;consSelect6=0;
-=======
->>>>>>> 25b8186dcf4827c106b10cfb2f5a795199696ec8
+//<<<<<<< HEAD
+//        DocumentReference documentReference = fStore.collection("users").document(userId);
+//        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                if(documentSnapshot.exists()){
+//                    welcomeMsg.setText("Hello "+documentSnapshot.getString("firstName")+",");
+//                    classDefault[0] =Integer.parseInt(Objects.requireNonNull(documentSnapshot.getString("class")));
+//                    classSelected=classDefault[0];
+//                    emailId=documentSnapshot.getString("email");
+//                    phone=documentSnapshot.getString("phone");
+//                    if( classDefault[0]>=1 && classDefault[0]<=4)
+//                    {
+//                        consSelect8=1;consSelect5=0;consSelect6=0;
+//=======
+//>>>>>>> 25b8186dcf4827c106b10cfb2f5a795199696ec8
                     }
+
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {

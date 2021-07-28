@@ -417,11 +417,12 @@
                     app:layout_constraintTop_toBottomOf="@id/guidelineHorizontalFour1"
                     app:layout_constraintBottom_toTopOf="@id/guidelineHorizontalFour2" >
                     <ImageView
-                        android:src="@drawable/coding"
+
                         android:id="@+id/subFourImg2"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:src="@drawable/coding"
                         />
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
@@ -440,7 +441,8 @@
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/science"/>
+                        android:src="@drawable/science"
+                        />
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewFour6"
@@ -458,7 +460,8 @@
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/sdf"/>
+                        android:src="@drawable/sdf"
+                        />
                 </androidx.cardview.widget.CardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -467,7 +470,8 @@
                 android:visibility="gone"
                 android:id="@+id/consSix"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
 
                 <!-- vertical guidelines -->
                 <androidx.constraintlayout.widget.Guideline
