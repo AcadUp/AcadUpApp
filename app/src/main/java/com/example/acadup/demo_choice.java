@@ -2,10 +2,14 @@ package com.example.acadup;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.telephony.PhoneNumberUtils;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -24,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.acadup.Models.SubjectsModel;
+import com.example.acadup.SendMail.JavaMailAPI;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +38,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
+import com.hbb20.CountryCodePicker;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -40,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.example.acadup.LoadData.ApplicationClass.lowerClass;
@@ -51,30 +60,40 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
     Spinner spinnerClass;
     AppCompatButton scheduleBtn;
     int low=1,mid=0,up=0;
+    String spinSel;
     TextView sub1,sub2,sub3,sub4,sub5,sub6,sub7,sub8;
+    TextView dateText,timeText;
     Button datePickerBtn,timePickerBtn;
+    CountryCodePicker countryCodePicker;
+    String selectedSubject;
+    LinearLayout whatsApp;
     int date,month,year;
     int hour;
+    String minute;
     Calendar calendar=Calendar.getInstance();
     int count1=0,count2=0,count3=0,count4=0,count5=0,count6=0,count7=0,count8=0;
     String dates,times,s;
     TextView slotTime;
     ArrayList<SubjectsModel> lowClass,middleClass,upClass;
+    FirebaseAuth auth;
     FirebaseFirestore fireStore;
-    FirebaseAuth firebaseAuth;
-    DocumentReference documentReference,demoClassRef;
-    String name,email,phone;
-    int classSel;
-    Map<String,Object> user ;
+    Map<String,Object> map1;
+    Map<String,Object> map2;
+    int classTxt;
+    DocumentReference dbRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_demo_choice);
-        user= new HashMap<>();
-        firebaseAuth=FirebaseAuth.getInstance();
+        map1=new HashMap<>();
+        map2=new HashMap<>();
+
+        auth=FirebaseAuth.getInstance();
         fireStore=FirebaseFirestore.getInstance();
-        demoClassRef = fireStore.collection("DemoClass").document(firebaseAuth.getCurrentUser().getUid());
+        loadClassFromFireBase();
+        dbRef=fireStore.collection("DemoClass").document(auth.getCurrentUser().getUid());
+
         lowClass=lowerClass;
         middleClass=midClass;
         upClass=upperClass;
@@ -82,16 +101,24 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
         year=calendar.get(Calendar.YEAR);
         month=calendar.get(Calendar.MONTH);
         date=calendar.get(Calendar.DAY_OF_MONTH);
-        
+
+        whatsApp=findViewById(R.id.whatsapp);
         etName=findViewById(R.id.name);
         etEmail=findViewById(R.id.emailId);
+        countryCodePicker=findViewById(R.id.ccp);
         etPhone=findViewById(R.id.phoneNum);
         slotTime=findViewById(R.id.slotTime);
+        dateText=findViewById(R.id.dateText);
+        timeText=findViewById(R.id.timeText);
+        String text1="<font color=#C11515>*</font> <font color=#000000>Date :</font>";
+        String text2="<font color=#C11515>*</font> <font color=#000000>Time :</font>";
+        dateText.setText(Html.fromHtml(text1));
+        timeText.setText(Html.fromHtml(text2));
+        countryCodePicker.registerCarrierNumberEditText(etPhone);
+        etName.setText("");
+        etEmail.setText("");
+        etPhone.setText("");
 
-        etName.setEnabled(false);
-        etPhone.setEnabled(false);
-        etEmail.setEnabled(false);
-        
         sub1=findViewById(R.id.sub1);
         sub2=findViewById(R.id.sub2);
         sub3=findViewById(R.id.sub3);
@@ -108,54 +135,11 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
         spinnerClass=findViewById(R.id.spinnerClass);
 
 
-
-        documentReference=fireStore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-        documentReference.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if(documentSnapshot.exists()) {
-                            name=documentSnapshot.getString("firstName")+" "+documentSnapshot.getString("lastName");
-                            classSel=Integer.parseInt(documentSnapshot.getString("class"))-1;
-                            phone=documentSnapshot.getString("phone");
-                            email=documentSnapshot.getString("email");
-                            etName.setText(name);
-                            spinnerClass.setSelection(classSel);
-                            etPhone.setText(phone);
-                            etEmail.setText(email);
-
-                            user.put("name",name);
-                            user.put("email",email);
-                            user.put("phone",phone);
-                            user.put("class",String.valueOf(classSel+1));
-                            demoClassRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-
-                                }
-                            });
-
-                        }
-                        }
-                })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(demo_choice.this, "Something wrong", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        ArrayAdapter adapter=ArrayAdapter.createFromResource(this, R.array.classes,
-                R.layout.color_spinner_layout);
+        ArrayAdapter adapter=ArrayAdapter.createFromResource(this, R.array.classes, R.layout.color_spinner_layout);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_layout); //Spinner Dropdown Text
         spinnerClass.setAdapter(adapter);
         spinnerClass.setOnItemSelectedListener(this);
+
 
         sub1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,52 +219,119 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
 
             }
         });
-
         scheduleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(demo_choice.this, s, Toast.LENGTH_SHORT).show();
-
                 if(etName.getText().toString().trim().isEmpty()||etEmail.getText().toString().trim().isEmpty()||
-                etPhone.getText().toString().trim().isEmpty()|| times == null || dates == null){
+                        etPhone.getText().toString().trim().isEmpty()|| times == null || dates == null){
                     Toast.makeText(demo_choice.this, "Fill all fields", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Intent intent = new Intent(demo_choice.this, demo_slot.class);
-                    intent.putExtra("slot_time",dates+", "+times);
-                    intent.putExtra("count1", count1);
-                    intent.putExtra("count2", count2);
-                    intent.putExtra("count3", count3);
-                    intent.putExtra("count4", count4);
-                    intent.putExtra("count5", count5);
-                    intent.putExtra("count6", count6);
-                    intent.putExtra("count7", count7);
-                    intent.putExtra("count8", count8);
-                    if (count1 == 1) {
-                        intent.putExtra("Sub1", sub1.getText().toString().trim());
-                    } else if (count2 == 1) {
-                        intent.putExtra("Sub2", sub2.getText().toString().trim());
-                    } else if (count3 == 1) {
-                        intent.putExtra("Sub3", sub3.getText().toString().trim());
-                    } else if (count4 == 1) {
-                        intent.putExtra("Sub4", sub4.getText().toString().trim());
-                    } else if (count5 == 1) {
-                        intent.putExtra("Sub5", sub5.getText().toString().trim());
-                    } else if (count6 == 1) {
-                        intent.putExtra("Sub6", sub6.getText().toString().trim());
-                    } else if (count7 == 1) {
-                        intent.putExtra("Sub7", sub7.getText().toString().trim());
-                    } else if (count8 == 1) {
-                        intent.putExtra("Sub8", sub8.getText().toString().trim());
-                    } else {
-                        intent.putExtra("Sub1", sub1.getText().toString().trim());
-                    }
-                    startActivity(intent);
-                    finish();
+                    dbRef.get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if(documentSnapshot.exists()){
+                                        int valAvailable=1;
+                                        Map<String,Object> fetchedMap=documentSnapshot.getData();
+                                        Object[] key= fetchedMap.keySet().toArray();
+                                        for(int i=0;i<fetchedMap.size();i++){
+                                            if(key[i].toString().equals(selectedSubject+spinSel)){
+                                                valAvailable=0;
+                                            }
+                                        }
+                                        if(valAvailable==0){
+                                            Toast.makeText(demo_choice.this, "You are not available for this subject", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else{
+                                            createDemoClassCollection();
+                                        }
+                                    }
+                                    else{
+                                        createDemoClassCollection();
+                                    }
+                                    sendEmail();
+                                }
+
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(demo_choice.this, "Something wrong", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                 }
             }
         });
+        whatsApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    String number = "+918584074448";
+                    number = number.replace(" ", "").replace("+", "");
+                    Intent sendIntent = new Intent("android.intent.action.MAIN");
+                    sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+                    sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(number) + "@s.whatsapp.net");
+                    Context context = demo_choice.this;
+                    context.startActivity(sendIntent);
+                }
+                catch (Exception e){
+                    Toast.makeText(demo_choice.this, "Something wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
+    private void sendEmail() {
+        JavaMailAPI javaMailAPI=new JavaMailAPI(this,etEmail.getText().toString(),
+                etName.getText().toString()+",\n you have successfully registered for a demo class for "+selectedSubject+"(Class-"+spinSel+") subject.\n"+
+                        "\nDate and Time :"+dates+", "+times+"\nThank you..");
+        javaMailAPI.execute();
+    }
+    private void createDemoClassCollection() {
+        map2.put("name",etName.getText().toString());
+        map2.put("phone",String.valueOf(countryCodePicker.getFullNumberWithPlus().replace(" ","")));
+        map2.put("email",etEmail.getText().toString());
+        map1.put(String.valueOf(selectedSubject+spinSel),map2);
+
+        dbRef.set(map1, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Intent intent = new Intent(demo_choice.this, demo_slot.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(demo_choice.this, "Something wrong", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+    private void loadClassFromFireBase() {
+        DocumentReference db=fireStore.collection("users").document(auth.getCurrentUser().getUid());
+        db.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+
+                            classTxt=Integer.parseInt(documentSnapshot.getString("class"))-1;
+                            spinnerClass.setSelection(classTxt);
+
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     @Override
@@ -288,13 +339,12 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
         subChangeEffect(count1);
         spinnerSelectionEffect(i);
     }
-
-
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
     private void subChangeEffect(int count) {
+        selectedSubject="Maths";
         if(count==count1){
             sub1.setBackground(getResources().getDrawable(R.drawable.sub_select));
             sub2.setBackground(getResources().getDrawable(R.drawable.subjects_background));
@@ -312,7 +362,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             sub6.setTextColor(Color.BLACK);
             sub7.setTextColor(Color.BLACK);
             sub8.setTextColor(Color.BLACK);
-            user.put("subject",sub1.getText().toString());
+            selectedSubject=sub1.getText().toString();
         }
         else if(count==count2){
             sub2.setBackground(getResources().getDrawable(R.drawable.sub_select));
@@ -331,7 +381,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             sub6.setTextColor(Color.BLACK);
             sub7.setTextColor(Color.BLACK);
             sub8.setTextColor(Color.BLACK);
-            user.put("subject",sub2.getText().toString());
+            selectedSubject=sub2.getText().toString();
         }
         else if(count==count3){
             sub3.setBackground(getResources().getDrawable(R.drawable.sub_select));
@@ -350,7 +400,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             sub6.setTextColor(Color.BLACK);
             sub7.setTextColor(Color.BLACK);
             sub8.setTextColor(Color.BLACK);
-            user.put("subject",sub3.getText().toString());
+            selectedSubject=sub3.getText().toString();
         }
         else if(count==count4){
             sub4.setBackground(getResources().getDrawable(R.drawable.sub_select));
@@ -369,7 +419,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             sub6.setTextColor(Color.BLACK);
             sub7.setTextColor(Color.BLACK);
             sub8.setTextColor(Color.BLACK);
-            user.put("subject",sub4.getText().toString());
+            selectedSubject=sub4.getText().toString();
         }
         else if(count==count5){
             sub5.setBackground(getResources().getDrawable(R.drawable.sub_select));
@@ -389,7 +439,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             sub6.setTextColor(Color.BLACK);
             sub7.setTextColor(Color.BLACK);
             sub8.setTextColor(Color.BLACK);
-            user.put("subject",sub5.getText().toString());
+            selectedSubject=sub5.getText().toString();
         }
         else if(count==count6){
             sub6.setBackground(getResources().getDrawable(R.drawable.sub_select));
@@ -409,7 +459,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             sub1.setTextColor(Color.BLACK);
             sub7.setTextColor(Color.BLACK);
             sub8.setTextColor(Color.BLACK);
-            user.put("subject",sub6.getText().toString());
+            selectedSubject=sub6.getText().toString();
         }
         else if(count==count7){
             sub7.setBackground(getResources().getDrawable(R.drawable.sub_select));
@@ -429,7 +479,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             sub6.setTextColor(Color.BLACK);
             sub1.setTextColor(Color.BLACK);
             sub8.setTextColor(Color.BLACK);
-            user.put("subject",sub7.getText().toString());
+            selectedSubject=sub7.getText().toString();
         }
         else if(count==count8){
             sub8.setBackground(getResources().getDrawable(R.drawable.sub_select));
@@ -449,34 +499,13 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             sub6.setTextColor(Color.BLACK);
             sub7.setTextColor(Color.BLACK);
             sub1.setTextColor(Color.BLACK);
-            user.put("subject",sub8.getText().toString());
+            selectedSubject=sub8.getText().toString();
         }
-        demoClassRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
+        map2.put("subject",selectedSubject);
     }
-
     private void spinnerSelectionEffect(int i) {
-        user.put("class",String.valueOf(i+1));
-        demoClassRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
+        spinSel=String.valueOf(i+1);
+        map2.put("classes",String.valueOf(i+1));
         if(i>=0 && i<=4){
             low=1;mid=0;up=0;
             sub1.setVisibility(View.VISIBLE);
@@ -536,17 +565,16 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
         }
     }
 
+
     private void setTime() {
         TimePickerDialog timePickerDialog=new TimePickerDialog(demo_choice.this,kTimePickerListener,
                 calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false);
         timePickerDialog.show();
     }
-
     private void setDate() {
         DatePickerDialog datePickerDialog=new DatePickerDialog(demo_choice.this,kDatePickerListener,year,month,date);
         datePickerDialog.show();
     }
-
     protected DatePickerDialog.OnDateSetListener kDatePickerListener=new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -566,7 +594,6 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             String weekDay=format2.format(d1);
 
 
-//            Toast.makeText(demo_choice.this, date+"/"+month+"/"+year+"\n"+weekDay, Toast.LENGTH_SHORT).show();
             dates=weekDay+", ";
             if(date==1){
                 dates=dates+date+"st";
@@ -618,16 +645,61 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             }
             //year calculation
             dates=dates+","+year;
-            slotTime.setText("Selected slot:\n"+dates+", "+times);
+
+            //Date selection correct or incorrect check
+            Date c = Calendar.getInstance().getTime();
+            SimpleDateFormat df = new SimpleDateFormat("dd", Locale.getDefault());
+            SimpleDateFormat mf = new SimpleDateFormat("MM", Locale.getDefault());
+            SimpleDateFormat yf = new SimpleDateFormat("yyyy", Locale.getDefault());
+            String formattedDate = df.format(c);
+            String formattedMonth = mf.format(c);
+            String formattedYear = yf.format(c);
+
+            if(year<Integer.parseInt(formattedYear)){
+                Toast.makeText(demo_choice.this, "Please select a valid date", Toast.LENGTH_SHORT).show();
+            }
+            else if(year==Integer.parseInt(formattedYear)){
+                if(month<Integer.parseInt(formattedMonth)){
+                    Toast.makeText(demo_choice.this, "Please select a valid date", Toast.LENGTH_SHORT).show();
+                }
+                else if(month==Integer.parseInt(formattedMonth)){
+                    if(dayOfMonth<=Integer.parseInt(formattedDate)){
+                        Toast.makeText(demo_choice.this, "Please select a valid date", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        slotTime.setText("Selected slot:\n"+dates+", "+times);
+                        map2.put("date",String.valueOf(dayOfMonth));
+                        map2.put("month",String.valueOf(month));
+
+                    }
+                }
+                else{
+                    slotTime.setText("Selected slot:\n"+dates+", "+times);
+                    map2.put("date",String.valueOf(dayOfMonth));
+                    map2.put("month",String.valueOf(month));
+                }
+            }
+            else{
+                slotTime.setText("Selected slot:\n"+dates+", "+times);
+                map2.put("date",String.valueOf(dayOfMonth));
+                map2.put("month",String.valueOf(month));
+            }
+
         }
     };
     protected TimePickerDialog.OnTimeSetListener kTimePickerListener=new
             TimePickerDialog.OnTimeSetListener() {
                 @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
                     String start_time="AM",end_time="AM";
                     hour=hourOfDay;
-                    minute=minute;
+
+                    if(minutes<10){
+                        minute=("0"+String.valueOf(minutes));
+                    }
+                    else {
+                        minute=String.valueOf(minutes);
+                    }
                     if(hour>12){
                         hour=hour-12;
                         start_time="PM";
@@ -657,6 +729,8 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
 
                     times=hour+":"+minute+" "+start_time+"-"+session_end+":"+minute+" "+end_time;
                     slotTime.setText("Selected slot:\n"+dates+", "+times);
+                    map2.put("time",hourOfDay+":"+minute);
+                    map2.put("formatted_date",dates+", "+times);
                 }
             };
 }

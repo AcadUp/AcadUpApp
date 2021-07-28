@@ -61,7 +61,7 @@
                     android:padding="10dp"
                     android:layout_height="50dp"
                     android:fontFamily="@font/lato_black"
-                    android:text="Ashish Kumar"
+                    android:text=" "
                     android:textAlignment="center"
                     android:textColor="@color/teal_700"
                     android:textSize="24dp" />

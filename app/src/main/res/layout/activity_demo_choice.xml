@@ -18,42 +18,102 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <EditText
-                android:background="@drawable/inputs_bg"
-                android:id="@+id/name"
-                android:hint="Name"
-                android:textColor="@color/colorPrimaryDark"
-                android:padding="4pt"
-                android:layout_marginVertical="4pt"
-                android:inputType="textPersonName"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <EditText
-                android:background="@drawable/inputs_bg"
-                android:id="@+id/emailId"
-                android:hint="Email"
-                android:textColor="@color/colorPrimaryDark"
-                android:padding="4pt"
+                android:layout_height="wrap_content"
                 android:layout_marginVertical="4pt"
-                android:inputType="textEmailAddress"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight=".5"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textSize="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@android:color/holo_red_dark"/>
+                <EditText
+                    android:background="@drawable/inputs_bg"
+                    android:id="@+id/name"
+                    android:hint="Name"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:padding="4pt"
+                    android:layout_marginVertical="4pt"
+                    android:inputType="textPersonName"
+                    android:layout_width="0dp"
+                    android:layout_weight="9.5"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <EditText
-                android:background="@drawable/inputs_bg"
-                android:id="@+id/phoneNum"
-                android:hint="Mobile"
+                android:layout_height="wrap_content"
                 android:layout_marginVertical="4pt"
-                android:textColor="@color/colorPrimaryDark"
-                android:padding="4pt"
-                android:inputType="phone"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight=".5"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textSize="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@android:color/holo_red_dark"/>
+                <EditText
+                    android:background="@drawable/inputs_bg"
+                    android:id="@+id/emailId"
+                    android:hint="Email"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:padding="4pt"
+                    android:inputType="textEmailAddress"
+                    android:layout_width="0dp"
+                    android:layout_weight="9.5"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="4pt"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight=".5"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textSize="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@android:color/holo_red_dark"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="9.5"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="4pt"
+                    android:orientation="horizontal"
+                    android:background="@drawable/inputs_bg"
+                    >
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/ccp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        />
+                    <EditText
+                        android:id="@+id/phoneNum"
+                        android:hint="Mobile"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:inputType="phone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"/>
+                </LinearLayout>
+            </LinearLayout>
+
             <RelativeLayout
                 android:id="@+id/spinnerHolder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/inputs_bg"
                 android:layout_marginTop="4pt"
+                android:layout_marginStart="5pt"
                 android:orientation="horizontal">
                 <Spinner
                     android:id="@+id/spinnerClass"
@@ -78,7 +138,7 @@
                     android:id="@+id/sub1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:text=""
+                    android:text="Maths"
                     android:gravity="center"
                     android:paddingVertical="4pt"
                     android:textSize="18sp"
@@ -205,9 +265,8 @@
                 <TextView
                     android:id="@+id/dateText"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="Date :"
+                    android:text="* Date :"
                     android:textSize="16sp"
-                    android:textColor="@android:color/black"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -226,8 +285,7 @@
                 <TextView
                     android:id="@+id/timeText"
                     app:layout_constraintLeft_toLeftOf="@+id/timePicker1"
-                    android:text="Time :"
-                    android:textColor="@android:color/black"
+                    android:text="* Time :"
                     android:textSize="16sp"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_width="wrap_content"
@@ -312,318 +370,5 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <!--
-    <EditText
-        android:background="@drawable/inputs_bg"
-        android:id="@+id/name"
-        android:hint="Name"
-        android:textColor="@color/colorPrimaryDark"
-        android:padding="4pt"
-        android:layout_marginVertical="8pt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:inputType="textPersonName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <EditText
-        android:background="@drawable/inputs_bg"
-        android:id="@+id/emailId"
-        android:hint="Email"
-        android:textColor="@color/colorPrimaryDark"
-        android:padding="4pt"
-        android:layout_marginVertical="8pt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:inputType="textEmailAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <EditText
-        android:background="@drawable/inputs_bg"
-        android:id="@+id/phoneNum"
-        android:hint="Mobile"
-        android:layout_marginVertical="8pt"
-        android:textColor="@color/colorPrimaryDark"
-        android:padding="4pt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailId"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:inputType="phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <RelativeLayout
-        android:id="@+id/spinnerHolder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/inputs_bg"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/phoneNum"
-        android:layout_marginTop="8pt"
-        android:orientation="horizontal">
-        <Spinner
-            android:id="@+id/spinnerClass"
-            android:backgroundTint="@android:color/black"
-            android:spinnerMode="dropdown"
-            android:popupBackground="@android:color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/subHolder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerHolder"
-        android:layout_marginTop="3pt">
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".5"/>
-        <TextView
-            android:id="@+id/sub1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text=""
-            android:gravity="center"
-            android:paddingVertical="4pt"
-            android:textSize="18sp"
-            android:textColor="@android:color/white"
-            android:layout_marginHorizontal="3pt"
-            android:layout_marginTop="3pt"
-            app:layout_constraintEnd_toStartOf="@+id/guide"
-            android:background="@drawable/sub_select"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/sub2"
-            app:layout_constraintStart_toEndOf="@+id/guide"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text=""
-            android:gravity="center"
-            android:paddingVertical="4pt"
-            android:textSize="18sp"
-            android:layout_marginHorizontal="3pt"
-            android:layout_marginTop="3pt"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/subjects_background"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/sub3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sub1"
-            android:text=""
-            android:gravity="center"
-            android:paddingVertical="4pt"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toEndOf="@+id/guide"
-            android:layout_marginHorizontal="3pt"
-            android:layout_marginTop="3pt"
-            android:background="@drawable/subjects_background"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/sub4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sub2"
-            android:text=""
-            android:layout_marginHorizontal="3pt"
-            android:layout_marginTop="3pt"
-            android:gravity="center"
-            android:paddingVertical="4pt"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintStart_toEndOf="@+id/guide"
-            android:background="@drawable/subjects_background"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/sub5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sub3"
-            android:text=""
-            android:gravity="center"
-            android:paddingVertical="4pt"
-            android:textSize="18sp"
-            android:layout_marginHorizontal="3pt"
-            android:layout_marginTop="3pt"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toStartOf="@+id/guide"
-            android:background="@drawable/subjects_background"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/sub6"
-            app:layout_constraintStart_toEndOf="@id/guide"
-            app:layout_constraintTop_toBottomOf="@id/sub4"
-            android:text=""
-            android:gravity="center"
-            android:paddingVertical="4pt"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/subjects_background"
-            android:layout_marginHorizontal="3pt"
-            android:layout_marginTop="3pt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/sub7"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sub5"
-            android:text=""
-            android:layout_marginHorizontal="3pt"
-            android:layout_marginTop="3pt"
-            android:gravity="center"
-            android:paddingVertical="4pt"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toStartOf="@+id/guide"
-            android:background="@drawable/subjects_background"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/sub8"
-            android:layout_marginHorizontal="3pt"
-            android:layout_marginTop="3pt"
-            app:layout_constraintStart_toEndOf="@id/guide"
-            app:layout_constraintTop_toBottomOf="@id/sub6"
-            android:text=""
-            android:gravity="center"
-            android:paddingVertical="4pt"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:background="@drawable/subjects_background"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        app:layout_constraintTop_toBottomOf="@+id/subHolder"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="3pt"
-        app:layout_constraintBottom_toTopOf="@+id/scheduleTrialBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="3pt"
-     >
-        <TextView
-            android:id="@+id/dateText"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="Date :"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <Button
-            android:id="@+id/datePicker1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#810606"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dateText"
-            android:textAllCaps="false"
-            android:text="Select Date"/>
-        <TextView
-            android:id="@+id/timeText"
-            app:layout_constraintLeft_toLeftOf="@+id/timePicker1"
-            android:text="Time :"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <Button
-            android:id="@+id/timePicker1"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:backgroundTint="#810606"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/timeText"
-            android:text="Select Time"
-            android:textAllCaps="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:id="@+id/slotTime"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:text="Selected Slot :\n
-   No selected till now"
-            android:fontFamily="@font/stolzl_regular"
-            android:layout_marginVertical="2pt"
-            android:background="#DDEAF8"
-            android:gravity="center_horizontal|center_vertical"
-            app:layout_constraintTop_toBottomOf="@+id/datePicker1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <androidx.appcompat.widget.AppCompatButton
-        android:text="Schedule Trial"
-        android:textAllCaps="false"
-        android:paddingHorizontal="14pt"
-        android:paddingVertical="4pt"
-        android:textSize="18dp"
-        android:background="@drawable/intermediate_bg"
-        android:shadowColor="@color/logInBack"
-        android:id="@+id/scheduleTrialBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="5pt"
-        android:shadowRadius="0.4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/problemText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/problemText"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/whatsapp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Problem in booking a slot?"
-        android:textColor="@color/colorPrimaryDark"
-        android:textStyle="bold"
-        android:gravity="center"/>
-    <LinearLayout
-        android:id="@+id/whatsapp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="3pt"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <TextView
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="#0D8779"
-            android:textSize="18sp"
-            android:layout_marginTop="3pt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="3pt"
-            android:text="Connect our support team"/>
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="20dp"
-            android:src="@drawable/whatsapp"/>
-    </LinearLayout>
--->
 </androidx.constraintlayout.widget.ConstraintLayout>

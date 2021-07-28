@@ -37,6 +37,7 @@ import com.example.acadup.Models.SubjectsModel;
 import com.example.acadup.R;
 import com.example.acadup.SubjectOptions;
 import com.example.acadup.SubjectView;
+import com.example.acadup.demo_choice;
 import com.example.acadup.payment_inquiry;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -85,10 +86,10 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
     StorageReference storageReference;
     String userId;
     FirebaseUser user;
-    final int[] classDefault = new int[1];
+//    final int[] classDefault = new int[1];
     String emailId;
     String phone;
-//    ArrayList<SubjectsModel> lowClass1,middleClass1,upClass1;
+
     FirebaseFirestore db;
     DocumentReference lowClassRef,midClassRef,upperClassRef;
     public static ArrayList<SubjectsModel> lowerClass_1,midClass_1,upperClass_1;
@@ -169,10 +170,12 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
 
         consEight.setVisibility(View.GONE);
 
+
+
         demoActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), payment_inquiry.class));
+                startActivity(new Intent(getContext(), demo_choice.class));
             }
         });
 
@@ -430,7 +433,6 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
     @Override
     public void spinnerClicked(int index) {
         classSelected=index+1;
-      //Toast.makeText(getContext(), String.valueOf(index), Toast.LENGTH_SHORT).show();
         if(index>=0&& index<=4){
             consSelect8=1;consSelect5=0;consSelect6=0;
             consEight.setVisibility(View.GONE);
@@ -479,16 +481,38 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         }
     }
 
-
     @Override
     public void onCreate(@androidx.annotation.Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
 
+        if( classSelected>=0 && classSelected<=5)
+        {
+            consSelect8=1;consSelect5=0;consSelect6=0;
+        }
+        else if(classSelected>=6 && classSelected<=9){
+            consSelect8=0;consSelect5=0;consSelect6=1;
+        }
+        else if(classSelected>=10 && classSelected<=11)
+        {
+            consSelect8=0;consSelect5=1;consSelect6=0;
+        }
+
+
         userId = fAuth.getCurrentUser().getUid();
         user = fAuth.getCurrentUser();
+        DocumentReference ref=fStore.collection("users").document(userId);
+        ref.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String nameTxt=documentSnapshot.getString("firstName");
+                        welcomeMsg.setText("Hello "+nameTxt+",");
+                        emailId=documentSnapshot.getString("email");
+                        phone=documentSnapshot.getString("phone");
 
+<<<<<<< HEAD
         DocumentReference documentReference = fStore.collection("users").document(userId);
         documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
             @Override
@@ -502,17 +526,13 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                     if( classDefault[0]>=1 && classDefault[0]<=4)
                     {
                         consSelect8=1;consSelect5=0;consSelect6=0;
+=======
+>>>>>>> 25b8186dcf4827c106b10cfb2f5a795199696ec8
                     }
-                    else if(classDefault[0]>=5 && classDefault[0]<=10){
-                        consSelect8=0;consSelect5=0;consSelect6=1;
-                    }
-                    else if(classDefault[0]>=11 && classDefault[0]<=12)
-                    {
-                        consSelect8=0;consSelect5=1;consSelect6=0;
-                    }
-                }else {
-                    Log.d("tag", "onEvent: Document do not exists");
-                }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
             }
         });
 
@@ -592,5 +612,4 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         }
     }
 
-    /**/
 }
