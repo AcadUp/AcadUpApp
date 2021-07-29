@@ -27,11 +27,14 @@ import com.example.acadup.LoadData.ApplicationClass;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.acadup.Models.SubjectsModel;
 import com.example.acadup.SendMail.JavaMailAPI;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -288,9 +291,16 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
         String showClass=classFormatForMail(spinSel);
         String showDate=demoDate;
         String showTime=timeFormatForMail(times);
+        String showName="";
+        if(etName.getText().toString().trim().contains(" ")){
+            showName=etName.getText().toString().substring(0,etName.getText().toString().indexOf(" "));
+        }
+        else{
+            showName=etName.getText().toString().trim();
+        }
 
         JavaMailAPI javaMailAPI=new JavaMailAPI(this,etEmail.getText().toString(),
-                "Dear "+etName.getText().toString().substring(0,etName.getText().toString().indexOf(" "))
+                "Dear "+showName
                         +",\nWelcome to AcadUp."
                         +"\n\n You have successfully registered for a demo class.Your demo class details are as:"
                         +"\n\nSubject - "+selectedSubject
@@ -641,9 +651,74 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
 
 
     private void setTime() {
-        TimePickerDialog timePickerDialog=new TimePickerDialog(demo_choice.this,kTimePickerListener,
-                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false);
-        timePickerDialog.show();
+//        TimePickerDialog timePickerDialog=new TimePickerDialog(demo_choice.this,kTimePickerListener,
+//                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false);
+//        timePickerDialog.show();
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        MaterialTimePicker.Builder picker=new MaterialTimePicker.Builder();
+        picker.setTitleText("schedule demo")
+                .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)
+                .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                .setMinute(calendar.get(Calendar.MINUTE))
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .build();
+        MaterialTimePicker materialTimePicker=picker.build();
+        materialTimePicker.show(fragmentManager,"TIME");
+        materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    int hourOfDay=materialTimePicker.getHour();
+                    int minutes=materialTimePicker.getMinute();
+                    String start_time="AM",end_time="AM";
+                    hour=hourOfDay;
+
+                    if(minutes<10){
+                        minute=("0"+String.valueOf(minutes));
+                    }
+                    else {
+                        minute=String.valueOf(minutes);
+                    }
+                    if(hour>12){
+                        hour=hour-12;
+                        start_time="PM";
+                    }
+                    else if(hour==12){
+                        start_time="PM";
+                    }
+                    int session_end=hour+1;
+                    if(start_time.equals("AM")){
+                        if(session_end==12){
+                            end_time="PM";
+                        }
+                    }
+                    else if(start_time.equals("PM")){
+                        if(hour==12){
+                            end_time="PM";
+                            session_end=session_end-12;
+                        }
+                        else if(session_end==12){
+                            end_time="AM";
+                            session_end=0;
+                        }
+                        else{
+                            end_time="PM";
+                        }
+                    }
+
+                    times=hour+":"+minute+" "+start_time+"-"+session_end+":"+minute+" "+end_time;
+                    slotTime.setText("Selected slot:\n"+dates+", "+times);
+                    map2.put("time",hourOfDay+":"+minute);
+                    map2.put("formatted_date",dates+", "+times);
+                }
+
+        });
+           materialTimePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                   Toast.makeText(demo_choice.this, "You have not selected time", Toast.LENGTH_SHORT).show();
+               }
+           });
+
     }
     private void setDate() {
         DatePickerDialog datePickerDialog=new DatePickerDialog(demo_choice.this,kDatePickerListener,year,month,date);
@@ -769,7 +844,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
                     map2.put("formatted_date",dates+", "+times);
                 }
             }
-            else{
+            else if(year>Integer.parseInt(formattedYear)){
                 slotTime.setText("Selected slot:\n"+dates+", "+times);
                 map2.put("date",String.valueOf(dayOfMonth));
                 map2.put("month",String.valueOf(month));
@@ -778,50 +853,50 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
 
         }
     };
-    protected TimePickerDialog.OnTimeSetListener kTimePickerListener=new
-            TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
-                    String start_time="AM",end_time="AM";
-                    hour=hourOfDay;
-
-                    if(minutes<10){
-                        minute=("0"+String.valueOf(minutes));
-                    }
-                    else {
-                        minute=String.valueOf(minutes);
-                    }
-                    if(hour>12){
-                        hour=hour-12;
-                        start_time="PM";
-                    }
-                    else if(hour==12){
-                        start_time="PM";
-                    }
-                    int session_end=hour+1;
-                    if(start_time.equals("AM")){
-                        if(session_end==12){
-                            end_time="PM";
-                        }
-                    }
-                    else if(start_time.equals("PM")){
-                        if(hour==12){
-                            end_time="PM";
-                            session_end=session_end-12;
-                        }
-                        else if(session_end==12){
-                            end_time="AM";
-                            session_end=0;
-                        }
-                        else{
-                            end_time="PM";
-                        }
-                    }
-
-                    times=hour+":"+minute+" "+start_time+"-"+session_end+":"+minute+" "+end_time;
-                    slotTime.setText("Selected slot:\n"+dates+", "+times);
-                    map2.put("time",hourOfDay+":"+minute);
-                    map2.put("formatted_date",dates+", "+times);
-                }
-            };
+//    protected TimePickerDialog.OnTimeSetListener kTimePickerListener=new
+//            TimePickerDialog.OnTimeSetListener() {
+//                @Override
+//                public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
+//                    String start_time="AM",end_time="AM";
+//                    hour=hourOfDay;
+//
+//                    if(minutes<10){
+//                        minute=("0"+String.valueOf(minutes));
+//                    }
+//                    else {
+//                        minute=String.valueOf(minutes);
+//                    }
+//                    if(hour>12){
+//                        hour=hour-12;
+//                        start_time="PM";
+//                    }
+//                    else if(hour==12){
+//                        start_time="PM";
+//                    }
+//                    int session_end=hour+1;
+//                    if(start_time.equals("AM")){
+//                        if(session_end==12){
+//                            end_time="PM";
+//                        }
+//                    }
+//                    else if(start_time.equals("PM")){
+//                        if(hour==12){
+//                            end_time="PM";
+//                            session_end=session_end-12;
+//                        }
+//                        else if(session_end==12){
+//                            end_time="AM";
+//                            session_end=0;
+//                        }
+//                        else{
+//                            end_time="PM";
+//                        }
+//                    }
+//
+//                    times=hour+":"+minute+" "+start_time+"-"+session_end+":"+minute+" "+end_time;
+//                    slotTime.setText("Selected slot:\n"+dates+", "+times);
+//                    map2.put("time",hourOfDay+":"+minute);
+//                    map2.put("formatted_date",dates+", "+times);
+//                }
+//            };
 }
