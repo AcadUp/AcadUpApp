@@ -759,19 +759,21 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
                         slotTime.setText("Selected slot:\n"+dates+", "+times);
                         map2.put("date",String.valueOf(dayOfMonth));
                         map2.put("month",String.valueOf(month));
-
+                        map2.put("formatted_date",dates+", "+times);
                     }
                 }
                 else{
                     slotTime.setText("Selected slot:\n"+dates+", "+times);
                     map2.put("date",String.valueOf(dayOfMonth));
                     map2.put("month",String.valueOf(month));
+                    map2.put("formatted_date",dates+", "+times);
                 }
             }
             else{
                 slotTime.setText("Selected slot:\n"+dates+", "+times);
                 map2.put("date",String.valueOf(dayOfMonth));
                 map2.put("month",String.valueOf(month));
+                map2.put("formatted_date",dates+", "+times);
             }
 
         }
