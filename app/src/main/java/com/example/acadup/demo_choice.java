@@ -69,6 +69,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
     LinearLayout whatsApp;
     int date,month,year;
     int hour;
+    String demoDate="";
     String minute;
     Calendar calendar=Calendar.getInstance();
     int count1=0,count2=0,count3=0,count4=0,count5=0,count6=0,count7=0,count8=0;
@@ -284,11 +285,84 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
     }
 
     private void sendEmail() {
+        String showClass=classFormatForMail(spinSel);
+        String showDate=demoDate;
+        String showTime=timeFormatForMail(times);
+
         JavaMailAPI javaMailAPI=new JavaMailAPI(this,etEmail.getText().toString(),
-                etName.getText().toString()+",\n you have successfully registered for a demo class for "+selectedSubject+"(Class-"+spinSel+") subject.\n"+
-                        "\nDate and Time :"+dates+", "+times+"\nThank you..");
+                "Dear "+etName.getText().toString().substring(0,etName.getText().toString().indexOf(" "))
+                        +",\nWelcome to AcadUp."
+                        +"\n\n You have successfully registered for a demo class.Your demo class details are as:"
+                        +"\n\nSubject - "+selectedSubject
+                        +"\nClass - "+showClass
+                        +"\nDate: "+showDate
+                        +"\nTime: "+showTime
+                        +"\n\nIf you need any help/assistance, kindly reach out to us at rishavju21@gmail.com or +918584074448"
+                        +"\n\nThank you"
+                        +"\nTeam AcadUp");
         javaMailAPI.execute();
     }
+
+    private String timeFormatForMail(String times) {
+        String timeShow="";
+        if(times.length()==17){
+            timeShow=times;
+        }
+        else if(times.length()==15){
+            timeShow="0"+times.substring(0,8)+"0"+times.substring(8);
+        }
+        else if(times.length()==16){
+            if(times.indexOf("-")==8){
+                timeShow=times.substring(0,9)+"0"+times.substring(9);
+            }
+            else if(times.indexOf("-")==7){
+                timeShow="0"+times;
+            }
+        }
+        return timeShow;
+    }
+
+    private String classFormatForMail(String spinSel) {
+        String classShow="";
+        if(spinSel.equals("1")){
+            classShow="I";
+        }
+        else if(spinSel.equals("2")){
+            classShow="II";
+        }
+        else if(spinSel.equals("3")){
+            classShow="III";
+        }
+        else if(spinSel.equals("4")){
+            classShow="IV";
+        }
+        else if(spinSel.equals("5")){
+            classShow="V";
+        }
+        else if(spinSel.equals("6")){
+            classShow="VI";
+        }
+        else if(spinSel.equals("7")){
+            classShow="VII";
+        }
+        else if(spinSel.equals("8")){
+            classShow="VIII";
+        }
+        else if(spinSel.equals("9")){
+            classShow="IX";
+        }
+        else if(spinSel.equals("10")){
+            classShow="X";
+        }
+        else if(spinSel.equals("11")){
+            classShow="XI";
+        }
+        else if(spinSel.equals("12")){
+            classShow="XII";
+        }
+        return classShow;
+    }
+
     private void createDemoClassCollection() {
         map2.put("name",etName.getText().toString());
         map2.put("phone",String.valueOf(countryCodePicker.getFullNumberWithPlus().replace(" ","")));
@@ -600,6 +674,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             }
             else if(date==2){
                 dates=dates+date+"nd";
+
             }
             else if(date==3){
                 dates=dates+date+"rd";
@@ -608,43 +683,57 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
                 dates=dates+date+"th";
             }
 
+            demoDate=demoDate+date+"-";
 //            month calculation
             if(month==1){
                 dates=dates+" Jan";
+                demoDate=demoDate+"January-";
             }
             else if(month==2){
                 dates=dates+" Feb";
+                demoDate=demoDate+"February-";
             }
             else if(month==3){
                 dates=dates+" Mar";
+                demoDate=demoDate+"March-";
             }
             else if(month==4){
                 dates=dates+" Apr";
+                demoDate=demoDate+"April-";
             }
             else if(month==5){
                 dates=dates+" May";
+                demoDate=demoDate+"May-";
             }
             else if(month==6){
                 dates=dates+" June";
+                demoDate=demoDate+"June-";
             }
             else if(month==7){
                 dates=dates+" July";
+                demoDate=demoDate+"July-";
             }
             else if(month==8){
                 dates=dates+" Aug";
+                demoDate=demoDate+"August-";
             }
             else if(month==9){
                 dates=dates+" Sep";
+                demoDate=demoDate+"September-";
             }
             else if(month==10){
                 dates=dates+" Oct";
+                demoDate=demoDate+"October-";
             }else if(month==11){
                 dates=dates+" Nov";
+                demoDate=demoDate+"November-";
             }else if(month==12){
                 dates=dates+" Dec";
+                demoDate=demoDate+"December-";
             }
             //year calculation
-            dates=dates+","+year;
+            dates=dates+", "+year;
+            demoDate=demoDate+year;
 
             //Date selection correct or incorrect check
             Date c = Calendar.getInstance().getTime();

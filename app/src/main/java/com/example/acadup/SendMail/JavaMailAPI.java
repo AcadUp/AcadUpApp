@@ -3,6 +3,7 @@ package com.example.acadup.SendMail;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -41,12 +42,12 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void> {
 
         MimeMessage mimeMessage = new MimeMessage(session);
         try {
-            mimeMessage.setFrom(new InternetAddress(Utils.EMAIL));
+            mimeMessage.setFrom(new InternetAddress(Utils.EMAIL,"AcadUp - A Smart Learning Platform"));
             mimeMessage.addRecipients(Message.RecipientType.TO, String.valueOf(new InternetAddress(email)));
-            mimeMessage.setSubject("AcadUp||Demo Class||Confirmation mail");
+            mimeMessage.setSubject("Demo Class | Confirmation mail");
             mimeMessage.setText(message);
             Transport.send(mimeMessage);
-        } catch (MessagingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return null;
