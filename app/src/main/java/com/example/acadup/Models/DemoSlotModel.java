@@ -1,18 +1,19 @@
 package com.example.acadup.Models;
 
 public class DemoSlotModel {
-    String available,classes,date,email,formatted_date,month,name,phone,time,subject;
+    String available,classes,date,email,formatted_date,month,year,name,phone,time,subject;
     public DemoSlotModel(){
 
     }
     public DemoSlotModel(String available, String classes, String date, String email,
-                         String formatted_date, String month, String name, String phone, String time, String subject) {
+                         String formatted_date, String month,String year, String name, String phone, String time, String subject) {
         this.available = available;
         this.classes = classes;
         this.date = date;
         this.email = email;
         this.formatted_date = formatted_date;
         this.month = month;
+        this.year=year;
         this.name = name;
         this.phone = phone;
         this.time = time;
@@ -65,6 +66,14 @@ public class DemoSlotModel {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
     }
 
     public String getName() {

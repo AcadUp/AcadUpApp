@@ -651,9 +651,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
 
 
     private void setTime() {
-//        TimePickerDialog timePickerDialog=new TimePickerDialog(demo_choice.this,kTimePickerListener,
-//                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false);
-//        timePickerDialog.show();
+
         FragmentManager fragmentManager=getSupportFragmentManager();
         MaterialTimePicker.Builder picker=new MaterialTimePicker.Builder();
         picker.setTitleText("schedule demo")
@@ -834,6 +832,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
                         slotTime.setText("Selected slot:\n"+dates+", "+times);
                         map2.put("date",String.valueOf(dayOfMonth));
                         map2.put("month",String.valueOf(month));
+                        map2.put("year",String.valueOf(year));
                         map2.put("formatted_date",dates+", "+times);
                     }
                 }
@@ -841,6 +840,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
                     slotTime.setText("Selected slot:\n"+dates+", "+times);
                     map2.put("date",String.valueOf(dayOfMonth));
                     map2.put("month",String.valueOf(month));
+                    map2.put("year",String.valueOf(year));
                     map2.put("formatted_date",dates+", "+times);
                 }
             }
@@ -848,55 +848,11 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
                 slotTime.setText("Selected slot:\n"+dates+", "+times);
                 map2.put("date",String.valueOf(dayOfMonth));
                 map2.put("month",String.valueOf(month));
+                map2.put("year",String.valueOf(year));
                 map2.put("formatted_date",dates+", "+times);
             }
 
         }
     };
-//    protected TimePickerDialog.OnTimeSetListener kTimePickerListener=new
-//            TimePickerDialog.OnTimeSetListener() {
-//                @Override
-//                public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
-//                    String start_time="AM",end_time="AM";
-//                    hour=hourOfDay;
-//
-//                    if(minutes<10){
-//                        minute=("0"+String.valueOf(minutes));
-//                    }
-//                    else {
-//                        minute=String.valueOf(minutes);
-//                    }
-//                    if(hour>12){
-//                        hour=hour-12;
-//                        start_time="PM";
-//                    }
-//                    else if(hour==12){
-//                        start_time="PM";
-//                    }
-//                    int session_end=hour+1;
-//                    if(start_time.equals("AM")){
-//                        if(session_end==12){
-//                            end_time="PM";
-//                        }
-//                    }
-//                    else if(start_time.equals("PM")){
-//                        if(hour==12){
-//                            end_time="PM";
-//                            session_end=session_end-12;
-//                        }
-//                        else if(session_end==12){
-//                            end_time="AM";
-//                            session_end=0;
-//                        }
-//                        else{
-//                            end_time="PM";
-//                        }
-//                    }
-//
-//                    times=hour+":"+minute+" "+start_time+"-"+session_end+":"+minute+" "+end_time;
-//                    slotTime.setText("Selected slot:\n"+dates+", "+times);
-//                    map2.put("time",hourOfDay+":"+minute);
-//                    map2.put("formatted_date",dates+", "+times);
-//                }
-//            };
+
 }

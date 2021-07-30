@@ -25,10 +25,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.acadup.Models.DemoSlotModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -57,7 +60,7 @@ public class demo_slot extends AppCompatActivity {
     int date,month,year;
     int hour;
     int fromHome;
-    String dateFinal,monthFinal;
+    String dateFinal,monthFinal,yearFinal;
     Calendar calendar=Calendar.getInstance();
     ViewGroup viewGroup;
     ScrollView.LayoutParams params;
@@ -132,6 +135,7 @@ public class demo_slot extends AppCompatActivity {
 
                                 String date_in = demoSlotModel.getDate();
                                 String month_in = demoSlotModel.getMonth();
+                                String year_in=demoSlotModel.getYear();
                                 String time_in = demoSlotModel.getTime();
                                 String hour_in = time_in.split(":")[0];
                                 String minute_in = time_in.split(":")[1];
@@ -144,59 +148,70 @@ public class demo_slot extends AppCompatActivity {
                                 int miute_int = Integer.parseInt(minute_in);
                                 int date_int = Integer.parseInt(date_in);
                                 int month_int = Integer.parseInt(month_in);
+                                int year_int=Integer.parseInt(year_in);
 
                                 String Hour_sys = new SimpleDateFormat("HH", Locale.getDefault()).format(new Date());
                                 String Minute_sys = new SimpleDateFormat("mm", Locale.getDefault()).format(new Date());
                                 String Date_sys = new SimpleDateFormat("dd", Locale.getDefault()).format(new Date());
                                 String Month_sys = new SimpleDateFormat("MM", Locale.getDefault()).format(new Date());
+                                String Year_sys=new SimpleDateFormat("yyyy",Locale.getDefault()).format(new Date());
 
                                 int hour_sys_int = Integer.parseInt(Hour_sys);
                                 int minute_sys_int = Integer.parseInt(Minute_sys);
                                 int date_sys_int = Integer.parseInt(Date_sys);
                                 int month_sys_int = Integer.parseInt(Month_sys);
+                                int year_sys_int = Integer.parseInt(Year_sys);
 
-
-                                if (month_sys_int > month_int) {
-
+                                if(year_sys_int > year_int){
                                     reference.update(key[i].toString(), FieldValue.delete());
+                                }
+                                else if(year_sys_int == year_int){
+                                    if (month_sys_int > month_int) {
 
-                                } else if (month_sys_int == month_int) {
+                                        reference.update(key[i].toString(), FieldValue.delete());
 
-                                    if (date_sys_int > date_int) {
+                                    }
+                                    else if (month_sys_int == month_int) {
 
-                                        reference.update(key[i].toString(),FieldValue.delete());
-
-                                    } else if (date_sys_int == date_int) {
-
-                                        if (hour_sys_int > hour_int) {
+                                        if (date_sys_int > date_int) {
 
                                             reference.update(key[i].toString(),FieldValue.delete());
 
-                                        } else if (hour_sys_int == hour_int) {
+                                        } else if (date_sys_int == date_int) {
 
-                                            if (minute_sys_int > miute_int) {
+                                            if (hour_sys_int > hour_int) {
 
                                                 reference.update(key[i].toString(),FieldValue.delete());
 
-                                            } else if (minute_sys_int == miute_int) {
+                                            } else if (hour_sys_int == hour_int) {
+
+                                                if (minute_sys_int > miute_int) {
+
+                                                    reference.update(key[i].toString(),FieldValue.delete());
+
+                                                } else if (minute_sys_int == miute_int) {
+                                                    slots.add(demoSlotModel);
+                                                }
+                                            } else {
+
                                                 slots.add(demoSlotModel);
+
                                             }
                                         } else {
 
                                             slots.add(demoSlotModel);
 
                                         }
-                                    } else {
-
-                                        slots.add(demoSlotModel);
 
                                     }
-
-                                } else {
-
-                                    slots.add(demoSlotModel);
-
+                                    else {
+                                        slots.add(demoSlotModel);
+                                    }
                                 }
+                                else{
+                                    slots.add(demoSlotModel);
+                                }
+
                             }
                             for (int j = 0; j < slots.size(); j++) {
                                 View v = LayoutInflater.from(demo_slot.this).inflate(R.layout.card_holders, viewGroup, false);
@@ -293,7 +308,7 @@ public class demo_slot extends AppCompatActivity {
             year=year;
             month=month+1;
             date=dayOfMonth;
-            int ValMonth=month,ValDay=date;
+            int ValMonth=month,ValDay=date,valYear=year;
 
 
             s=String.valueOf(date)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
@@ -385,12 +400,14 @@ public class demo_slot extends AppCompatActivity {
 
                         dateFinal=String.valueOf(ValDay);
                         monthFinal=String.valueOf(ValMonth);
+                        yearFinal=String.valueOf(valYear);
                         setTime();
                     }
                 }
                 else{
                     dateFinal=String.valueOf(ValDay);
                     monthFinal=String.valueOf(ValMonth);
+                    yearFinal=String.valueOf(valYear);
                     setTime();
 
                 }
@@ -399,20 +416,28 @@ public class demo_slot extends AppCompatActivity {
 
                 dateFinal=String.valueOf(ValDay);
                 monthFinal=String.valueOf(ValMonth);
+                yearFinal=String.valueOf(valYear);
                 setTime();
             }
 
         }
     };
     private void setTime() {
-        TimePickerDialog timePickerDialog=new TimePickerDialog(demo_slot.this,kTimePickerListener,
-                calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),false);
-        timePickerDialog.show();
-    }
-    protected TimePickerDialog.OnTimeSetListener kTimePickerListener=new
-            TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        MaterialTimePicker.Builder picker=new MaterialTimePicker.Builder();
+        picker.setTitleText("schedule demo")
+                .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)
+                .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                .setMinute(calendar.get(Calendar.MINUTE))
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .build();
+        MaterialTimePicker materialTimePicker=picker.build();
+        materialTimePicker.show(fragmentManager,"TIME");
+        materialTimePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int hourOfDay=materialTimePicker.getHour();
+                int minutes=materialTimePicker.getMinute();
                     String start_time="AM",end_time="AM";
                     hour=hourOfDay;
                     if(minutes<10){
@@ -453,9 +478,19 @@ public class demo_slot extends AppCompatActivity {
                     reference.update(sub_node+class_node+".formatted_time",dates+", "+time);
                     reference.update(sub_node+class_node+".date",dateFinal);
                     reference.update(sub_node+class_node+".month",monthFinal);
+                    reference.update(sub_node+class_node+".year",yearFinal);
                     reference.update(sub_node+class_node+".time",hourOfDay+":"+minute);
                 }
-            };
+
+        });
+        materialTimePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(demo_slot.this, "You have not selected time", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         if(fromHome==7){
