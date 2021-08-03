@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +43,7 @@ public class UpdateProfile extends AppCompatActivity {
     FirebaseFirestore fStore;
     FirebaseUser user;
     StorageReference storageReference;
+    Spinner classSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class UpdateProfile extends AppCompatActivity {
         final String lastname = data.getStringExtra("lastName");
         String email = data.getStringExtra("email");
         String phone = data.getStringExtra("phone");
+        String classDefault=data.getStringExtra("class");
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -60,6 +63,7 @@ public class UpdateProfile extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
 
         firstnameEt = findViewById(R.id.firstname);
+        classSpinner=findViewById(R.id.classSpinner);
         lastnameEt=findViewById(R.id.lastname);
         profileEmail = findViewById(R.id.profileEmailAddress);
         profilePhone = findViewById(R.id.profilePhoneNo);
@@ -79,7 +83,7 @@ public class UpdateProfile extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).into(profileImageView);
-                profileImageView.setRotation(90);
+                //profileImageView.setRotation(90);
             }
         });
 
@@ -109,6 +113,7 @@ public class UpdateProfile extends AppCompatActivity {
                         edited.put("firstName",firstnameEt.getText().toString());
                         edited.put("lastName",lastnameEt.getText().toString());
                         edited.put("phone",profilePhone.getText().toString());
+                        edited.put("class",classSpinner.getSelectedItem());
                         docRef.update(edited).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -132,6 +137,7 @@ public class UpdateProfile extends AppCompatActivity {
         firstnameEt.setText(firstname);
         lastnameEt.setText(lastname);
         profilePhone.setText(phone);
+        classSpinner.setSelection(Integer.parseInt(classDefault));
 
         Log.d(TAG, "onCreate: " + firstname + " " + email + " " + phone);
     }

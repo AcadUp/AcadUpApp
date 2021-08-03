@@ -13,7 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TopicVideoLists"></activity>
+        <activity android:name=".VideoPlayActivity"></activity>
+        <activity android:name=".Tutorials" />
+        <activity android:name=".PDFOpening" />
+        <activity android:name=".ConceptPDFs" />
+        <activity android:name=".TopicVideoLists" />
         <activity android:name=".NcertSolution" />
         <activity
             android:name=".ConnectUsActivity"
@@ -30,7 +34,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".signup" />
-        <activity android:name=".payment_inquiry" />
+        <activity android:name=".Coding_Robotics_Purchase" />
         <activity android:name=".demo_choice" />
         <activity android:name=".demo_slot" />
         <activity android:name=".Splash">

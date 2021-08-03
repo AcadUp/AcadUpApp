@@ -8,6 +8,21 @@
     android:background="@drawable/bgone"
     tools:context=".SubjectOptions">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Maths"
+        android:textSize="28sp"
+        android:fontFamily="@font/stolzl_regular"
+        android:textColor="#000"
+        android:layout_gravity="center"
+        android:paddingHorizontal="30dp"
+        android:layout_margin="5dp"
+        android:paddingVertical="5dp"
+        android:backgroundTint="#BFE0FA"
+        android:background="@drawable/inputs_bg"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -49,7 +64,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:padding="10dp"
                     android:gravity="center"
                     android:textStyle="bold"
@@ -61,6 +76,7 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
+            android:id="@+id/tutorialsCard"
             android:background="@drawable/why_acadup"
             android:layout_height="140dp"
             android:layout_marginLeft="25dp"
@@ -69,7 +85,6 @@
             android:layout_marginBottom="15dp"
             android:layout_weight="0.5">
             <androidx.cardview.widget.CardView
-            android:id="@+id/tutorialsCard"
             app:cardCornerRadius="15dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -90,7 +105,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:padding="10dp"
                     android:gravity="center"
@@ -136,7 +151,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:layout_marginTop="10dp"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -147,6 +162,7 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
+            android:id="@+id/pdfLayout"
             android:background="@drawable/why_acadup"
             android:layout_height="140dp"
             android:layout_marginTop="15dp"
@@ -175,7 +191,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:padding="10dp"
                     android:gravity="center"
@@ -223,7 +239,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:padding="10dp"
                     android:gravity="center"
@@ -265,7 +281,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:padding="10dp"
                     android:gravity="center"

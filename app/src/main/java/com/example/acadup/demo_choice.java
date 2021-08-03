@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+
 import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.util.Log;

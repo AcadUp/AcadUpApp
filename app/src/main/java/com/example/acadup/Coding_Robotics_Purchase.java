@@ -14,7 +14,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.razorpay.Checkout;
@@ -27,7 +26,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class payment_inquiry extends AppCompatActivity implements PaymentResultListener {
+public class Coding_Robotics_Purchase extends AppCompatActivity implements PaymentResultListener {
     TextView codingSelect,codingDeselect,roboticsSelect,roboticsDeselect;
     TextView heading_fundamental,amount,classNumber,moneyClass;
     TextView beginnerSelected,beginnerDeselected,intermediateSelected,intermediateDeselected,advancedSelected,advancedDeselected;
@@ -44,7 +43,7 @@ public class payment_inquiry extends AppCompatActivity implements PaymentResultL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_payment_inquiry);
+        setContentView(R.layout.activity_coding_robotics_purchase);
         Intent data = getIntent();
         String email=data.getStringExtra("email");
         String contact=data.getStringExtra("phone");
@@ -58,7 +57,7 @@ public class payment_inquiry extends AppCompatActivity implements PaymentResultL
         demoChoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(payment_inquiry.this,demo_choice.class));
+                startActivity(new Intent(Coding_Robotics_Purchase.this,demo_choice.class));
             }
         });
 
@@ -252,7 +251,7 @@ public class payment_inquiry extends AppCompatActivity implements PaymentResultL
                     object.put("contact of student",contact);
                     object.put("email of student",email);
 
-                    checkout.open(payment_inquiry.this,object);
+                    checkout.open(Coding_Robotics_Purchase.this,object);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -275,13 +274,13 @@ public class payment_inquiry extends AppCompatActivity implements PaymentResultL
         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Toast.makeText(payment_inquiry.this,"added data: "+s,Toast.LENGTH_SHORT).show();
+                Toast.makeText(Coding_Robotics_Purchase.this,"added data: "+s,Toast.LENGTH_SHORT).show();
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(payment_inquiry.this,"not added"+s,Toast.LENGTH_SHORT).show();
+                Toast.makeText(Coding_Robotics_Purchase.this,"not added"+s,Toast.LENGTH_SHORT).show();
 
             }
         });

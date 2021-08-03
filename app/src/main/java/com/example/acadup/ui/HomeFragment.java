@@ -1,11 +1,8 @@
 package com.example.acadup.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +24,7 @@ import com.bumptech.glide.Glide;
 import com.example.acadup.Adapters.HotCourseAdapter;
 import com.example.acadup.Adapters.PracticeTestAdapter;
 import com.example.acadup.Adapters.SliderAdapter;
-import com.example.acadup.HomeActivity;
-import com.example.acadup.LoadData.ApplicationClass;
-import com.example.acadup.MainActivity;
+import com.example.acadup.LoginActivity;
 import com.example.acadup.Models.HotCourseModel;
 import com.example.acadup.Models.PracticeTestModel;
 import com.example.acadup.Models.SliderModel;
@@ -38,22 +33,18 @@ import com.example.acadup.R;
 import com.example.acadup.SubjectOptions;
 import com.example.acadup.SubjectView;
 import com.example.acadup.demo_choice;
-import com.example.acadup.payment_inquiry;
+import com.example.acadup.Coding_Robotics_Purchase;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.Executor;
 
 
 public class HomeFragment extends Fragment implements SubjectView,View.OnClickListener {
@@ -98,6 +89,12 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
 
         root= inflater.inflate(R.layout.fragment_home, container, false);
+
+
+        if(fAuth.getCurrentUser() == null  ){
+            startActivity(new Intent(getActivity().getApplicationContext(), LoginActivity.class));
+            getActivity().finish();
+        }
         lowerClass_1=new ArrayList<>();
         midClass_1=new ArrayList<>();
         upperClass_1=new ArrayList<>();
@@ -558,7 +555,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
             case R.id.subEightImg7 :
             case R.id.subSixImg3:
             case R.id.subSixImg4:
-                Intent intent=new Intent(getContext(),payment_inquiry.class);
+                Intent intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
                 intent.putExtra("email",emailId);
                 intent.putExtra("phone",phone);
                 startActivity(intent);
@@ -566,7 +563,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
             case R.id.subFourImg3:
                 if(classSelected>=7 && classSelected<=10)
                 {
-                    intent=new Intent(getContext(),payment_inquiry.class);
+                    intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
                     intent.putExtra("email",emailId);
                     intent.putExtra("phone",phone);
                     startActivity(intent);
@@ -578,14 +575,14 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
             case R.id.subFourImg4:
                 if(classSelected>=7 && classSelected<=10)
                 {
-                    intent=new Intent(getContext(),payment_inquiry.class);
+                    intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
                     intent.putExtra("email",emailId);
                     intent.putExtra("phone",phone);
                     startActivity(intent);
                 }
                 else if(classSelected>=11 && classSelected<=12)
                 {
-                    intent=new Intent(getContext(),payment_inquiry.class);
+                    intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
                     intent.putExtra("email",emailId);
                     intent.putExtra("phone",phone);
                     startActivity(intent);
@@ -597,7 +594,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
             case R.id.subSixImg5:
                 if(classSelected>=11 && classSelected<=12)
                 {
-                    intent=new Intent(getContext(),payment_inquiry.class);
+                    intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
                     intent.putExtra("email",emailId);
                     intent.putExtra("phone",phone);
                     startActivity(intent);

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/why_acadup"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginTop="10dp"
+    android:elevation="10dp"
+    android:id="@+id/linearLayout"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/chImage"
+            android:layout_gravity="center"
+            android:layout_width="30pt"
+            android:layout_height="30pt"
+            app:civ_border_width="1dp"
+            android:src="@drawable/maths"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="3pt"
+            android:weightSum="1">
+            <TextView
+                android:id="@+id/chName"
+                android:text="Real Numbers"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="@font/lato_regular"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_weight="0.5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_gravity="end"
+                android:id="@+id/videoIcon"
+                android:layout_weight="0.5"
+                android:visibility="invisible"
+                android:backgroundTint="@color/colorRed"
+                android:src="@drawable/play"
+                android:layout_height="40dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
