@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.acadup.Models.HotCourseModel;
 import com.example.acadup.R;
 import com.example.acadup.Models.HotCourseModel;
@@ -42,6 +44,7 @@ public class HotCourseAdapter extends RecyclerView.Adapter<HotCourseAdapter.HotC
     @Override
     public void onBindViewHolder(@NonNull HotCourseHolder holder, int position) {
         holder.hotCourseName.setText(hotCourseModelsName.get(position).getName());
+        Glide.with(context).load(hotCourseModelsName.get(position).getImage()).into(holder.hotCourseImg);
     }
 
     @Override
@@ -52,9 +55,11 @@ public class HotCourseAdapter extends RecyclerView.Adapter<HotCourseAdapter.HotC
 
     public class HotCourseHolder extends RecyclerView.ViewHolder{
         TextView hotCourseName;
+        ImageView hotCourseImg;
         public HotCourseHolder(@NonNull View itemView) {
             super(itemView);
             hotCourseName=itemView.findViewById(R.id.hotCourseTxt);
+            hotCourseImg=itemView.findViewById(R.id.hotCourseImg);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

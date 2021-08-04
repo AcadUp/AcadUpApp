@@ -25,6 +25,7 @@ import com.example.acadup.Adapters.HotCourseAdapter;
 import com.example.acadup.Adapters.PracticeTestAdapter;
 import com.example.acadup.Adapters.SliderAdapter;
 import com.example.acadup.LoginActivity;
+import com.example.acadup.Models.ConnectUsModel;
 import com.example.acadup.Models.HotCourseModel;
 import com.example.acadup.Models.PracticeTestModel;
 import com.example.acadup.Models.SliderModel;
@@ -85,6 +86,8 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
     DocumentReference lowClassRef,midClassRef,upperClassRef;
     public static ArrayList<SubjectsModel> lowerClass_1,midClass_1,upperClass_1;
 
+    DocumentReference hotCourseRef;
+
     private View root;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
 
@@ -102,6 +105,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         lowClassRef=db.document("Class/lowerClass");
         midClassRef=db.document("Class/midClass");
         upperClassRef=db.document("Class/upperClass");
+        hotCourseRef=db.document("HotCourses/Course");
         loadData();
 
         moreSubjectBtn=root.findViewById(R.id.moreSubButton);
@@ -272,12 +276,46 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         });
 
         //hot course some dummy element added
-        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 1"));
-        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 2"));
-        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 3"));
-        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 4"));
-        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 5"));
-        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 6"));
+//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 1"));
+//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 2"));
+//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 3"));
+//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 4"));
+//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 5"));
+//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 6"));
+        hotCourseRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            Map<String,Object> map1=documentSnapshot.getData();
+                            Object[] key= map1.keySet().toArray();
+                            for(int i=0;i<map1.size();i++){
+                                HotCourseModel hotModel=documentSnapshot.get(key[i].toString(),HotCourseModel.class);
+                                hotCourseModelArrayList.add(hotModel);
+                            }
+                            hotCourseAdapter.notifyDataSetChanged();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+        //hot course adapter, layout Manager set and itemClick of hot course
+        hotCourseItem=new HotCourseAdapter.ItemClicked() {
+            @Override
+            public void onItemClicked(int index) {
+                Toast.makeText(getContext(), "Hot Course "+(index+1), Toast.LENGTH_SHORT).show();
+            }
+        };
+        hotCourseAdapter=new HotCourseAdapter(getContext(),hotCourseModelArrayList,hotCourseItem);
+        layoutManagerHotCourse=new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
+        hotCourseRecyclerView.setLayoutManager(layoutManagerHotCourse);
+        hotCourseRecyclerView.setAdapter(hotCourseAdapter);
+
         //in practice test some dummy data added
         practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));
         practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));
@@ -292,18 +330,6 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         sliderModelArrayList.add(new SliderModel(R.drawable.sample3));
         sliderModelArrayList.add(new SliderModel(R.drawable.sample4));
 
-
-        //hot course adapter, layout Manager set and itemClick of hot course
-        hotCourseItem=new HotCourseAdapter.ItemClicked() {
-            @Override
-            public void onItemClicked(int index) {
-                Toast.makeText(getContext(), "Hot Course "+(index+1), Toast.LENGTH_SHORT).show();
-            }
-        };
-        hotCourseAdapter=new HotCourseAdapter(getContext(),hotCourseModelArrayList,hotCourseItem);
-        layoutManagerHotCourse=new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL,false);
-        hotCourseRecyclerView.setLayoutManager(layoutManagerHotCourse);
-        hotCourseRecyclerView.setAdapter(hotCourseAdapter);
 
         //practice test adapter,layout Manager set and itemClick of practice test
 
