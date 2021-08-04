@@ -95,6 +95,8 @@ public class NcertSolution extends AppCompatActivity{
                     @Override
                     public void onClick(View view) {
                         Intent intent=new Intent(getApplicationContext(), TopicVideoLists.class);
+                        intent.putExtra("chapterName",model.getName());
+                        intent.putExtra("chapterImage",model.getImage());
                         startActivity(intent);
                     }
                 });

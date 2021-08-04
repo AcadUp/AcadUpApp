@@ -28,7 +28,7 @@ public class VideoPlayActivity extends AppCompatActivity {
         String Videolink=getIntent().getStringExtra("video_link");
         chapterName.setText(getIntent().getStringExtra("chapter_name"));
         String video_code=getVideoId(Videolink);
-        Toast.makeText(VideoPlayActivity.this,video_code,Toast.LENGTH_SHORT).show();
+//        Toast.makeText(VideoPlayActivity.this,video_code,Toast.LENGTH_SHORT).show();
 
         YouTubePlayerView youTubePlayerView = findViewById(R.id.youtube_player_view);
         getLifecycle().addObserver(youTubePlayerView);

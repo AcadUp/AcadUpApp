@@ -1,27 +1,47 @@
 package com.example.acadup.Models;
 
 public class VideoListHolderModel {
-    String video_name;
-    String video_duration;
-
-    public VideoListHolderModel(String video_name, String video_duration) {
-        this.video_name = video_name;
-        this.video_duration = video_duration;
+    String name;
+    String duration;
+    String video;
+    String notes_pdf;
+    public VideoListHolderModel(){}
+    public VideoListHolderModel(String name, String duration,String video,String notes_pdf) {
+        this.name=name;
+        this.duration=duration;
+        this.video=video;
+        this.notes_pdf=notes_pdf;
     }
 
-    public String getVideo_name() {
-        return video_name;
+    public String getName() {
+        return name;
     }
 
-    public void setVideo_name(String video_name) {
-        this.video_name = video_name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getVideo_duration() {
-        return video_duration;
+    public String getDuration() {
+        return duration;
     }
 
-    public void setVideo_duration(String video_duration) {
-        this.video_duration = video_duration;
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
+    }
+
+    public String getNotes_pdf() {
+        return notes_pdf;
+    }
+
+    public void setNotes_pdf(String notes_pdf) {
+        this.notes_pdf = notes_pdf;
     }
 }
