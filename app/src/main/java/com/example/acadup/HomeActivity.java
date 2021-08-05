@@ -61,7 +61,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     FirebaseFirestore fireStore;
 
     String userId;
-    int classTxt;
+    public static int classTxt;
 //    final int[] spinnerPos = new int[1];
     HashMap<String, List<ExpandableModel>> listDataChild;
     LinearLayout homeLayout,scheduleTrialLayout,upcomingLiveLayout,notesLayout,progressLayout
@@ -316,27 +316,15 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     Fragment selectedFragment=null;
                     switch (item.getItemId()){
                         case R.id.navigation_home:
-//                            spinner.setSelection(spinnerPos[0]);
-                            spinner.setSelection(classTxt);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment(),"HOME_FRAGMENT").commit();
-                            spinner.setEnabled(true);
                             break;
                         case R.id.navigation_test:
-//                            spinner.setSelection(spinnerPos[0]);
-                            spinner.setSelection(classTxt);
-                            spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new TestFragment()).commit();
                             break;
                         case R.id.navigation_dashboard:
-//                            spinner.setSelection(spinnerPos[0]);
-                            spinner.setSelection(classTxt);
-                            spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DashboardFragment()).commitNow();
                             break;
                         case R.id.navigation_notifications:
-//                            spinner.setSelection(spinnerPos[0]);
-                            spinner.setSelection(classTxt);
-                            spinner.setEnabled(false);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new NotificationsFragment()).commit();
                             break;
                     }
@@ -347,7 +335,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     //Spinner item clicked
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+        classTxt=i+1;
         subView.spinnerClicked(i);
         HomeFragment homeFrag=(HomeFragment)getSupportFragmentManager().findFragmentByTag("HOME_FRAGMENT");
         if(homeFrag!=null && homeFrag.isVisible()) {

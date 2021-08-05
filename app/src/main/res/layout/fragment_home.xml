@@ -399,7 +399,6 @@
                     app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontalFour2">
 
                     <ImageView
-                        android:src="@drawable/maths"
                         android:id="@+id/subFourImg1"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
@@ -417,12 +416,10 @@
                     app:layout_constraintTop_toBottomOf="@id/guidelineHorizontalFour1"
                     app:layout_constraintBottom_toTopOf="@id/guidelineHorizontalFour2" >
                     <ImageView
-
                         android:id="@+id/subFourImg2"
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/coding"
                         />
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
@@ -441,7 +438,6 @@
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/science"
                         />
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
@@ -460,7 +456,6 @@
                         android:scaleType="centerCrop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/sdf"
                         />
                 </androidx.cardview.widget.CardView>
 

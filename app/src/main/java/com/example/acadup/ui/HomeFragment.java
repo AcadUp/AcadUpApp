@@ -49,6 +49,8 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static com.example.acadup.HomeActivity.classTxt;
+
 
 public class HomeFragment extends Fragment implements SubjectView,View.OnClickListener {
     ConstraintLayout demoActivity;
@@ -377,6 +379,10 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                                 SubjectsModel subjectsModel1=documentSnapshot.get("Subjects."+key[i].toString(),SubjectsModel.class);
                                 lowerClass_1.add(subjectsModel1);
                             }
+                            if(classTxt>=1 && classTxt<=5){
+                                spinnerClicked(classTxt-1);
+                            }
+
                         }
                     }
                 })
@@ -399,6 +405,9 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                                 SubjectsModel subjectsModel1=documentSnapshot.get("Subjects."+key[i].toString(),SubjectsModel.class);
                                 midClass_1.add(subjectsModel1);
                             }
+                            if(classTxt>=6 && classTxt<=10){
+                                spinnerClicked(classTxt-1);
+                            }
                         }
                     }
                 })
@@ -419,6 +428,9 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                             for(int i=0;i<map.size();i++){
                                 SubjectsModel subjectsModel1=documentSnapshot.get("Subjects."+key[i].toString(),SubjectsModel.class);
                                 upperClass_1.add(subjectsModel1);
+                            }
+                            if(classTxt>=11 && classTxt<=12){
+                                spinnerClicked(classTxt-1);
                             }
                         }
                     }
