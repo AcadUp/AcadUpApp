@@ -37,13 +37,16 @@ public class TopicVideoLists extends AppCompatActivity {
     FirestoreRecyclerAdapter fAdapter;
     ImageView back,showImg;
     FirebaseFirestore fireStore;
-    String chapterName,chapterImg;
+    String chapterName,chapterImg,sub;
+    int classNum;
     TextView headingTxt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_topic_video_lists);
+        sub=getIntent().getStringExtra("subject");
+        classNum=getIntent().getIntExtra("class",1);
         chapterName=getIntent().getStringExtra("chapterName");
         chapterImg=getIntent().getStringExtra("chapterImage");
         back=findViewById(R.id.back);
@@ -56,7 +59,7 @@ public class TopicVideoLists extends AppCompatActivity {
 
         vdHolderList=new ArrayList<>();
         fireStore=FirebaseFirestore.getInstance();
-        Query query= fireStore.collection("NCERT").document("maths").collection("7")
+        Query query= fireStore.collection("NCERT").document(sub).collection(String.valueOf(classNum))
                 .document(chapterName).collection("Topics");
 
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {

@@ -40,16 +40,22 @@ public class NcertSolution extends AppCompatActivity{
     RecyclerView subjectChapters;
     FirestoreRecyclerAdapter adapter;
     ImageView backButton;
-
+    TextView subjectName;
+    String sub;
+    int classNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ncert_solution);
         getSupportActionBar().hide();
 
+        sub=getIntent().getStringExtra("subject");
+        classNum=getIntent().getIntExtra("class",1);
+
         firebaseAuth=FirebaseAuth.getInstance();
         firestore=FirebaseFirestore.getInstance();
         backButton=findViewById(R.id.backButton);
+        subjectName=findViewById(R.id.subjectName);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,8 +63,8 @@ public class NcertSolution extends AppCompatActivity{
             }
         });
         subjectChapters=findViewById(R.id.subjectChapters);
-
-        Query query= firestore.collection("NCERT").document("maths").collection("7");
+        subjectName.setText(sub.toUpperCase());
+        Query query= firestore.collection("NCERT").document(sub).collection(String.valueOf(classNum));
 
         query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -95,6 +101,8 @@ public class NcertSolution extends AppCompatActivity{
                     @Override
                     public void onClick(View view) {
                         Intent intent=new Intent(getApplicationContext(), TopicVideoLists.class);
+                        intent.putExtra("subject",sub);
+                        intent.putExtra("class",classNum);
                         intent.putExtra("chapterName",model.getName());
                         intent.putExtra("chapterImage",model.getImage());
                         startActivity(intent);

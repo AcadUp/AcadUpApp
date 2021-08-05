@@ -9,10 +9,11 @@
     tools:context=".SubjectOptions">
 
     <TextView
+        android:id="@+id/heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Maths"
-        android:textSize="28sp"
+        android:textSize="20sp"
         android:fontFamily="@font/stolzl_regular"
         android:textColor="#000"
         android:layout_gravity="center"

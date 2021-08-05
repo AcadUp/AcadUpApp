@@ -575,73 +575,128 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
     public void onClick(View view) {
         switch(view.getId())
         {
-            case R.id.subEightImg1 :
-            case R.id.subSixImg6:
             case R.id.subFourImg1:
-            case R.id.subSixImg2:
-            case R.id.subEightImg8 :
             case R.id.subSixImg1 :
-            case R.id.subEightImg5 :
-            case R.id.subEightImg3 :
-            case R.id.subEightImg4 :
-            case R.id.subEightImg2:
-            case R.id.subFourImg2:
-                startActivity(new Intent(getContext(),SubjectOptions.class));
+            case R.id.subEightImg1 :
+                Intent intent1=new Intent(getContext(),SubjectOptions.class);
+                intent1.putExtra("subject","maths");
+                intent1.putExtra("class",classSelected);
+                startActivity(intent1);
                 break;
+
+            case R.id.subFourImg2:
+                if(classSelected>=1&& classSelected<=10){
+                    Intent intent2=new Intent(getContext(),SubjectOptions.class);
+                    intent2.putExtra("subject","science");
+                    intent2.putExtra("class",classSelected);
+                    startActivity(intent2);
+                }
+                else if(classSelected>=11 && classSelected<=12){
+                    Intent intent2=new Intent(getContext(),SubjectOptions.class);
+                    intent2.putExtra("subject","physics");
+                    intent2.putExtra("class",classSelected);
+                    startActivity(intent2);
+                }
+                break;
+
+            case R.id.subFourImg3:
+                if(classSelected>=6 && classSelected<=10) {
+                    Intent intent3=new Intent(getContext(), Coding_Robotics_Purchase.class);
+                    intent3.putExtra("email",emailId);
+                    intent3.putExtra("phone",phone);
+                    startActivity(intent3);
+                }
+                else if(classSelected>=11 && classSelected<=12){
+                    Intent intent3=new Intent(getContext(),SubjectOptions.class);
+                    intent3.putExtra("subject","chemistry");
+                    intent3.putExtra("class",classSelected);
+                    startActivity(intent3);
+                }
+                else {
+                    Toast.makeText(getContext(), "No NCERT", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case R.id.subFourImg4:
+                if(classSelected>=6 && classSelected<=12) {
+                    Intent intent4=new Intent(getContext(), Coding_Robotics_Purchase.class);
+                    intent4.putExtra("email",emailId);
+                    intent4.putExtra("phone",phone);
+                    startActivity(intent4);
+                }
+                else {
+                    Toast.makeText(getContext(), "No NCERT", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+            case R.id.subSixImg2:
+                if(classSelected>=6&& classSelected<=10){
+                    Intent intent5=new Intent(getContext(),SubjectOptions.class);
+                    intent5.putExtra("subject","science");
+                    intent5.putExtra("class",classSelected);
+                    startActivity(intent5);
+                }
+                else if(classSelected>=11 && classSelected<=12){
+                    Intent intent5=new Intent(getContext(),SubjectOptions.class);
+                    intent5.putExtra("subject","physics");
+                    intent5.putExtra("class",classSelected);
+                    startActivity(intent5);
+                }
+                break;
+
+            case R.id.subSixImg3:
+                if(classSelected>=6&&classSelected<=10){
+                    Intent intent6=new Intent(getContext(), Coding_Robotics_Purchase.class);
+                    intent6.putExtra("email",emailId);
+                    intent6.putExtra("phone",phone);
+                    startActivity(intent6);
+                }
+                else if(classSelected>=11 && classSelected<=12){
+                    Intent intent6=new Intent(getContext(), SubjectOptions.class);
+                    intent6.putExtra("subject","chemistry");
+                    intent6.putExtra("class",classSelected);
+                    startActivity(intent6);
+                }
+                else {
+                    Toast.makeText(getContext(), "No NCERT", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
             case R.id.subEightImg6 :
             case R.id.subEightImg7 :
-            case R.id.subSixImg3:
             case R.id.subSixImg4:
-                Intent intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
-                intent.putExtra("email",emailId);
-                intent.putExtra("phone",phone);
-                startActivity(intent);
+                Intent intent7=new Intent(getContext(), Coding_Robotics_Purchase.class);
+                intent7.putExtra("email",emailId);
+                intent7.putExtra("phone",phone);
+                startActivity(intent7);
                 break;
-            case R.id.subFourImg3:
-                if(classSelected>=7 && classSelected<=10)
-                {
-                    intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
-                    intent.putExtra("email",emailId);
-                    intent.putExtra("phone",phone);
-                    startActivity(intent);
-                }
-                else {
-                    startActivity(new Intent(getContext(),SubjectOptions.class));
-                }
-                break;
-            case R.id.subFourImg4:
-                if(classSelected>=7 && classSelected<=10)
-                {
-                    intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
-                    intent.putExtra("email",emailId);
-                    intent.putExtra("phone",phone);
-                    startActivity(intent);
-                }
-                else if(classSelected>=11 && classSelected<=12)
-                {
-                    intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
-                    intent.putExtra("email",emailId);
-                    intent.putExtra("phone",phone);
-                    startActivity(intent);
-                }
-                else {
-                    startActivity(new Intent(getContext(),SubjectOptions.class));
-                }
-                break;
+
             case R.id.subSixImg5:
-                if(classSelected>=11 && classSelected<=12)
-                {
-                    intent=new Intent(getContext(), Coding_Robotics_Purchase.class);
-                    intent.putExtra("email",emailId);
-                    intent.putExtra("phone",phone);
-                    startActivity(intent);
+                if(classSelected>=11 && classSelected<=12) {
+                    Intent intent8=new Intent(getContext(), Coding_Robotics_Purchase.class);
+                    intent8.putExtra("email",emailId);
+                    intent8.putExtra("phone",phone);
+                    startActivity(intent8);
                 }
                 else {
-                    startActivity(new Intent(getContext(),SubjectOptions.class));
+                    Toast.makeText(getContext(), "No NCERT", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
+            case R.id.subSixImg6:
+            case R.id.subEightImg3 :
+            case R.id.subEightImg4 :
+            case R.id.subEightImg5 :
+            case R.id.subEightImg8 :
+                Toast.makeText(getContext(), "No NCERT", Toast.LENGTH_SHORT).show();
+                break;
 
+            case R.id.subEightImg2 :
+                Intent intent9=new Intent(getContext(),SubjectOptions.class);
+                intent9.putExtra("subject","science");
+                intent9.putExtra("class",classSelected);
+                startActivity(intent9);
+                break;
         }
     }
 

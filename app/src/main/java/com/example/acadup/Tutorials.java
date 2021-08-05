@@ -39,12 +39,16 @@ public class Tutorials extends AppCompatActivity {
         RecyclerView subjectChapters;
         FirestoreRecyclerAdapter adapter;
         ImageView backButton;
-
+        String sub;
+        int classNum;
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_tutorials);
             getSupportActionBar().hide();
+
+            sub=getIntent().getStringExtra("subject");
+            classNum=getIntent().getIntExtra("class",1);
 
             firebaseAuth=FirebaseAuth.getInstance();
             firestore=FirebaseFirestore.getInstance();
@@ -57,7 +61,7 @@ public class Tutorials extends AppCompatActivity {
             });
             subjectChapters=findViewById(R.id.subjectChapters);
 
-            Query query= firestore.collection("NCERT").document("maths").collection("7");
+            Query query= firestore.collection("NCERT").document(sub).collection(String.valueOf(classNum));
 
             query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
