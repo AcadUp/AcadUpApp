@@ -33,6 +33,8 @@ import com.example.acadup.Models.SubjectsModel;
 import com.example.acadup.R;
 import com.example.acadup.SubjectOptions;
 import com.example.acadup.SubjectView;
+import com.example.acadup.TopicVideoLists;
+import com.example.acadup.VideoPlayActivity;
 import com.example.acadup.demo_choice;
 import com.example.acadup.Coding_Robotics_Purchase;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -275,13 +277,6 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
             }
         });
 
-        //hot course some dummy element added
-//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 1"));
-//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 2"));
-//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 3"));
-//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 4"));
-//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 5"));
-//        hotCourseModelArrayList.add(new HotCourseModel("Hot Course 6"));
         hotCourseRef.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -308,7 +303,11 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         hotCourseItem=new HotCourseAdapter.ItemClicked() {
             @Override
             public void onItemClicked(int index) {
-                Toast.makeText(getContext(), "Hot Course "+(index+1), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), hotCourseModelArrayList.get(index).getLink(), Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(getContext(), VideoPlayActivity.class);
+                intent.putExtra("video_link",hotCourseModelArrayList.get(index).getLink());
+                intent.putExtra("chapter_name",hotCourseModelArrayList.get(index).getName());
+                startActivity(intent);
             }
         };
         hotCourseAdapter=new HotCourseAdapter(getContext(),hotCourseModelArrayList,hotCourseItem);
