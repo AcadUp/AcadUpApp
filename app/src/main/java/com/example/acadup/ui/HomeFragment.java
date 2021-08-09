@@ -31,6 +31,7 @@ import com.example.acadup.Models.PracticeTestModel;
 import com.example.acadup.Models.SliderModel;
 import com.example.acadup.Models.SubjectsModel;
 import com.example.acadup.R;
+import com.example.acadup.RestSubjects;
 import com.example.acadup.SubjectOptions;
 import com.example.acadup.SubjectView;
 import com.example.acadup.TopicVideoLists;
@@ -581,6 +582,8 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                 Intent intent1=new Intent(getContext(),SubjectOptions.class);
                 intent1.putExtra("subject","maths");
                 intent1.putExtra("class",classSelected);
+                intent1.putExtra("email",emailId);
+                intent1.putExtra("phone",phone);
                 startActivity(intent1);
                 break;
 
@@ -589,12 +592,16 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                     Intent intent2=new Intent(getContext(),SubjectOptions.class);
                     intent2.putExtra("subject","science");
                     intent2.putExtra("class",classSelected);
+                    intent2.putExtra("email",emailId);
+                    intent2.putExtra("phone",phone);
                     startActivity(intent2);
                 }
                 else if(classSelected>=11 && classSelected<=12){
                     Intent intent2=new Intent(getContext(),SubjectOptions.class);
                     intent2.putExtra("subject","physics");
                     intent2.putExtra("class",classSelected);
+                    intent2.putExtra("email",emailId);
+                    intent2.putExtra("phone",phone);
                     startActivity(intent2);
                 }
                 break;
@@ -610,11 +617,17 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                     Intent intent3=new Intent(getContext(),SubjectOptions.class);
                     intent3.putExtra("subject","chemistry");
                     intent3.putExtra("class",classSelected);
+                    intent3.putExtra("email",emailId);
+                    intent3.putExtra("phone",phone);
                     startActivity(intent3);
                 }
                 else {
-                    Toast.makeText(getContext(), "No NCERT", Toast.LENGTH_SHORT).show();
-                }
+                    Intent intent12=new Intent(getContext(),RestSubjects.class);
+                    intent12.putExtra("email",emailId);
+                    intent12.putExtra("phone",phone);
+                    intent12.putExtra("subject","English");
+                    intent12.putExtra("class",classSelected);
+                    startActivity(intent12);                }
                 break;
 
             case R.id.subFourImg4:
@@ -625,7 +638,12 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                     startActivity(intent4);
                 }
                 else {
-                    Toast.makeText(getContext(), "No NCERT", Toast.LENGTH_SHORT).show();
+                    Intent intent12=new Intent(getContext(),RestSubjects.class);
+                    intent12.putExtra("email",emailId);
+                    intent12.putExtra("phone",phone);
+                    intent12.putExtra("subject","Hindi");
+                    intent12.putExtra("class",classSelected);
+                    startActivity(intent12);
                 }
                 break;
 
@@ -634,12 +652,16 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                     Intent intent5=new Intent(getContext(),SubjectOptions.class);
                     intent5.putExtra("subject","science");
                     intent5.putExtra("class",classSelected);
+                    intent5.putExtra("email",emailId);
+                    intent5.putExtra("phone",phone);
                     startActivity(intent5);
                 }
                 else if(classSelected>=11 && classSelected<=12){
                     Intent intent5=new Intent(getContext(),SubjectOptions.class);
                     intent5.putExtra("subject","physics");
                     intent5.putExtra("class",classSelected);
+                    intent5.putExtra("email",emailId);
+                    intent5.putExtra("phone",phone);
                     startActivity(intent5);
                 }
                 break;
@@ -655,6 +677,8 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                     Intent intent6=new Intent(getContext(), SubjectOptions.class);
                     intent6.putExtra("subject","chemistry");
                     intent6.putExtra("class",classSelected);
+                    intent6.putExtra("email",emailId);
+                    intent6.putExtra("phone",phone);
                     startActivity(intent6);
                 }
                 else {
@@ -679,23 +703,58 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                     startActivity(intent8);
                 }
                 else {
-                    Toast.makeText(getContext(), "No NCERT", Toast.LENGTH_SHORT).show();
-                }
+                    Intent intent12=new Intent(getContext(),RestSubjects.class);
+                    intent12.putExtra("email",emailId);
+                    intent12.putExtra("phone",phone);
+                    intent12.putExtra("subject","English");
+                    intent12.putExtra("class",classSelected);
+                    startActivity(intent12);                }
                 break;
 
             case R.id.subSixImg6:
-            case R.id.subEightImg3 :
             case R.id.subEightImg4 :
-            case R.id.subEightImg5 :
-            case R.id.subEightImg8 :
-                Toast.makeText(getContext(), "No NCERT", Toast.LENGTH_SHORT).show();
+                Intent intent8=new Intent(getContext(), RestSubjects.class);
+                intent8.putExtra("email",emailId);
+                intent8.putExtra("phone",phone);
+                intent8.putExtra("class",classSelected);
+                intent8.putExtra("subject","Hindi");
+                startActivity(intent8);
                 break;
 
             case R.id.subEightImg2 :
                 Intent intent9=new Intent(getContext(),SubjectOptions.class);
                 intent9.putExtra("subject","science");
                 intent9.putExtra("class",classSelected);
+                intent9.putExtra("email",emailId);
+                intent9.putExtra("phone",phone);
                 startActivity(intent9);
+                break;
+
+            case R.id.subEightImg8:
+                Intent intent10=new Intent(getContext(),RestSubjects.class);
+                intent10.putExtra("email",emailId);
+                intent10.putExtra("phone",phone);
+                intent10.putExtra("subject","EVS");
+                intent10.putExtra("class",classSelected);
+                startActivity(intent10);
+                break;
+
+            case R.id.subEightImg5:
+                Intent intent11=new Intent(getContext(),RestSubjects.class);
+                intent11.putExtra("email",emailId);
+                intent11.putExtra("phone",phone);
+                intent11.putExtra("subject","Computer");
+                intent11.putExtra("class",classSelected);
+                startActivity(intent11);
+                break;
+
+            case R.id.subEightImg3:
+                Intent intent12=new Intent(getContext(),RestSubjects.class);
+                intent12.putExtra("email",emailId);
+                intent12.putExtra("phone",phone);
+                intent12.putExtra("subject","English");
+                intent12.putExtra("class",classSelected);
+                startActivity(intent12);
                 break;
         }
     }

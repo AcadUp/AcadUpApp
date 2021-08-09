@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".VideoPlayActivity"></activity>
+        <activity android:name=".RestSubjects"></activity>
+        <activity android:name=".PreviousYearPaper" />
+        <activity android:name=".VideoPlayActivity" />
         <activity android:name=".Tutorials" />
         <activity android:name=".PDFOpening" />
         <activity android:name=".ConceptPDFs" />

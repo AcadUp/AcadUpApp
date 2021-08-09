@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cardbg1"
+    tools:context=".PreviousYearPaper">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:id="@+id/backButton"
+        android:src="@drawable/ic_baseline_arrow_back_ios_24"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Previous Year Papers"
+        android:id="@+id/subjectName"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_margin="20dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:id="@+id/subjectChapters"
+        android:layout_below="@id/subjectName"/>
+
+
+</RelativeLayout>
