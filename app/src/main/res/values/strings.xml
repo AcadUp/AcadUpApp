@@ -46,9 +46,5 @@
     <string name="close">Close</string>
     <string name="sample2">We have received a request for free demo session. You will be allocated a class on your mentioned date or
     our representative will call you to find a better time.</string>
-    <!--
-    <string name="phone_info">
-    　　<a href="tel:+918584074448">+918584074448</a>
-    </string>
-    -->
+
 </resources>

@@ -30,6 +30,7 @@ import com.example.acadup.Models.HotCourseModel;
 import com.example.acadup.Models.PracticeTestModel;
 import com.example.acadup.Models.SliderModel;
 import com.example.acadup.Models.SubjectsModel;
+import com.example.acadup.QuizIntroActivity;
 import com.example.acadup.R;
 import com.example.acadup.RestSubjects;
 import com.example.acadup.SubjectOptions;
@@ -91,7 +92,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
     DocumentReference lowClassRef,midClassRef,upperClassRef;
     public static ArrayList<SubjectsModel> lowerClass_1,midClass_1,upperClass_1;
 
-    DocumentReference hotCourseRef;
+    DocumentReference hotCourseRef,practiceTestRef;
 
     private View root;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
@@ -111,6 +112,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         midClassRef=db.document("Class/midClass");
         upperClassRef=db.document("Class/upperClass");
         hotCourseRef=db.document("HotCourses/Course");
+        practiceTestRef=db.document("PracticeTest/Practice");
         loadData();
 
         moreSubjectBtn=root.findViewById(R.id.moreSubButton);
@@ -280,6 +282,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
             }
         });
 
+        //hotCourse data load
         hotCourseRef.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -318,28 +321,39 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         hotCourseRecyclerView.setLayoutManager(layoutManagerHotCourse);
         hotCourseRecyclerView.setAdapter(hotCourseAdapter);
 
-        //in practice test some dummy data added
-        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));
-        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));
-        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));
-        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));
-        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));
-        practiceTestModelArrayList.add(new PracticeTestModel(R.drawable.maths));
+        //practiceTest data load
+        practiceTestRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists()){
+                            Map<String,Object> map1=documentSnapshot.getData();
+                            Object[] key= map1.keySet().toArray();
+                            for(int i=0;i<map1.size();i++){
+                                PracticeTestModel practiceModel=documentSnapshot.get(key[i].toString(),PracticeTestModel.class);
+                                practiceTestModelArrayList.add(practiceModel);
+                            }
+                            practiceTestAdapter.notifyDataSetChanged();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-        //slide recyclerView dummy data added
-        sliderModelArrayList.add(new SliderModel(R.drawable.sample1));
-        sliderModelArrayList.add(new SliderModel(R.drawable.sample2));
-        sliderModelArrayList.add(new SliderModel(R.drawable.sample3));
-        sliderModelArrayList.add(new SliderModel(R.drawable.sample4));
-
+                    }
+                });
 
         //practice test adapter,layout Manager set and itemClick of practice test
-
         practiceTestItem=new PracticeTestAdapter.ItemClicked() {
             @Override
             public void onItemClicked(int index) {
-                startActivity(new Intent(getActivity().getApplicationContext(), SubjectOptions.class));
-                Toast.makeText(getActivity().getApplicationContext(), "Profile", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(getActivity(), QuizIntroActivity.class);
+                intent.putExtra("from_which_activity",101);
+                intent.putExtra("quiz_time",30);
+                intent.putExtra("quiz_name",practiceTestModelArrayList.get(index).getName());
+                intent.putExtra("doc_name",practiceTestModelArrayList.get(index).getDoc_name());
+                startActivity(intent);
             }
         };
         practiceTestAdapter=new PracticeTestAdapter(getContext(),practiceTestModelArrayList,practiceTestItem);
@@ -347,6 +361,11 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
         practiceTestRecyclerView.setLayoutManager(layoutManagerPracticeTest);
         practiceTestRecyclerView.setAdapter(practiceTestAdapter);
 
+        //slide recyclerView dummy data added
+        sliderModelArrayList.add(new SliderModel(R.drawable.sample1));
+        sliderModelArrayList.add(new SliderModel(R.drawable.sample2));
+        sliderModelArrayList.add(new SliderModel(R.drawable.sample3));
+        sliderModelArrayList.add(new SliderModel(R.drawable.sample4));
 
         //slide recyclerview adapter set and also dots are set
         sliderAdapter=new SliderAdapter(sliderModelArrayList);
@@ -545,22 +564,7 @@ public class HomeFragment extends Fragment implements SubjectView,View.OnClickLi
                         }
                         emailId=documentSnapshot.getString("email");
                         phone=documentSnapshot.getString("phone");
-//<<<<<<< HEAD
-//        DocumentReference documentReference = fStore.collection("users").document(userId);
-//        documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                if(documentSnapshot.exists()){
-//                    welcomeMsg.setText("Hello "+documentSnapshot.getString("firstName")+",");
-//                    classDefault[0] =Integer.parseInt(Objects.requireNonNull(documentSnapshot.getString("class")));
-//                    classSelected=classDefault[0];
-//                    emailId=documentSnapshot.getString("email");
-//                    phone=documentSnapshot.getString("phone");
-//                    if( classDefault[0]>=1 && classDefault[0]<=4)
-//                    {
-//                        consSelect8=1;consSelect5=0;consSelect6=0;
-//=======
-//>>>>>>> 25b8186dcf4827c106b10cfb2f5a795199696ec8
+
                     }
 
                 }).addOnFailureListener(new OnFailureListener() {

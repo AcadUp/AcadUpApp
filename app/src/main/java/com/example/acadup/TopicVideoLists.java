@@ -118,7 +118,18 @@ public class TopicVideoLists extends AppCompatActivity {
                 holder.quizBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getApplicationContext(), "Quiz "+position, Toast.LENGTH_SHORT).show();
+
+                        Intent intent=new Intent(getApplicationContext(),QuizIntroActivity.class);
+                        intent.putExtra("from_which_activity",100);
+                        intent.putExtra("quiz_time",30);
+
+                        intent.putExtra("subject",sub);
+                        intent.putExtra("classNum",String.valueOf(classNum));
+                        intent.putExtra("chapterName",chapterName);
+                        intent.putExtra("quiz_name",model.getName());
+
+
+                        startActivity(intent);
                     }
                 });
                 holder.trackBtn.setOnClickListener(new View.OnClickListener() {

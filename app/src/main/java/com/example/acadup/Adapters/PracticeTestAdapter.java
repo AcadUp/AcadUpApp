@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.acadup.Models.PracticeTestModel;
 import com.example.acadup.R;
 
@@ -39,13 +40,8 @@ public class PracticeTestAdapter extends RecyclerView.Adapter<PracticeTestAdapte
 
     @Override
     public void onBindViewHolder(@NonNull PracticeTestHolder holder, int position) {
-        holder.practiceTestImage.setImageResource(practiceTestModelArrayList.get(position).getImageSource());
-        holder.practiceTestImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context.getApplicationContext(), "hello",Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.practiceTestImage.setImageResource(practiceTestModelArrayList.get(position).getImageSource());
+        Glide.with(context).load(practiceTestModelArrayList.get(position).getImageSource()).into(holder.practiceTestImage);
     }
 
     @Override
@@ -58,6 +54,12 @@ public class PracticeTestAdapter extends RecyclerView.Adapter<PracticeTestAdapte
         public PracticeTestHolder(@NonNull View itemView) {
             super(itemView);
             practiceTestImage=itemView.findViewById(R.id.practiceImg);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.onItemClicked(getAbsoluteAdapterPosition());
+                }
+            });
         }
     }
 }

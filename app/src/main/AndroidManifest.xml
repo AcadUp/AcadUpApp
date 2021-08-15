@@ -13,7 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RestSubjects"></activity>
+        <activity android:name=".TestsActivity"></activity>
+        <activity android:name=".ScoreActivity" />
+        <activity android:name=".TestQuestionActivity" />
+        <activity android:name=".QuizIntroActivity" />
+        <activity android:name=".RestSubjects" />
         <activity android:name=".PreviousYearPaper" />
         <activity android:name=".VideoPlayActivity" />
         <activity android:name=".Tutorials" />

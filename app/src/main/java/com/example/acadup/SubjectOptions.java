@@ -84,6 +84,15 @@ public class SubjectOptions extends AppCompatActivity {
 
             }
         });
+        testLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(SubjectOptions.this,TestsActivity.class);
+                intent.putExtra("subject",sub);
+                intent.putExtra("class",classNum);
+                startActivity(intent);
 
+            }
+        });
     }
 }

@@ -44,4 +44,6 @@ public class VideoListHolderModel {
     public void setNotes_pdf(String notes_pdf) {
         this.notes_pdf = notes_pdf;
     }
+
+
 }

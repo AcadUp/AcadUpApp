@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@drawable/bgone">
+
+    <TextView
+        android:id="@+id/headTxt"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Instructions"
+        android:textSize="25sp"
+        android:fontFamily="@font/stolzl_regular"
+        android:textColor="#0A176C"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true" />
+    <TextView
+        android:id="@+id/insTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headTxt"
+        android:layout_marginTop="20dp"
+        android:fontFamily="monospace"
+        android:textColor="#226280"
+        android:textSize="17dp"
+        android:layout_marginHorizontal="20dp"
+        />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/saveProfileInfo"
+        app:cardCornerRadius="20dp"
+        android:backgroundTint="#03A9F4"
+        android:elevation="15dp"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Start"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:fontFamily="monospace"
+            android:background="@android:color/transparent"
+            />
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>
