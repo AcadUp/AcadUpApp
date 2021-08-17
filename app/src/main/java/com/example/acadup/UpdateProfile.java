@@ -71,6 +71,7 @@ public class UpdateProfile extends AppCompatActivity {
         saveBtn = findViewById(R.id.saveProfileInfo);
         backBtn=findViewById(R.id.backBtn);
 
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,7 +138,7 @@ public class UpdateProfile extends AppCompatActivity {
         firstnameEt.setText(firstname);
         lastnameEt.setText(lastname);
         profilePhone.setText(phone);
-        classSpinner.setSelection(Integer.parseInt(classDefault));
+        classSpinner.setSelection(Integer.parseInt(classDefault)-1);
 
         Log.d(TAG, "onCreate: " + firstname + " " + email + " " + phone);
     }

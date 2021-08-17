@@ -36,6 +36,7 @@ public class RestSubjects extends AppCompatActivity implements PaymentResultList
     String amnt="11999";
     int robotics=0;
     int coding=1;
+    String selectedPlan="1 on 1";
     FirebaseFirestore fireStore;
     FirebaseAuth firebaseAuth;
     DocumentReference documentReference;
@@ -109,6 +110,8 @@ public class RestSubjects extends AppCompatActivity implements PaymentResultList
                     amnt="12999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 700/- per session");
+                    selectedPlan="1 on 5";
+
                 }
                 else
                 {
@@ -117,6 +120,7 @@ public class RestSubjects extends AppCompatActivity implements PaymentResultList
                     amnt="11999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 600/- per session");
+                    selectedPlan="1 on 1";
                 }
                 beginnerDeselected.setVisibility(View.GONE);
                 beginnerSelected.setVisibility(View.VISIBLE);
@@ -124,6 +128,7 @@ public class RestSubjects extends AppCompatActivity implements PaymentResultList
                 advancedDeselected.setVisibility(View.VISIBLE);
                 intermediateSelected.setVisibility(View.GONE);
                 advancedSelected.setVisibility(View.GONE);
+
             }
         });
         codingDeselect.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +147,7 @@ public class RestSubjects extends AppCompatActivity implements PaymentResultList
                     amnt="12999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 700/- per session");
+                    selectedPlan="1 on 5";
                 }
                 else
                 {
@@ -150,6 +156,7 @@ public class RestSubjects extends AppCompatActivity implements PaymentResultList
                     amnt="11999";
                     classNumber.setText("30");
                     moneyClass.setText("Rs. 600/- per session");
+                    selectedPlan="1 on 1";
                 }
                 beginnerDeselected.setVisibility(View.GONE);
                 beginnerSelected.setVisibility(View.VISIBLE);
@@ -157,6 +164,7 @@ public class RestSubjects extends AppCompatActivity implements PaymentResultList
                 advancedDeselected.setVisibility(View.VISIBLE);
                 intermediateSelected.setVisibility(View.GONE);
                 advancedSelected.setVisibility(View.GONE);
+
             }
         });
 
@@ -277,7 +285,7 @@ public class RestSubjects extends AppCompatActivity implements PaymentResultList
         firebaseAuth=FirebaseAuth.getInstance();
         fireStore=FirebaseFirestore.getInstance();
         documentReference = fireStore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("purchasedCourses").document(s);
-        user.put("course_name",heading_fundamental.getText().toString());
+        user.put("course_name",heading_fundamental.getText().toString()+" ("+selectedPlan+")");
         user.put("amount",amount.getText().toString());
 
         user.put("Date of Payment", Calendar.getInstance().getTime());

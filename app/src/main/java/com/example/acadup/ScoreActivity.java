@@ -1,5 +1,6 @@
 package com.example.acadup;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,6 +10,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScoreActivity extends AppCompatActivity {
     TextView correctAns,wrongAns,attempt,retake,review,quit,progressAccuTxt,textProgressMarks,textProgressTime,remarkTxt;
@@ -24,6 +35,12 @@ public class ScoreActivity extends AppCompatActivity {
 
     String top_text;
     String sub,classNum,chapterName,quizName;
+
+
+    FirebaseFirestore fireStore;
+    FirebaseAuth firebaseAuth;
+    DocumentReference documentReference;
+    Map<String,Object> user ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +89,7 @@ public class ScoreActivity extends AppCompatActivity {
 
         heading.setText(top_text+" Test");
 
-        accuracy=((points*100)/total);
+        accuracy=((points*100)/(total-unAttempted));
         correctAns.setText("Correct Answers:"+points);
         wrongAns.setText("Wrong Answers:"+((total-unAttempted)-points));
         attempt.setText("Attempted:"+(total-unAttempted));
@@ -80,6 +97,32 @@ public class ScoreActivity extends AppCompatActivity {
         progressAcc.setProgress(accuracy);
         progressAccuTxt.setText(accuracy+"%");
         textProgressMarks.setText(points+" / "+total);
+
+
+        user= new HashMap<>();
+        firebaseAuth= FirebaseAuth.getInstance();
+        fireStore= FirebaseFirestore.getInstance();
+        documentReference = fireStore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("Attempted Tests").document(top_text);
+        user.put("test_name",heading.getText().toString());
+        user.put("score",textProgressMarks.getText().toString());
+        user.put("accuracy",accuracy);
+        user.put("correct answers",correctAns.getText().toString());
+        user.put("wrong answers",wrongAns.getText().toString());
+        user.put("attempted questions",total-unAttempted+"/"+total);
+        user.put("date", Calendar.getInstance().getTime());
+        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(ScoreActivity.this,"added data: ",Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ScoreActivity.this,"not added",Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
 
         minTime=(totalTimes-1)-(Integer.parseInt(times.substring(0,times.indexOf(':'))));
