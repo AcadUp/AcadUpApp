@@ -22,15 +22,17 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="15dp"
+        android:background="@drawable/linear_layout_bg"
         android:gravity="center"
+        android:padding="5dp"
+        android:layout_margin="10dp"
         android:text="Edit Profile"
         android:textColor="#02508E"
         android:textSize="22sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/backBtn"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,12 +71,12 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImageView"
         android:layout_width="125dp"
-        app:civ_border_color="@color/teal_700"
+        app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
         android:layout_height="125dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:padding="10dp"
-
+        android:elevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

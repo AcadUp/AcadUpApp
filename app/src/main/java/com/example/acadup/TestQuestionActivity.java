@@ -1,10 +1,12 @@
 package com.example.acadup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -554,14 +557,27 @@ public class TestQuestionActivity extends AppCompatActivity {
 
                 intent.putExtra("heading",chapterName);
             }
+            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure that you want to submit the test?");
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    startActivity(intent);
+                    if(timer!=null){
+                        timer.cancel();
+                        timer=null;
+                    }
+                    finish();
+                }
+            }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog mDialog=builder.create();
+            mDialog.show();
 
-            startActivity(intent);
-            if(timer!=null){
-                timer.cancel();
-                timer=null;
-            }
-
-            finish();
 
         }
     }
@@ -638,10 +654,25 @@ public class TestQuestionActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(timer!=null){
-            timer.cancel();
-            timer=null;
-        }
-        finish();
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure that you want to leave the test?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(timer!=null){
+                    timer.cancel();
+                    timer=null;
+                }
+                finish();
+            }
+        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog mDialog=builder.create();
+        mDialog.show();
     }
 }

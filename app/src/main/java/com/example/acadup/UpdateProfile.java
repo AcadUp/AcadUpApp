@@ -49,7 +49,7 @@ public class UpdateProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
-
+        getSupportActionBar().hide();
         Intent data = getIntent();
         final String firstname = data.getStringExtra("firstName");
         final String lastname = data.getStringExtra("lastName");

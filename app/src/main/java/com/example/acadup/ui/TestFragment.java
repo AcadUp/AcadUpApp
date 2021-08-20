@@ -18,7 +18,7 @@ public class TestFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_test, container, false);
-        textView = root.findViewById(R.id.text_test);
+        //textView = root.findViewById(R.id.text_test);
         textView.setText("This is Test Fragment");
 
         return root;

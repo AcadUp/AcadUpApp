@@ -270,7 +270,7 @@ public class Coding_Robotics_Purchase extends AppCompatActivity implements Payme
         user.put("course_name",heading_fundamental.getText().toString());
         user.put("amount",amount.getText().toString());
 
-        user.put("Date of Payment", Calendar.getInstance().getTime());
+        user.put("date", Calendar.getInstance().getTime());
         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

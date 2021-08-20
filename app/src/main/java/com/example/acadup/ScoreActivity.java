@@ -11,10 +11,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.acadup.SendMail.JavaMailAPI;
+import com.example.acadup.SendMail.JavaMailAPIS;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
@@ -33,7 +37,9 @@ public class ScoreActivity extends AppCompatActivity {
     String calTime;
     TextView heading;
 
-    String top_text;
+    String top_text,nameTxt,userId;
+    FirebaseUser users;
+    int marks=0;
     String sub,classNum,chapterName,quizName;
 
 
@@ -72,6 +78,28 @@ public class ScoreActivity extends AppCompatActivity {
             chapterName=getIntent().getStringExtra("chapterName");
         }
 
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        fireStore = FirebaseFirestore.getInstance();
+
+        userId = firebaseAuth.getCurrentUser().getUid();
+        users = firebaseAuth.getCurrentUser();
+        DocumentReference ref=fireStore.collection("users").document(userId);
+        ref.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        nameTxt=documentSnapshot.getString("firstName");
+                    }
+
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
         heading=findViewById(R.id.heading);
         correctAns=findViewById(R.id.correctAns);
         wrongAns=findViewById(R.id.wrongAns);
@@ -94,16 +122,18 @@ public class ScoreActivity extends AppCompatActivity {
         wrongAns.setText("Wrong Answers:"+((total-unAttempted)-points));
         attempt.setText("Attempted:"+(total-unAttempted));
 
+        marks=(points*4)-((total-unAttempted)-points);
+
         progressAcc.setProgress(accuracy);
         progressAccuTxt.setText(accuracy+"%");
-        textProgressMarks.setText(points+" / "+total);
+        textProgressMarks.setText(marks+" / "+(total*4));
 
 
         user= new HashMap<>();
         firebaseAuth= FirebaseAuth.getInstance();
         fireStore= FirebaseFirestore.getInstance();
         documentReference = fireStore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("Attempted Tests").document(top_text);
-        user.put("test_name",heading.getText().toString());
+        user.put("name",heading.getText().toString());
         user.put("score",textProgressMarks.getText().toString());
         user.put("accuracy",accuracy);
         user.put("correct answers",correctAns.getText().toString());
@@ -113,6 +143,7 @@ public class ScoreActivity extends AppCompatActivity {
         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                sendEmail();
                 Toast.makeText(ScoreActivity.this,"added data: ",Toast.LENGTH_SHORT).show();
 
             }
@@ -198,6 +229,32 @@ public class ScoreActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void sendEmail() {
+
+        String showName=firebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
+
+        JavaMailAPIS javaMailAPI=new JavaMailAPIS(this,firebaseAuth.getInstance().getCurrentUser().getEmail(),
+                "Dear "+nameTxt
+                        +",\nYou have successfully completed an assessment test on the topic-"
+                        +"\n"+heading.getText().toString()
+                        +"\n\nHere is a quick report on the performance breakup: "
+                        +"\nTotal Questions: "+total
+                        +"\nTotal Attempted: "+(total-unAttempted)
+                        +"\nTotal Correct: "+points
+                        +"\nTotal Incorrect: "+((total-unAttempted)-points)
+                        + "\nObtained Marks: "+marks+"/"+(total*4)
+                        +"\nAccuracy: "+accuracy+"%"
+                        +"\n\nTo view complete details and answer key,please login to your account."
+                        +"\n\nFor any concern, Please reach us to our team members at 08584074448 or write to us at assessment@acadup.in"
+                        +"\nHappy learning! :)"
+                        +"\nRegards,"
+                        +"\nTeam AcadUp");
+        javaMailAPI.execute();
+    }
+
+
 
 
 }

@@ -96,8 +96,8 @@ public class TestsActivity extends AppCompatActivity {
 
                         Intent intent=new Intent(getApplicationContext(),QuizIntroActivity.class);
                         intent.putExtra("from_which_activity",102);
-                        intent.putExtra("quiz_time",5);
-
+                        intent.putExtra("quiz_time",30);
+                        //intent.putExtra("pdfLink",model.getAnswerPdf());
                         intent.putExtra("subject",sub);
                         intent.putExtra("classNum",String.valueOf(classNum));
                         intent.putExtra("chapterName",model.getName());

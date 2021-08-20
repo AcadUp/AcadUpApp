@@ -3,12 +3,14 @@ package com.example.acadup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -247,8 +249,23 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         logOutLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Log out Clicked", Toast.LENGTH_SHORT).show();
-                drawerLayout.closeDrawer(GravityCompat.START);
+                AlertDialog.Builder builder=new AlertDialog.Builder(HomeActivity.this);
+                builder.setMessage("Are you sure that you want to Logout?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseAuth.getInstance().signOut();
+                        finishAffinity();
+                        startActivity(new Intent(HomeActivity.this,LoginActivity.class));
+                    }
+                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog mDialog=builder.create();
+                mDialog.show();                drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
         rateLayout.setOnClickListener(new View.OnClickListener() {

@@ -1,5 +1,6 @@
 package com.example.acadup;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
+        getSupportActionBar().hide();
         logoutBtn=findViewById(R.id.logoutBtn);
         editProfile=findViewById(R.id.edirprofile);
         nameTv=findViewById(R.id.name);
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).into(profileImageView);
-                        profileImageView.setRotation(90);
+                        //profileImageView.setRotation(90);
                     }
                 });
 
@@ -123,9 +126,24 @@ public class MainActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                finishAffinity();
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+
+                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Are you sure that you want to Logout?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseAuth.getInstance().signOut();
+                        finishAffinity();
+                        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                    }
+                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog mDialog=builder.create();
+                mDialog.show();
 
             }
         });
@@ -152,9 +170,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager2.setAdapter(fragmentAdapter);
 
         tabLayout.addTab(tabLayout.newTab().setText("Stats"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tests"));
-        tabLayout.addTab(tabLayout.newTab().setText("Question"));
-        tabLayout.addTab(tabLayout.newTab().setText("Docs/Videos"));
+        tabLayout.addTab(tabLayout.newTab().setText("Attempted Tests"));
+        tabLayout.addTab(tabLayout.newTab().setText("Purchased courses"));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
