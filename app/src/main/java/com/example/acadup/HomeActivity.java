@@ -177,7 +177,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                                         int groupPosition, int childPosition, long id) {
                 Toast.makeText(
                         getApplicationContext(),
-                        listDataHeader.get(groupPosition) + " : " + listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getText(),
+//                        listDataHeader.get(groupPosition) + " : " +
+                                listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getText(),
                         Toast.LENGTH_SHORT).show();
                 if(groupPosition==0 && childPosition==1){
                     startActivity(new Intent(HomeActivity.this,ConnectUsActivity.class));
@@ -191,7 +192,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         homeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HomeActivity.this, "Home Clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(HomeActivity.this, "Home Clicked", Toast.LENGTH_SHORT).show();
                 drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
@@ -199,6 +200,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
                 Toast.makeText(HomeActivity.this, "Schedule Trail Clicked", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this,demo_choice.class));
                 drawerLayout.closeDrawer(GravityCompat.START);
             }
         });

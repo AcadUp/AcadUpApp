@@ -44,7 +44,7 @@ public class QuizIntroActivity extends AppCompatActivity {
         insTxt=findViewById(R.id.insTxt);
         btnStart=findViewById(R.id.btnStart);
 
-        insTxt.setText("A quiz is a form of game attempt to answer questions correctly about a certain or verity of subjects. Here we arrange a quiz where you get "+timeTxt+" min and "+timeTxt+" questions to answer. We also provide 4 options and 1 point to each question . There is a 'Next' and 'Previous' button and within the "+timeTxt+" min you can change your answers of any question. If you do not press finish button ,we automatically submitted your answer and show your score.\nStart the quiz , all the best :))) ");
+        insTxt.setText("A quiz is a form of game attempt to answer questions correctly about a certain or verity of subjects. Here we arrange a quiz where you get "+timeTxt+" min and "+timeTxt+" questions to answer. We also provide 4 options and 4 point to each question . There is a 'Next' and 'Previous' button and within the "+timeTxt+" min you can change your answers of any question. If you do not press finish button ,we automatically submitted your answer and show your score.\nStart the quiz , all the best :))) ");
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

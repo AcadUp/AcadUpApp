@@ -36,8 +36,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class TestFragment extends Fragment {
 
-
-
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firestore;
     RecyclerView subjectChapters;

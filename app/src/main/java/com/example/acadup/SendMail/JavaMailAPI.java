@@ -17,11 +17,12 @@ import javax.mail.internet.MimeMessage;
 public class JavaMailAPI extends AsyncTask<Void,Void,Void> {
     private Context context;
     private Session session;
-    private String email, message;
+    private String email, message,subject_heading;
 
-    public JavaMailAPI(Context context, String email,String message) {
+    public JavaMailAPI(Context context, String email,String subject_heading,String message) {
         this.context = context;
         this.email = email;
+        this.subject_heading=subject_heading;
         this.message=message;
     }
 
@@ -44,7 +45,7 @@ public class JavaMailAPI extends AsyncTask<Void,Void,Void> {
         try {
             mimeMessage.setFrom(new InternetAddress(Utils.EMAIL,"AcadUp - A Smart Learning Platform"));
             mimeMessage.addRecipients(Message.RecipientType.TO, String.valueOf(new InternetAddress(email)));
-            mimeMessage.setSubject("Demo Class | Confirmation mail");
+            mimeMessage.setSubject(subject_heading);
             mimeMessage.setText(message);
             Transport.send(mimeMessage);
         } catch (MessagingException | UnsupportedEncodingException e) {

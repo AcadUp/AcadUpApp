@@ -299,7 +299,7 @@ public class demo_choice extends AppCompatActivity implements AdapterView.OnItem
             showName=etName.getText().toString().trim();
         }
 
-        JavaMailAPI javaMailAPI=new JavaMailAPI(this,etEmail.getText().toString(),
+        JavaMailAPI javaMailAPI=new JavaMailAPI(this,etEmail.getText().toString(),"Demo Class | Confirmation mail",
                 "Dear "+showName
                         +",\nWelcome to AcadUp."
                         +"\n\n You have successfully registered for a demo class.Your demo class details are as:"

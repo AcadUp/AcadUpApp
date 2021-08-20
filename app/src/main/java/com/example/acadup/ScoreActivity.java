@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.acadup.SendMail.JavaMailAPI;
-import com.example.acadup.SendMail.JavaMailAPIS;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -78,7 +77,7 @@ public class ScoreActivity extends AppCompatActivity {
             chapterName=getIntent().getStringExtra("chapterName");
         }
 
-
+//        Toast.makeText(this, unAttempted+" "+total, Toast.LENGTH_LONG).show();
 
         firebaseAuth = FirebaseAuth.getInstance();
         fireStore = FirebaseFirestore.getInstance();
@@ -117,12 +116,17 @@ public class ScoreActivity extends AppCompatActivity {
 
         heading.setText(top_text+" Test");
 
-        accuracy=((points*100)/(total-unAttempted));
+        if((total-unAttempted)!=0) {
+            accuracy = ((points * 100) / (total - unAttempted));
+        }
+        else{
+            accuracy = 0;
+        }
         correctAns.setText("Correct Answers:"+points);
         wrongAns.setText("Wrong Answers:"+((total-unAttempted)-points));
         attempt.setText("Attempted:"+(total-unAttempted));
 
-        marks=(points*4)-((total-unAttempted)-points);
+        marks=points*4;
 
         progressAcc.setProgress(accuracy);
         progressAccuTxt.setText(accuracy+"%");
@@ -175,11 +179,12 @@ public class ScoreActivity extends AppCompatActivity {
         progressTime.setMax(totalTimes*100);
         progressTime.setProgress((int) (t*100));
 
-        if(accuracy>=0 && accuracy<=40){
+        int remarkCal=(points*100)/total;
+        if(remarkCal>=0 && remarkCal<=40){
             remarkImg.setImageResource(R.drawable.cry);
             remarkTxt.setText("Not so good , Keep hardworking");
         }
-        else if(accuracy>40 && accuracy<=75){
+        else if(remarkCal>40 && remarkCal<=75){
             remarkImg.setImageResource(R.drawable.good);
             remarkTxt.setText("Good , Keep going");
         }
@@ -235,7 +240,7 @@ public class ScoreActivity extends AppCompatActivity {
         String showName=firebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
 
-        JavaMailAPIS javaMailAPI=new JavaMailAPIS(this,firebaseAuth.getInstance().getCurrentUser().getEmail(),
+        JavaMailAPI javaMailAPI=new JavaMailAPI(this,firebaseAuth.getInstance().getCurrentUser().getEmail(),"Test Result",
                 "Dear "+nameTxt
                         +",\nYou have successfully completed an assessment test on the topic-"
                         +"\n"+heading.getText().toString()
