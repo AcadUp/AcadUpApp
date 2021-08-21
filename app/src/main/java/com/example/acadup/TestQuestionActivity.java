@@ -653,31 +653,27 @@ public class TestQuestionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        if(timer!=null){
-            timer.cancel();
-            timer=null;
-        }
-        finish();
+        //super.onBackPressed();
 
-//        AlertDialog.Builder builder=new AlertDialog.Builder(this);
-//        builder.setMessage("Are you sure that you want to leave the test?");
-//        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                if(timer!=null){
-//                    timer.cancel();
-//                    timer=null;
-//                }
-//                finish();
-//            }
-//        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int i) {
-//                dialog.cancel();
-//            }
-//        });
-//        AlertDialog mDialog=builder.create();
-//        mDialog.show();
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure that you want to leave the test?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(timer!=null){
+                    timer.cancel();
+                    timer=null;
+                }
+                finish();
+            }
+        }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog mDialog=builder.create();
+        mDialog.show();
     }
 }

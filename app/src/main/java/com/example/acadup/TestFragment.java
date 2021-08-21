@@ -99,9 +99,9 @@ public class TestFragment extends Fragment {
                     holder.linearLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent intent = new Intent(getContext(), PDFOpening.class);
+                            //Intent intent = new Intent(getContext(), PDFOpening.class);
                             //intent.putExtra("pdf_link", model.getPdf());
-                            startActivity(intent);
+                            //startActivity(intent);
                         }
                     });
                 }

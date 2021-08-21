@@ -338,7 +338,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment(),"HOME_FRAGMENT").commit();
                             break;
                         case R.id.navigation_test:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new TestFragment()).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new NotificationsFragment()).commit();
                             break;
                         case R.id.navigation_dashboard:
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new DashboardFragment()).commitNow();
