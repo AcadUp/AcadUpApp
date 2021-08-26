@@ -102,7 +102,7 @@ public class TestsActivity extends AppCompatActivity {
                         intent.putExtra("classNum",String.valueOf(classNum));
                         intent.putExtra("chapterName",model.getName());
                         startActivity(intent);
-
+                        finish();
 //                        Toast.makeText(TestsActivity.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
                     }
                 });

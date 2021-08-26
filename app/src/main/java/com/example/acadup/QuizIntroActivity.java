@@ -14,7 +14,7 @@ public class QuizIntroActivity extends AppCompatActivity {
     TextView insTxt;
     Button btnStart;
     int ACTIVITY_CODE;
-    String sub,classNum,chapterName;
+    String sub,classNum,chapterName,chapterImg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +32,7 @@ public class QuizIntroActivity extends AppCompatActivity {
             sub=getIntent().getStringExtra("subject");
             classNum=getIntent().getStringExtra("classNum");
             chapterName=getIntent().getStringExtra("chapterName");
+            chapterImg=getIntent().getStringExtra("chapterImage");
             timeTxt=getIntent().getIntExtra("quiz_time",0);
             subTxt=getIntent().getStringExtra("quiz_name");
         }
@@ -75,7 +76,24 @@ public class QuizIntroActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, HomeActivity.class));
-
+        if(ACTIVITY_CODE==101) {
+            startActivity(new Intent(this, HomeActivity.class));
+        }
+        else if(ACTIVITY_CODE==102){
+            Intent intent=new Intent(this,TestsActivity.class);
+            intent.putExtra("subject",sub);
+            intent.putExtra("class",Integer.parseInt(classNum));
+            startActivity(intent);
+            finish();
+        }
+        else if(ACTIVITY_CODE==100){
+            Intent intent=new Intent(this,TopicVideoLists.class);
+            intent.putExtra("subject",sub);
+            intent.putExtra("class",Integer.parseInt(classNum));
+            intent.putExtra("chapterName",chapterName);
+            intent.putExtra("chapterImage",chapterImg);
+            startActivity(intent);
+            finish();
+        }
     }
 }

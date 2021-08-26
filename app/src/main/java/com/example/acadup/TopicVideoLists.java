@@ -126,10 +126,11 @@ public class TopicVideoLists extends AppCompatActivity {
                         intent.putExtra("subject",sub);
                         intent.putExtra("classNum",String.valueOf(classNum));
                         intent.putExtra("chapterName",chapterName);
+                        intent.putExtra("chapterImage",chapterImg);
                         intent.putExtra("quiz_name",model.getName());
 
-
                         startActivity(intent);
+                        finish();
                     }
                 });
                 holder.trackBtn.setOnClickListener(new View.OnClickListener() {
