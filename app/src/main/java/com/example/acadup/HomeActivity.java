@@ -229,6 +229,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View view) {
                 Toast.makeText(HomeActivity.this, "Leaderboard Clicked", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeActivity.this,LeaderBoardActivity.class));
                 drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
